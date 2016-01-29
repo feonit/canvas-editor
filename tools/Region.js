@@ -52,6 +52,10 @@ Region.prototype.createRegionByPoint = function(x, y){
 
     addOne(x,y);
 
+
+    //todo перетащить в webworkers попробовать
+    //Обработка больших массивов данных
+    //Предварительный выбор или кэширование данных
     var find = whilePoint(x, y, []);
 
     find.forEach(function(arr){
@@ -66,22 +70,22 @@ Region.prototype.createRegionByPoint = function(x, y){
      * @param {number} y — координата Y
      * @param {number[][]} total — коллекция точек
      * */
-    function reqursively(x, y, total){
-
-        var arr = getClosestCoords(x, y);         // все 8
-        arr = getClosestPoints(arr);              // убрать выходящие за границы координаты //todo добавить условие такого случая
-        arr = filterPassed(arr);                  // оставить все новые
-        addAll(arr);                              // зарегистрировать новые
-        arr = filterEquivalent(arr);              // оставить только подходящие новые
-
-        for (var i = 0, len = arr.length; i < len; i+=1){
-            // поиск совпадений по хешу быстрее чем по массиву
-            total.push([arr[i][0], arr[i][1]]);
-            reqursively(arr[i][0], arr[i][1], total);
-        }
-
-        return total;
-    }
+    //function reqursively(x, y, total){
+    //
+    //    var arr = getClosestCoords(x, y);         // все 8
+    //    arr = getClosestPoints(arr);              // убрать выходящие за границы координаты //todo добавить условие такого случая
+    //    arr = filterPassed(arr);                  // оставить все новые
+    //    addAll(arr);                              // зарегистрировать новые
+    //    arr = filterEquivalent(arr);              // оставить только подходящие новые
+    //
+    //    for (var i = 0, len = arr.length; i < len; i+=1){
+    //        // поиск совпадений по хешу быстрее чем по массиву
+    //        total.push([arr[i][0], arr[i][1]]);
+    //        reqursively(arr[i][0], arr[i][1], total);
+    //    }
+    //
+    //    return total;
+    //}
     /**
      * Последовательный поиск всех похожих прилегающих точек, как непосредственно,
      * так и посредством аналогичных по цвету точек
@@ -97,17 +101,17 @@ Region.prototype.createRegionByPoint = function(x, y){
         queue.push([x,y]);
 
         while (queue.length){
-            if (queue.length > canvas.height*canvas.width){
-                throw 'error'
-            }
+            //if (queue.length > canvas.height*canvas.width){
+            //    throw 'error'
+            //}
             point = queue.splice(0, 1)[0];
             total.push(point);
 
             var arr = getClosestCoords(point[0], point[1]);         // все 8
             arr = getClosestPoints(arr);              // убрать выходящие за границы координаты //todo добавить условие такого случая
-            arr = filterPassed(arr);                  // оставить все новые
-            addAll(arr);                              // зарегистрировать новые
-            arr = filterEquivalent(arr);              // оставить только подходящие новые
+            arr = filterPassed(arr);                    // оставить все новые
+            addAll(arr);                                // зарегистрировать новые
+            arr = filterEquivalent(arr);                // оставить только подходящие новые
 
             Array.prototype.push.apply(queue, arr)
         }
@@ -209,10 +213,10 @@ Region.prototype.createRegionByPoint = function(x, y){
      * @param {number} y — координата Y
      * */
     function addOne(x, y){
-        if (getRecord(x, y))
-            throw 'it always been';
-        if (Object.keys(register).length >= totalCountOfPx)
-            throw 'Maximum';
+        //if (getRecord(x, y))
+        //    throw 'it always been';
+        //if (Object.keys(register).length >= totalCountOfPx) <--- ОЧЕНЬ ТЯЖЕЛОВЕСНАЯ ХРЕНЬ
+        //    throw 'Maximum';
 
         if (!addOne.ctx){
             var canvas = document.createElement('canvas');
@@ -258,7 +262,7 @@ Region.prototype.createRegionByPoint = function(x, y){
             var data = ctx.getImageData(0, 0, width, height).data;
 
             /**{Array}*/
-            getPx.data = Array.prototype.slice.call(data, 0, data.length);
+            getPx.data = data;
         }
 
         var index = (y - 1)*canvas.width*4 + x*4;
