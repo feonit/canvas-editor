@@ -6,6 +6,10 @@ var canvas = new Canvas();
 
 document.body.appendChild(canvas);
 
+//var ctx=canvas.getContext("2d");
+//ctx.fillStyle = 'red';
+//ctx.fillRect(20,20,150,100);
+
 /**
  * Переключатель инструментов
  * */
@@ -14,13 +18,14 @@ document.body.appendChild(canvas);
 
     toolsDriver.plug(Draw);
     toolsDriver.plug(Eraser);
-    toolsDriver.plug(Region);
+    toolsDriver.plug(RegionTool);
 
-    var enabledToolName = 'Draw';
+    var enabledToolName = 'RegionTool';
 
     toolsDriver.play(enabledToolName);
     //canvasToolManager.plug(File);
     //canvasToolManager.plug(History);
+    //canvasToolManager.plug(Loupe);
 
     var radioBox = new RadioBox(Object.keys(toolsDriver.register), enabledToolName);
 

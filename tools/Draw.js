@@ -105,7 +105,7 @@ function Draw(canvas){
         ctx = canvas.getContext("2d");
         ctx.lineCap = "round";
         ctx.lineJoin = "round";
-        ctx.lineWidth = 15;
+        ctx.lineWidth = 10;
         ctx.strokeStyle = 'blue';
 
         canvas.addEventListener('mousedown', onMousedown, false);

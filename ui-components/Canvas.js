@@ -4,16 +4,25 @@
 function Canvas(options, canvas, ctx){
     options = options || {};
     canvas = document.createElement('canvas');
-    canvas.width  = options.width || 1200;
-    canvas.height = options.height || 850;
+    canvas.width  = options.width || 800;
+    canvas.height = options.height || 400;
     canvas.style.border   = "1px solid";
     ctx = canvas.getContext("2d");
 
-    ctx.beginPath();
-    ctx.fillStyle = '#333';
+    canvas.setAttribute('oncontextmenu', 'return false;');
 
-    ctx.fillRect(0,0,canvas.width,canvas.height);
-    ctx.stroke();
+    //ctx.fillStyle = '#333';
+    //ctx.fillRect(0,0,canvas.width,canvas.height);
+
+    //ctx.fillStyle = 'red';
+    //ctx.fillRect(50,50,10,10);
+    //
+    //ctx.fillStyle = 'green';
+    //ctx.fillRect(0,0,1,1);
+
+    //ctx.arc(15, 15, 5, 0, 2 * Math.PI, false);
+    //ctx.fillStyle = 'rgb(0,0,255)';
+    //ctx.fill();
 
     return canvas;
 }
