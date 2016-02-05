@@ -6,6 +6,8 @@ var canvas = new Canvas();
 
 document.body.appendChild(canvas);
 
+pxRegion = new PixelMap(canvas.width, canvas.height);
+
 //var ctx=canvas.getContext("2d");
 //ctx.fillStyle = 'red';
 //ctx.fillRect(20,20,150,100);
@@ -22,12 +24,32 @@ document.body.appendChild(canvas);
 
     var enabledToolName = 'RegionTool';
 
+    var draw = toolsDriver.getToolByName('Draw');
+    var regionTool = toolsDriver.getToolByName('RegionTool');
+
+    function newLayout(layout, point){
+        var regionObject = regionTool.createRegionByPointAtCanvas(point[0], point[1], canvas);
+        regionObject.layout = layout;
+
+        regionTool.addRegion(regionObject);
+
+        pxRegion.addRegion(regionObject);
+    }
+
+    Object.observe(draw, function(changes){
+        changes.forEach(function(change) {
+            if (change.name === 'lastLayout') {
+                newLayout(draw.lastLayout, draw.lastLayoutExamplePoint);
+            }
+        });
+    });
+
     toolsDriver.play(enabledToolName);
     //canvasToolManager.plug(File);
     //canvasToolManager.plug(History);
     //canvasToolManager.plug(Loupe);
 
-    var radioBox = new RadioBox(Object.keys(toolsDriver.register), enabledToolName);
+    var radioBox = new RadioBox(toolsDriver.getKeys(), enabledToolName);
 
     radioBox.addEventListener("userSelectTool", function(data){
         toolsDriver.play(data.detail.name);

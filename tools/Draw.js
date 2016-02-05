@@ -1,5 +1,13 @@
 function Draw(canvas){
 
+    var optionsDraw = {
+        lineWidth: 70,
+        //lineCap: 'square',
+        //lineJoin: 'square',
+        lineCap: 'round',
+        lineJoin: 'round',
+    };
+
     var points = null;
     var point;
     var ctx;
@@ -7,12 +15,39 @@ function Draw(canvas){
 
     ctx = canvas.getContext("2d");
 
+    this.lastLayout = null;
+    this.lastLayoutExamplePoint = [];
+
+    var canvasCopy;
+    var canvasCopyCtx;
+    var that = this;
+
+    function createCopyOfCanvas(canvas){
+        var copy = document.createElement('canvas');
+        copy.height = canvas.height;
+        copy.width = canvas.width;
+        var copyCtx =  copy.getContext('2d');
+        copyCtx.lineCap = "round";
+        copyCtx.lineJoin = "round";
+        copyCtx.lineWidth = optionsDraw.lineWidth;
+        copyCtx.strokeStyle = 'blue';
+        return copy;
+    }
+
     function onMousedown(event){
         if (!points) {
             points = [];
+
             point = new Point(event.layerX, event.layerY, colorValue);
             points.push(point);
-            render();
+
+            that.lastLayoutExamplePoint[0] = event.layerX;
+            that.lastLayoutExamplePoint[1] = event.layerY;
+
+            canvasCopy = createCopyOfCanvas(canvas);
+            canvasCopyCtx = canvasCopy.getContext('2d');
+            drawCurve(new Curve(points), ctx);
+            drawCurve(new Curve(points), canvasCopyCtx);
         }
     }
 
@@ -20,23 +55,26 @@ function Draw(canvas){
         if (points){
             point = new Point(event.layerX, event.layerY, colorValue);
             points.push(point);
-            render();
+            drawCurve(new Curve(points), ctx);
+            drawCurve(new Curve(points), canvasCopyCtx);
         }
     }
 
     function onMouseup(event){
         point = new Point(event.layerX, event.layerY, colorValue);
         points.push(point);
-        render();
+        drawCurve(new Curve(points), ctx);
+        drawCurve(new Curve(points), canvasCopyCtx);
         points = null;
+
+        var image = new Image();
+        image.height = canvasCopy.height;
+        image.width = canvasCopy.width;
+        image.src = canvasCopy.toDataURL('image/png');
+
+        that.lastLayout = image;
     }
 
-    function render(){
-        var curve = new Curve(points);
-
-        drawCurve(curve, ctx);
-        //console.log(curve)
-    }
 
     function drawCurve(touches, ctx){
         if (!touches || !touches.x || typeof(touches.x[0])!=="number") {
@@ -103,9 +141,9 @@ function Draw(canvas){
 
     this.start = function(){
         ctx = canvas.getContext("2d");
-        ctx.lineCap = "round";
-        ctx.lineJoin = "round";
-        ctx.lineWidth = 10;
+        ctx.lineCap = optionsDraw.lineCap;
+        ctx.lineJoin = optionsDraw.lineJoin;
+        ctx.lineWidth = optionsDraw.lineWidth;
         ctx.strokeStyle = 'blue';
 
         canvas.addEventListener('mousedown', onMousedown, false);

@@ -4,13 +4,13 @@
  * получение доступа подключаемых инструментов к канвасу
  * */
 function ToolsDriver(canvas){
-    this.canvas = canvas;
+    this._canvas = canvas;
 
     /*@arg Набор инструментов по работе с холстом (Eraser, Cursor, Draw)*/
-    this.register = {};
+    this._register = {};
 
     /*@arg {Object} Активный инструмент, ссылка на него*/
-    this.activedTool = null;
+    this._activedTool = null;
 }
 
 /**
@@ -18,8 +18,8 @@ function ToolsDriver(canvas){
  * @param {function} Constructor — конструктор нового инструмента
  * */
 ToolsDriver.prototype.plug = function(Constructor){
-    var tool = new Constructor(this.canvas);
-    this.register[tool.constructor.name] = tool;
+    var tool = new Constructor(this._canvas);
+    this._register[tool.constructor.name] = tool;
 };
 
 /**
@@ -27,11 +27,19 @@ ToolsDriver.prototype.plug = function(Constructor){
  * @param {string} name - имя инструмента
  * */
 ToolsDriver.prototype.play = function(name){
-    if (name || this.register[name] || (this.activedTool && this.activedTool.constructor.name !== name)){
-        if (this.activedTool){
-            this.activedTool.stop();
+    if (name || this._register[name] || (this._activedTool && this._activedTool.constructor.name !== name)){
+        if (this._activedTool){
+            this._activedTool.stop();
         }
-        this.activedTool = this.register[name];
-        this.activedTool.start();
+        this._activedTool = this._register[name];
+        this._activedTool.start();
     }
+};
+
+ToolsDriver.prototype.getToolByName = function(name){
+    return this._register[name];
+};
+
+ToolsDriver.prototype.getKeys = function(){
+    return Object.keys(this._register);
 };

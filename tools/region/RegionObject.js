@@ -1,15 +1,43 @@
 /**
  * @class RegionObject
- * @param {HTMLCanvasElement} canvas — холст, к которому принадлежит объект
- * @param {number[][]} coordinates — массив координат пикселей объекта на холсте
- * @param {}
+ * @param options
  * */
-function RegionObject(canvas, coordinates, etalonPointImageData, borderCoordinates){
-    this.canvas = canvas;
-    this.coordinates = coordinates;
-    this.borderCoordinates = borderCoordinates;
-    this.etalonPointImageData = etalonPointImageData;
-    this.layout = null;
+function RegionObject(options){
+    options = options || {};
+
+    /**
+     * Массив координат пикселей объекта на холсте
+     * @type {number[][]}
+     * */
+    this.coordinates = options.coordinates;
+
+    /**
+     * @type {ImageData.data}
+     * */
+    this.etalonPointImageData = options.etalonPointImageData;
+
+    /**
+     * Картинка с регионом размером с сам холст
+     * @type {HTMLElementCanvas}
+     * */
+    this.layoutCanvas = options.layoutCanvas || null;
+
+    /** не доделано */
+    this.borderCoordinates = options.borderCoordinates;
+
+    /**
+     * Смещение слоя на главноем холсте после транспортировки
+     * Первая запись гласит о нулевом смещении
+     * @arg {number[][]}
+     * */
+    this.recordsOffset = [[0,0]];
+
+    this.offsetX = 0;
+    this.offsetY = 0;
+
+    this.saveRecordOffset = function(){
+        this.recordsOffset.push([this.offsetX, this.offsetY])
+    }
 }
 
 /**
@@ -29,7 +57,7 @@ RegionObject.prototype.activate = function(){
     //canvas.width = this.canvas.width;
     //canvas.height = this.canvas.height;
     //var ctx = canvas.getContext('2d');
-    //ctx.drawImage(this.layout, 0, 0);
+    //ctx.drawImage(this.layoutCanvas, 0, 0);
     //this.borderCoordinates.forEach((function(arr){
     //    ctx.fillStyle = 'yellow';
     //    ctx.fillRect( arr[0], arr[1]-1 , 1, 1 ); // -1 смещение
@@ -37,7 +65,7 @@ RegionObject.prototype.activate = function(){
     //var image = new Image();
     //image.height = canvas.height;
     //image.width = canvas.width;
-    //this.layout = image;
+    //this.layoutCanvas = image;
 };
 
 /**
@@ -49,30 +77,29 @@ RegionObject.prototype.deactivate = function(){};
  * Метод стирающий регион с холста
  * Стирает каждый пиксел
  * */
-RegionObject.prototype.clean = function(){
+RegionObject.prototype.cleanFromCanvas = function(canvas){
+    var offsetX = this.recordsOffset[this.recordsOffset.length - 1][0];
+    var offsetY = this.recordsOffset[this.recordsOffset.length - 1][1];
+
     var ctx = canvas.getContext('2d');
     var coordinates = this.coordinates;
     for (var i = 0, len = coordinates.length; i < len; i++){
-        ctx.clearRect(coordinates[i][0], coordinates[i][1] - 1, 1, 1); // -1 смещение
+        ctx.clearRect(coordinates[i][0] + offsetX, coordinates[i][1] + offsetY, 1, 1); // -1 смещение
     }
 };
 
-RegionObject.prototype.getCopyLayout = function(){
-    if (this.layout)
-        return this.layout;
+RegionObject.prototype.makeLayoutFromCanvas = function(generalCanvas){
+    if (this.layoutCanvas)
+        return this.layoutCanvas;
 
-    var coordinates = this.coordinates;
-    var height = this.canvas.height;
-    var width = this.canvas.width;
+    var height = generalCanvas.height;
+    var width = generalCanvas.width;
     var layoutCanvas = document.createElement('canvas');
-    var ctx = layoutCanvas.getContext('2d');
-    var coordinate;
-    var i, len;
+    var ctx;
 
-    var layoutImage = new Image();
     layoutCanvas.height = height;
     layoutCanvas.width = width;
-
+    ctx = layoutCanvas.getContext('2d');
     // проверено drawImage в этом случае работает раза в 4 быстрее чем putImageData
     // создаю картинку размером в 1 пиксел
 
@@ -80,31 +107,30 @@ RegionObject.prototype.getCopyLayout = function(){
     // нужен оптимизирующий алгаритм для работы drawImage, чтобы избежать попиксельную обработку, основанный на том
     // факте, что цвета соседних пикселей одинаковы
 
-    var px = new Image();
-    var canvas = document.createElement('canvas');
-    var context = canvas.getContext('2d');
+    var canvas1px = document.createElement('canvas');
     var imageData = ctx.createImageData(1,1);
     var data = imageData.data;
     var etalon = this.etalonPointImageData;
     data[0] = etalon[0];
     data[1] = etalon[1];
     data[2] = etalon[2];
-    data[3] = etalon[3];
+    data[3] = 255;// etalon[3]; !!!!!!!!!
 
-    px.height = 1;
-    px.width = 1;
-    canvas.height = 1;
-    canvas.width = 1;
-    context.putImageData(imageData, 0, 0);
-    px.src = canvas.toDataURL('image/png');
+    canvas1px.height = 1;
+    canvas1px.width = 1;
 
-    for (i = 0, len = coordinates.length; i < len; i++){
+    var canvas1pxCtx = canvas1px.getContext('2d');
+    canvas1pxCtx.putImageData(imageData, 0, 0);
+
+    var coordinates = this.coordinates;
+    var coordinate;
+
+    for (var i = 0, len = coordinates.length; i < len; i++){
         coordinate = coordinates[i];
-        ctx.drawImage(px, coordinate[0], coordinate[1]);
+        ctx.drawImage(canvas1px, coordinate[0], coordinate[1]);
     }
 
-    layoutCanvas.getContext('2d').getImageData(0, 0, layoutCanvas.width, layoutCanvas.height);
-    layoutImage.src = layoutCanvas.toDataURL('image/png');
+    //ctx.getImageData(0, 0, width, height);
 
-    return this.layout = layoutImage;
+    return this.layoutCanvas = layoutCanvas;
 };
