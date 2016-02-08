@@ -1,7 +1,7 @@
 function Draw(canvas){
 
     var optionsDraw = {
-        lineWidth: 70,
+        lineWidth: 50,
         //lineCap: 'square',
         //lineJoin: 'square',
         lineCap: 'round',

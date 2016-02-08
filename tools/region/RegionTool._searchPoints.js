@@ -54,11 +54,12 @@ RegionTool.prototype._searchPoints = function (startX, startY, canvas){
     }
 
     function getPointImageData(x, y){
-        var index = (y - 1) * canvasWidth * 4 + x * 4;
+        var index = (y * canvasWidth + x) * 4;
         return imageData.data.slice(index, index + 4);
     }
 
     searched.push([startX,startY]);
+    setRecord(startX,startY, etalonPointImageData);
 
     //var TOP = 1;
     //var RIGHT = 2;

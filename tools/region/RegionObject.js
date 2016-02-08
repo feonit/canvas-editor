@@ -78,13 +78,23 @@ RegionObject.prototype.deactivate = function(){};
  * Стирает каждый пиксел
  * */
 RegionObject.prototype.cleanFromCanvas = function(canvas){
-    var offsetX = this.recordsOffset[this.recordsOffset.length - 1][0];
-    var offsetY = this.recordsOffset[this.recordsOffset.length - 1][1];
+    var offsetX = this.offsetX;
+    var offsetY = this.offsetY;
 
     var ctx = canvas.getContext('2d');
     var coordinates = this.coordinates;
+    var coordinate;
+    var coordinateX;
+    var coordinateY;
+    var clearCoordinateX;
+    var clearCoordinateY;
     for (var i = 0, len = coordinates.length; i < len; i++){
-        ctx.clearRect(coordinates[i][0] + offsetX, coordinates[i][1] + offsetY, 1, 1); // -1 смещение
+        coordinate = coordinates[i];
+        coordinateX = coordinate[0];
+        coordinateY = coordinate[1];
+        clearCoordinateX = coordinateX + offsetX;
+        clearCoordinateY = coordinateY + offsetY;
+        ctx.clearRect(clearCoordinateX, clearCoordinateY, 1, 1); // -1 смещение
     }
 };
 

@@ -11,8 +11,8 @@ function Canvas(options, canvas, ctx){
 
     canvas.setAttribute('oncontextmenu', 'return false;');
 
-    //ctx.fillStyle = '#333';
-    //ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle = '#333';
+    ctx.fillRect(0,0,canvas.width,canvas.height);
 
     ctx.fillStyle = 'red';
     ctx.fillRect(50,50,2,2);
