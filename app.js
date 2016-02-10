@@ -6,11 +6,7 @@ var canvas = new Canvas();
 
 document.body.appendChild(canvas);
 
-pxRegion = new PixelMap(canvas.width, canvas.height);
-
-//var ctx=canvas.getContext("2d");
-//ctx.fillStyle = 'red';
-//ctx.fillRect(20,20,150,100);
+layersManager = new LayersManager(canvas);
 
 /**
  * Переключатель инструментов
@@ -18,22 +14,20 @@ pxRegion = new PixelMap(canvas.width, canvas.height);
 !function(RadioBox, ToolsDriver, document, Object){
     var toolsDriver = new ToolsDriver(canvas);
 
-    toolsDriver.plug(Draw);
-    toolsDriver.plug(Eraser);
-    toolsDriver.plug(RegionTool);
+    toolsDriver.plug(DrawingTool);
+    toolsDriver.plug(EraserTool);
+    toolsDriver.plug(DraggingTool);
 
-    var enabledToolName = 'RegionTool';
+    var enabledToolName = 'DrawingTool';
 
-    var draw = toolsDriver.getToolByName('Draw');
-    var regionTool = toolsDriver.getToolByName('RegionTool');
+    var draw = toolsDriver.getToolByName('DrawingTool');
+    var regionTool = toolsDriver.getToolByName('DraggingTool');
 
     function newLayout(layout, point){
-        var regionObject = regionTool.createRegionByPointAtCanvas(point[0], point[1], canvas);
+        var regionObject = RegionObject.createRegion(point[0], point[1], canvas);
         regionObject.layout = layout;
 
-        regionTool.addRegion(regionObject);
-
-        pxRegion.addRegion(regionObject);
+        layersManager.addRegion(regionObject);
     }
 
     Object.observe(draw, function(changes){
@@ -45,9 +39,6 @@ pxRegion = new PixelMap(canvas.width, canvas.height);
     });
 
     toolsDriver.play(enabledToolName);
-    //canvasToolManager.plug(File);
-    //canvasToolManager.plug(History);
-    //canvasToolManager.plug(Loupe);
 
     var radioBox = new RadioBox(toolsDriver.getKeys(), enabledToolName);
 
@@ -61,9 +52,9 @@ pxRegion = new PixelMap(canvas.width, canvas.height);
 /**
  * Утилита: Задний фон для прозрачности
  * */
-!function(Transparent, CheckBox, document){
-    var transparent = new Transparent(canvas);
-    var checkBox = new CheckBox('Transparent');
+!function(TransparentTool, CheckBox, document){
+    var transparent = new TransparentTool(canvas);
+    var checkBox = new CheckBox('TransparentTool');
 
     document.body.appendChild(checkBox);
 
@@ -73,7 +64,7 @@ pxRegion = new PixelMap(canvas.width, canvas.height);
             : transparent.stop();
     });
     checkBox.click();
-}(Transparent, CheckBox, document);
+}(TransparentTool, CheckBox, document);
 
 /**
  * Утилита: Контрольные точки мыши

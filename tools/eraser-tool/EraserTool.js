@@ -1,12 +1,12 @@
 /**
  * Ластик, позволяет стирать область холста, относительно переданной координаты
- * @class Eraser Ластик
+ * @class EraserTool Ластик
  *
  * @arg {String} shape — форма ластика: круг/квадрат (Circle, Squire)
  * @arg {Number} shapeLength — параметры формы ластика: длинна стороны/диагонали
  * @arg {HTMLCanvasElement} canvas — холст, над которым происходит затирание
  * */
-function Eraser(canvas){
+function EraserTool(canvas){
 
     var points = null;
     var point;
@@ -146,18 +146,18 @@ function Eraser(canvas){
     };
 }
 
-Eraser.prototype = Object.create(Tool);
-Eraser.prototype.constructor = Eraser;
+EraserTool.prototype = Object.create(Tool);
+EraserTool.prototype.constructor = EraserTool;
 
 /**
  * Метод стирания области относительно полученной координаты
  * @method
- * @lends Eraser.prototype
+ * @lends EraserTool.prototype
  *
  * @param {Number} x — координата X
  * @param {Number} y — координата Y
  * */
-Eraser.prototype.cleanAtPoint = function(x, y){
+EraserTool.prototype.cleanAtPoint = function(x, y){
     /**
      * Функция проверки того, что точка принадлежит холсту и является корректной
      * */
@@ -166,13 +166,13 @@ Eraser.prototype.cleanAtPoint = function(x, y){
      * Функия получения массива всех точек стираемой области, относительно полученной координаты
      * */
 
-    var length = 10;
+    var length = 20;
 
     this.ctx.clearRect(x - length/2, y - length/2, length, length);
 
 };
 
 
-Eraser.prototype.clearAll = function(){
+EraserTool.prototype.clearAll = function(){
     this.ctx.clearRect(0, 0, this.canvasElement.width, this.canvasElement.height);
 };

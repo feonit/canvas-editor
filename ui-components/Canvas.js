@@ -14,11 +14,11 @@ function Canvas(options, canvas, ctx){
     ctx.fillStyle = '#333';
     ctx.fillRect(0,0,canvas.width,canvas.height);
 
-    ctx.fillStyle = 'red';
-    ctx.fillRect(50,50,2,2);
-    //
-    ctx.fillStyle = 'red';
-    ctx.fillRect(0,0,1,1);
+    //ctx.fillStyle = 'red';
+    //ctx.fillRect(50,50,2,2);
+    ////
+    //ctx.fillStyle = 'red';
+    //ctx.fillRect(0,0,1,1);
 
     //ctx.arc(15, 15, 5, 0, 2 * Math.PI, false);
     //ctx.fillStyle = 'rgb(0,0,255)';

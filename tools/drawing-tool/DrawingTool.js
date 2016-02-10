@@ -1,7 +1,7 @@
-function Draw(canvas){
+function DrawingTool(canvas){
 
     var optionsDraw = {
-        lineWidth: 50,
+        lineWidth: 20,
         //lineCap: 'square',
         //lineJoin: 'square',
         lineCap: 'round',
@@ -15,6 +15,9 @@ function Draw(canvas){
 
     ctx = canvas.getContext("2d");
 
+ctx.mozImageSmoothingEnabled = false;
+ctx.imageSmoothingEnabled = false;
+
     this.lastLayout = null;
     this.lastLayoutExamplePoint = [];
 
@@ -23,6 +26,7 @@ function Draw(canvas){
     var that = this;
 
     function createCopyOfCanvas(canvas){
+        var context = canvas.getContext('2d');
         var copy = document.createElement('canvas');
         copy.height = canvas.height;
         copy.width = canvas.width;
@@ -30,7 +34,7 @@ function Draw(canvas){
         copyCtx.lineCap = "round";
         copyCtx.lineJoin = "round";
         copyCtx.lineWidth = optionsDraw.lineWidth;
-        copyCtx.strokeStyle = 'blue';
+        copyCtx.strokeStyle = context.strokeStyle;
         return copy;
     }
 
@@ -43,6 +47,8 @@ function Draw(canvas){
 
             that.lastLayoutExamplePoint[0] = event.layerX;
             that.lastLayoutExamplePoint[1] = event.layerY;
+
+            ctx.strokeStyle = point.color;
 
             canvasCopy = createCopyOfCanvas(canvas);
             canvasCopyCtx = canvasCopy.getContext('2d');
@@ -112,7 +118,7 @@ function Draw(canvas){
     function Point(x, y, color){
         this.x = x;
         this.y = y;
-        this.color = color;
+        this.color = '#'+Math.floor(Math.random()*16777215).toString(16);
     }
 
     function Curve(points){
@@ -158,5 +164,5 @@ function Draw(canvas){
     }
 }
 
-Draw.prototype = Object.create(Tool);
-Draw.prototype.constructor = Draw;
+DrawingTool.prototype = Object.create(Tool);
+DrawingTool.prototype.constructor = DrawingTool;

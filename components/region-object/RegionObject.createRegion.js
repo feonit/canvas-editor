@@ -2,11 +2,12 @@
  * Алгоритм поиска области фигуры по координате в режиме поиска по цвету
  * Последовательный поиск всех похожих прилегающих точек, как непосредственно,
  * так и посредством аналогичных по цвету точек
- * @param {number} startX — координата X
- * @param {number} startY — координата Y
+ * @param {number} startX — координата X с которой начинается поиск
+ * @param {number} startY — координата Y с которой начинается поиск
  * @param {HTMLCanvasElement} canvas — анализируемый холст
+ * @return {RegionObject} объект фигуры
  * */
-RegionTool.prototype._searchPoints = function (startX, startY, canvas){
+RegionObject.createRegion = function (startX, startY, canvas){
     var canvasWidth = canvas.width;
     var canvasHeight = canvas.height;
     var imageData = canvas.getContext('2d').getImageData(0, 0, canvasWidth, canvasHeight);
@@ -119,6 +120,7 @@ RegionTool.prototype._searchPoints = function (startX, startY, canvas){
 
         } else {
             arr = [ [ x, decY ], [ decX, y ], [ incX, y ], [ x, incY ] ];
+            //arr.concat( [ x-1, decY ], [ decX, y+1 ], [ incX, y-1 ], [ x+1, incY ] );// восьмисвязный
         }
 
         //if (isZeroX || isZeroY || isMaxX || isMaxY){
@@ -173,5 +175,11 @@ RegionTool.prototype._searchPoints = function (startX, startY, canvas){
 
     }
 
-    return [searched, etalonPointImageData, borderCoordinates];
+    return new RegionObject({
+        width: canvas.width,
+        height: canvas.height,
+        coordinates: searched,
+        borderCoordinates: borderCoordinates,
+        etalonPointImageData: etalonPointImageData
+    });
 };
