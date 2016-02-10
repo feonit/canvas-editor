@@ -76,62 +76,10 @@ function EraserTool(canvas){
     }
 
     function drawEraser(curve){
-        var l = curve.x.length;
-
-        var arr = [];
-
-        if (l === 1){
-            that.cleanAtPoint(curve.x[l-1], curve.y[l-1]);
-            return;
-        }
-
-        if (l > 1){
-            arr[0] = [(curve.x[l-3] + curve.x[l-2]) * 0.5, (curve.y[l-3] + curve.y[l-2]) * 0.5];
-            arr[1] = [curve.x[l-2], curve.y[l-2]];
-        }
-
-        if (l > 2){
-            arr[2] = [(curve.x[l-2] + curve.x[l-1]) * 0.5, (curve.y[l-2] + curve.y[l-1]) * 0.5];
-        }
-
-        var flow = getBezierCurve(arr, 0.01);
-
+        var flow = MathFn.drawBezierCurve(curve);
         flow.forEach(function(coor){
             that.cleanAtPoint(coor[0], coor[1]);
         });
-    }
-
-    // arr - массив опорных точек. Точка - двухэлементный массив, (x = arr[0], y = arr[1])
-    // step - шаг при расчете кривой (0 < step < 1), по умолчанию 0.01
-    function getBezierCurve(arr, step) {
-        if (step == undefined) {
-            step = 0.01;
-        }
-        var res = [];
-        for (var t = 0; t < 1 + step; t += step) {
-            if (t > 1) {
-                t = 1;
-            }
-            var ind = res.length;
-            res[ind] = [0, 0];
-            for (var i = 0; i < arr.length; i++) {
-                var b = getBezierBasis(i, arr.length - 1, t);
-                res[ind][0] += arr[i][0] * b;
-                res[ind][1] += arr[i][1] * b;
-            }
-        }
-
-        return res;
-    }
-
-    // i - номер вершины, n - количество вершин, t - положение кривой (от 0 до 1)
-    function getBezierBasis(i, n, t) {
-        // Факториал
-        function f(n) {
-            return (n <= 1) ? 1 : n * f(n - 1);
-        }
-        // считаем i-й элемент полинома Берштейна
-        return (f(n)/(f(i)*f(n - i)))* Math.pow(t, i)*Math.pow(1 - t, n - i);
     }
 
     this.start = function(){
@@ -149,6 +97,10 @@ function EraserTool(canvas){
 EraserTool.prototype = Object.create(Tool);
 EraserTool.prototype.constructor = EraserTool;
 
+EraserTool.prototype.cleanAtPoint = function(){
+    //return EraserTool.prototype.cleanSquareAtPoint.apply(this, arguments);
+    return EraserTool.prototype.cleanCircleAtPoint.apply(this, arguments);
+};
 /**
  * Метод стирания области относительно полученной координаты
  * @method
@@ -157,7 +109,7 @@ EraserTool.prototype.constructor = EraserTool;
  * @param {Number} x — координата X
  * @param {Number} y — координата Y
  * */
-EraserTool.prototype.cleanAtPoint = function(x, y){
+EraserTool.prototype.cleanSquareAtPoint = function(x, y){
     /**
      * Функция проверки того, что точка принадлежит холсту и является корректной
      * */
@@ -169,9 +121,31 @@ EraserTool.prototype.cleanAtPoint = function(x, y){
     var length = 20;
 
     this.ctx.clearRect(x - length/2, y - length/2, length, length);
-
 };
 
+EraserTool.prototype.cleanCircleAtPoint =  function (x, y, radius){
+
+    var RADIUS = 5;
+    var coordinates = this._getCircleCoordinatesWithOffset(x, y, RADIUS);
+    var len = coordinates.length - 1;
+
+    while(len > 0){
+        len--;
+        var coordinate;
+        coordinate = coordinates[len];
+        this.ctx.clearRect(coordinate[0], coordinate[1], 1, 1);
+    }
+};
+
+
+/**
+ * Получить координаты всех точек принадлежащих окружности с заданными координатой и радиусом
+ * */
+EraserTool.prototype._getCircleCoordinatesWithOffset = function(x0, y0, radius){
+    var coordinates = MathFn.getCircleCoordinates(radius);
+    coordinates = RegionObject.prototype.getRelationCoordinate(coordinates, x0, y0);
+    return coordinates;
+};
 
 EraserTool.prototype.clearAll = function(){
     this.ctx.clearRect(0, 0, this.canvasElement.width, this.canvasElement.height);

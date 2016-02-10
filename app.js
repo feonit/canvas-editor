@@ -44,6 +44,11 @@ layersManager = new LayersManager(canvas);
 
     radioBox.addEventListener("userSelectTool", function(data){
         toolsDriver.play(data.detail.name);
+
+        if (data.detail.name === 'EraserTool'){
+            layersManager.dropLayersData();
+        }
+
     }, false);
 
     document.body.appendChild(radioBox);

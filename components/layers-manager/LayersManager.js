@@ -168,3 +168,9 @@ LayersManager.prototype._removeRecord = function(x, y, record){
 
     return removedRecord;
 };
+
+LayersManager.prototype.dropLayersData = function(){
+    this._regions = {};
+    this._map = {};
+    this._currentIndex = this._INDEX_DEFAULT;
+};

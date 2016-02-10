@@ -51,8 +51,11 @@ function DraggingTool(canvas){
                  //пробуем найти регион по индексовой карте (поиск по слою)
                 that.selectedRegionObject = layersManager._getRegionByPx(event.layerX, event.layerY);
 
-                // пробуем найти регион волшебной палочкой (поиск по цвету)
-                //selectedRegionObject = RegionObject.createRegion(event.layerX, event.layerY, canvas);
+                if (!that.selectedRegionObject){
+                    // пробуем найти регион волшебной палочкой (поиск по цвету)
+                    that.selectedRegionObject = RegionObject.createRegion(event.layerX, event.layerY, canvas);
+                    layersManager.addRegion(that.selectedRegionObject);
+                }
 
                 // стереть объект
                 layersManager.removeRegion(that.selectedRegionObject);
@@ -100,13 +103,6 @@ function DraggingTool(canvas){
 
     function mouseup(event){
         if (processDnD){
-
-            that.selectedRegionObject.offsetX = that.offsetXBeforeDnd + event.layerX - that.dndStartPositionX;
-            that.selectedRegionObject.offsetY = that.offsetYBeforeDnd + event.layerY - that.dndStartPositionY;
-
-            that._drawLayout();
-
-            //layersManager.removeRegion(that.selectedRegionObject);
 
             // save final offset
             that.selectedRegionObject.saveRecordOffset();

@@ -109,16 +109,19 @@ RegionObject.prototype._drawLayout = function(layout){
 /**
  * Сгенерировать новый набор оригинальных координат с применением актуального отступа
  * */
-RegionObject.prototype.getRelationCoordinate = function(){
+RegionObject.prototype.getRelationCoordinate = function(coordinates, offsetX, offsetY){
     var relation = [];
+    var offsetX = offsetX || this.offsetX;
+    var offsetY = offsetY || this.offsetY;
+    var coordinates = coordinates || this._originalCoordinates;
 
-    for (var i = 0, len = this._originalCoordinates.length; i < len; i+=1 ) {
+    for (var i = 0, len = coordinates.length; i < len; i+=1 ) {
         relation[i] = [];
-        relation[i][0] = this._originalCoordinates[i][0];
-        relation[i][1] = this._originalCoordinates[i][1];
+        relation[i][0] = coordinates[i][0];
+        relation[i][1] = coordinates[i][1];
     }
 
-    this._addOffsetToCoordinate(relation, this.offsetX, this.offsetY);
+    this._addOffsetToCoordinate(relation, offsetX, offsetY);
 
     return relation;
 };

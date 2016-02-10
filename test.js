@@ -59,5 +59,20 @@ function debugTimeWrapper(fn, message){
     };
 }
 
+function limitCallWrapper(fn, message){
+    var i = 0;
+    var max = 1000;
+    return function(){
+        i++;
+        if (i < max){
+            return fn.apply(this, arguments);
+        } else {
+            throw message+': ' + i;
+        }
+    };
+}
+
 RegionObject.createRegion = debugTimeWrapper(RegionObject.createRegion, 'REGION CREATED');
 RegionObject.prototype.drawPixelsAtCanvas = debugTimeWrapper(RegionObject.prototype.drawPixelsAtCanvas, 'LAYOUT FILLED');
+
+EraserTool.prototype._getCircleCoordinates = limitCallWrapper(EraserTool.prototype._getCircleCoordinates, 'LIMITING CALL');

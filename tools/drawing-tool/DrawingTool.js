@@ -52,7 +52,7 @@ ctx.imageSmoothingEnabled = false;
 
             canvasCopy = createCopyOfCanvas(canvas);
             canvasCopyCtx = canvasCopy.getContext('2d');
-            drawCurve(new Curve(points), ctx);
+            render(new Curve(points), ctx);
             drawCurve(new Curve(points), canvasCopyCtx);
         }
     }
@@ -61,7 +61,7 @@ ctx.imageSmoothingEnabled = false;
         if (points){
             point = new Point(event.layerX, event.layerY, colorValue);
             points.push(point);
-            drawCurve(new Curve(points), ctx);
+            render(new Curve(points), ctx);
             drawCurve(new Curve(points), canvasCopyCtx);
         }
     }
@@ -69,7 +69,7 @@ ctx.imageSmoothingEnabled = false;
     function onMouseup(event){
         point = new Point(event.layerX, event.layerY, colorValue);
         points.push(point);
-        drawCurve(new Curve(points), ctx);
+        render(new Curve(points), ctx);
         drawCurve(new Curve(points), canvasCopyCtx);
         points = null;
 
@@ -81,6 +81,66 @@ ctx.imageSmoothingEnabled = false;
         that.lastLayout = image;
     }
 
+    function render(curve, ctx){
+        var flow = MathFn.drawBezierCurve(curve);
+        flow.forEach(function(coor){
+
+            renderLine(coor[0], coor[1], 10, ctx, curve.color);
+
+        });
+    }
+
+    var renderLine = (function(){
+        var __canvas1px = document.createElement('canvas');
+        var canvas1pxCtx = __canvas1px.getContext('2d');
+
+        var __imageData = canvas1pxCtx.createImageData(1,1);
+
+        var etalon = [255, 0, 0 , 255];
+        __imageData.data[0] = etalon[0];
+        __imageData.data[1] = etalon[1];
+        __imageData.data[2] = etalon[2];
+        __imageData.data[3] = 255;// etalon[3]; !!!!!!!!!
+
+        __canvas1px.height = 1;
+        __canvas1px.width = 1;
+
+        canvas1pxCtx.putImageData(__imageData, 0, 0);
+
+        return function _fn(x, y, radius, ctx, color){
+
+            var RADIUS = 10;
+            ctx = this.canvas.getContext('2d');
+            var canvasRadius;
+
+            if (_fn[RADIUS]){
+                canvasRadius = _fn[RADIUS];
+
+                ctx.drawImage(canvasRadius, x - RADIUS, y - RADIUS)
+            } else {
+
+                var RR = RADIUS*RADIUS;
+                var coordinates = MathFn.getCircleCoordinates(RADIUS);
+                var len = coordinates.length - 1;
+
+                canvasRadius = document.createElement('canvas');
+                var canvasRadiusContext = canvasRadius.getContext('2d');
+                canvasRadius.height = RR;
+                canvasRadius.width = RR;
+
+                while(len > 0){
+                    console.log(len);
+                    len--;
+                    var coordinate;
+                    coordinate = coordinates[len];
+                    canvasRadiusContext.drawImage(__canvas1px, coordinate[0] + RADIUS, coordinate[1] + RADIUS);
+                }
+
+                _fn[RADIUS] = canvasRadius;
+
+            }
+        }
+    })();
 
     function drawCurve(touches, ctx){
         if (!touches || !touches.x || typeof(touches.x[0])!=="number") {
@@ -98,17 +158,14 @@ ctx.imageSmoothingEnabled = false;
         else {
             ctx.moveTo((touches.x[0] + touches.x[1]) * 0.5, (touches.y[0] + touches.y[1]) * 0.5);
             var i = 1;
-            //while (++i < (touches.x.length - 1)) {
-                //var abs1 = Math.abs(touches.x[i - 1] - touches.x[i]) + Math.abs(touches.y[i - 1] - touches.y[i])
-                //    + Math.abs(touches.x[i] - touches.x[i + 1]) + Math.abs(touches.y[i] - touches.y[i + 1]);
-                //var abs2 = Math.abs(touches.x[i - 1] - touches.x[i + 1]) + Math.abs(touches.y[i - 1] - touches.y[i + 1]);
-                //if (abs1 > 10 && abs2 > abs1 * 0.8) {
+                var abs1 = Math.abs(touches.x[i - 1] - touches.x[i]) + Math.abs(touches.y[i - 1] - touches.y[i])
+                    + Math.abs(touches.x[i] - touches.x[i + 1]) + Math.abs(touches.y[i] - touches.y[i + 1]);
+                var abs2 = Math.abs(touches.x[i - 1] - touches.x[i + 1]) + Math.abs(touches.y[i - 1] - touches.y[i + 1]);
+                if (abs1 > 10 && abs2 > abs1 * 0.8) {
                     ctx.quadraticCurveTo(touches.x[i], touches.y[i], (touches.x[i] + touches.x[i + 1]) * 0.5, (touches.y[i] + touches.y[i + 1]) * 0.5);
-                //} else {
-                //    ctx.lineTo((touches.x[i] + touches.x[i+1]) * 0.5, (touches.y[i] + touches.y[i+1]) * 0.5);
-                //}
-            //}
-            //ctx.moveTo(touches.x[touches.x.length - 1] , touches.y[touches.y.length - 1] );
+                } else {
+                    ctx.lineTo((touches.x[i] + touches.x[i+1]) * 0.5, (touches.y[i] + touches.y[i+1]) * 0.5);
+                }
         }
         ctx.stroke();
         return ctx.closePath();
@@ -118,12 +175,16 @@ ctx.imageSmoothingEnabled = false;
     function Point(x, y, color){
         this.x = x;
         this.y = y;
-        this.color = '#'+Math.floor(Math.random()*16777215).toString(16);
+    }
+
+    function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
     function Curve(points){
         this.x = [];
         this.y = [];
+        this.color = [getRandomInt(0, 255), getRandomInt(0, 255), getRandomInt(0, 255), 255];
 
         var i = points.length, n;
 
