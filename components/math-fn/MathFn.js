@@ -37,7 +37,7 @@ MathFn.drawBezierCurve = function(curve){
     var arr = [];
 
     if (l === 1){
-        return [curve.x[l-1], curve.y[l-1]]
+        return [[curve.x[l-1], curve.y[l-1]]]
     }
 
     if (l === 2){
@@ -53,7 +53,7 @@ MathFn.drawBezierCurve = function(curve){
 
     var flow = getBezierCurve(arr, 0.01);
 
-    for (var i, len = flow.length; i < len; i ++){
+    for (var i = 0, len = flow.length; i < len; i ++){
         flow[0] = Math.round(flow[0]);
         flow[1] = Math.round(flow[1]);
     }

@@ -1,148 +1,208 @@
-function DrawingTool(canvas){
+var DrawingTool = (function(global, document, Object){
 
-    var optionsDraw = {
-        lineWidth: 20,
-        //lineCap: 'square',
-        //lineJoin: 'square',
-        lineCap: 'round',
-        lineJoin: 'round',
+    var Tool = global.Tool;
+    var Point = global.Point;
+    var Curve = global.Curve;
+    var Math = global.Math;
+    var MathFn = global.MathFn;
+
+    function DrawingTool(canvas){
+
+        this.canvas = canvas;
+        this.ctx = this.canvas.getContext('2d');
+
+        /**
+         * Публикуемое изображение
+         * */
+        this.lastLayout = null;
+
+        /**
+         * Публикуемая координата изображения
+         * */
+        this.lastLayoutExamplePoint = [];
+
+        var optionsDraw = {
+            lineWidth: 20,
+            //lineCap: 'square',
+            //lineJoin: 'square',
+            lineCap: 'round',
+            lineJoin: 'round',
+        };
+
+        this.colorDrawing = [100, 15, 1, 255];
+        this._bufferCanvas = null;
+        this._bufferCanvasCtx = null;
+        this._bufferPoints = null;
+        this.START_PHASE = 'START_PHASE';
+        this.CONTINUE_PHASE = 'CONTINUE_PHASE';
+        this.END_PHASE = 'END_PHASE';
+        this._lastPhase = this.END_PHASE;
+
+        var ctx;
+
+        ctx = canvas.getContext("2d");
+
+        var that = this;
+
+        function mousedown(event){
+            that.drawingStart(event.layerX, event.layerY);
+        }
+
+        function mousemove(event){
+            that.drawingContinue(event.layerX, event.layerY);
+        }
+
+        function mouseup(event){
+            that.drawingEnd(event.layerX, event.layerY);
+        }
+
+        this.start = function(){
+            ctx = canvas.getContext("2d");
+            ctx.lineCap = optionsDraw.lineCap;
+            ctx.lineJoin = optionsDraw.lineJoin;
+            ctx.lineWidth = optionsDraw.lineWidth;
+            ctx.strokeStyle = 'blue';
+
+            ctx.mozImageSmoothingEnabled = false;
+            ctx.webkitImageSmoothingEnabled = false;
+            ctx.msImageSmoothingEnabled = false;
+            ctx.imageSmoothingEnabled = false;
+
+            canvas.addEventListener('mousedown', mousedown, false);
+            canvas.addEventListener('mousemove', mousemove, false);
+            canvas.addEventListener('mouseup', mouseup, false);
+        };
+
+        this.stop = function(){
+            canvas.removeEventListener('mousedown', mousedown);
+            canvas.removeEventListener('mousemove', mousemove);
+            canvas.removeEventListener('mouseup', mouseup);
+        }
+    }
+
+    DrawingTool.prototype = Object.create(Tool);
+
+    DrawingTool.prototype.constructor = DrawingTool;
+
+    /**
+     * Начало рисования
+     * */
+    DrawingTool.prototype.drawingStart = function(x, y){
+        if ( this._lastPhase !== this.END_PHASE ) return;
+
+        this._lastPhase = this.START_PHASE;
+
+        this._bufferPoints = [];
+
+        //ctx.strokeStyle = '#'+Math.floor(Math.random()*16777215).toString(16);
+
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        this.colorDrawing = [getRandomInt(0, 255), getRandomInt(0, 255), getRandomInt(0, 255), 255];
+
+        var point = new Point(x, y);
+        this._bufferPoints.push(point);
+
+        this.lastLayoutExamplePoint[0] = x;
+        this.lastLayoutExamplePoint[1] = y;
+
+        this.ctx.strokeStyle = point.color;
+
+        this._bufferCanvas = this._createCopyOfCanvas(canvas);
+        this._bufferCanvasCtx = this._bufferCanvas.getContext('2d');
+        this._render(new Curve(this._bufferPoints), this.ctx);
+        this._render(new Curve(this._bufferPoints), this._bufferCanvasCtx);
     };
 
-    var points = null;
-    var point;
-    var ctx;
-    var colorValue = 'red';
+    /**
+     * Продолжение рисования
+     * */
+    DrawingTool.prototype.drawingContinue = function(x, y){
+        // if not begin
+        if ( this._lastPhase === this.END_PHASE ) return;
+        this._lastPhase = this.CONTINUE_PHASE;
 
-    ctx = canvas.getContext("2d");
+        var point = new Point(x, y);
+        this._bufferPoints.push(point);
+        this._render(new Curve(this._bufferPoints), this.ctx);
+        this._render(new Curve(this._bufferPoints), this._bufferCanvasCtx);
+    };
 
-ctx.mozImageSmoothingEnabled = false;
-ctx.imageSmoothingEnabled = false;
+    /**
+     * Конец рисования
+     * */
+    DrawingTool.prototype.drawingEnd = function(x, y){
+        // if always have been
+        if ( this._lastPhase === this.END_PHASE ) return;
+        this._lastPhase = this.END_PHASE;
 
-    this.lastLayout = null;
-    this.lastLayoutExamplePoint = [];
+        var point = new Point(x, y);
+        this._bufferPoints.push(point);
+        this._render(new Curve(this._bufferPoints), ctx);
+        this._render(new Curve(this._bufferPoints), this._bufferCanvasCtx);
+        this._bufferPoints = null;
+        this._publicNewLayout();
+    };
 
-    var canvasCopy;
-    var canvasCopyCtx;
-    var that = this;
+    /**
+     * Сбособ отрисовки кривой линии
+     * @param {Curve} curve
+     * @param {CanvasRenderingContext2D} ctx
+     * */
+    DrawingTool.prototype._render = function (curve, ctx){
 
-    function createCopyOfCanvas(canvas){
+        //1 способ
+        var flow = MathFn.drawBezierCurve(curve);
+        var that = this;
+
+        flow.forEach(function(coor){
+            that.renderLine(coor[0], coor[1], 10, ctx, curve.color, curve.raduis);
+        });
+
+        //2 способ хуже
+        //that.drawCurve(curve, ctx);
+
+    };
+
+    /**
+     * Создает новое изображение нарисованной линии и сохраняет
+     * */
+    DrawingTool.prototype._publicNewLayout = function(){
+        var image = new Image();
+        image.height = this._bufferCanvas.height;
+        image.width = this._bufferCanvas.width;
+        image.src = this._bufferCanvas.toDataURL('image/png');
+        this.lastLayout = image;
+    };
+
+    /**
+     * Создает копию канваса по размеру и параметрам контекста
+     * @param {HTMLCanvasElement} canvas
+     * */
+    DrawingTool.prototype._createCopyOfCanvas = function (canvas){
         var context = canvas.getContext('2d');
         var copy = document.createElement('canvas');
         copy.height = canvas.height;
         copy.width = canvas.width;
         var copyCtx =  copy.getContext('2d');
-        copyCtx.lineCap = "round";
-        copyCtx.lineJoin = "round";
-        copyCtx.lineWidth = optionsDraw.lineWidth;
-        copyCtx.strokeStyle = context.strokeStyle;
-        return copy;
-    }
+        var propsToCopy = Object.getOwnPropertyNames(CanvasRenderingContext2D.prototype).filter(function(prop){ return typeof ctx[prop] === 'string'});
 
-    function onMousedown(event){
-        if (!points) {
-            points = [];
-
-            point = new Point(event.layerX, event.layerY, colorValue);
-            points.push(point);
-
-            that.lastLayoutExamplePoint[0] = event.layerX;
-            that.lastLayoutExamplePoint[1] = event.layerY;
-
-            ctx.strokeStyle = point.color;
-
-            canvasCopy = createCopyOfCanvas(canvas);
-            canvasCopyCtx = canvasCopy.getContext('2d');
-            render(new Curve(points), ctx);
-            drawCurve(new Curve(points), canvasCopyCtx);
-        }
-    }
-
-    function onMousemove(event){
-        if (points){
-            point = new Point(event.layerX, event.layerY, colorValue);
-            points.push(point);
-            render(new Curve(points), ctx);
-            drawCurve(new Curve(points), canvasCopyCtx);
-        }
-    }
-
-    function onMouseup(event){
-        point = new Point(event.layerX, event.layerY, colorValue);
-        points.push(point);
-        render(new Curve(points), ctx);
-        drawCurve(new Curve(points), canvasCopyCtx);
-        points = null;
-
-        var image = new Image();
-        image.height = canvasCopy.height;
-        image.width = canvasCopy.width;
-        image.src = canvasCopy.toDataURL('image/png');
-
-        that.lastLayout = image;
-    }
-
-    function render(curve, ctx){
-        var flow = MathFn.drawBezierCurve(curve);
-        flow.forEach(function(coor){
-
-            renderLine(coor[0], coor[1], 10, ctx, curve.color);
-
+        propsToCopy.forEach(function(name){
+            copyCtx[name] = context[name];
         });
-    }
 
-    var renderLine = (function(){
-        var __canvas1px = document.createElement('canvas');
-        var canvas1pxCtx = __canvas1px.getContext('2d');
+        return copy;
+    };
 
-        var __imageData = canvas1pxCtx.createImageData(1,1);
-
-        var etalon = [255, 0, 0 , 255];
-        __imageData.data[0] = etalon[0];
-        __imageData.data[1] = etalon[1];
-        __imageData.data[2] = etalon[2];
-        __imageData.data[3] = 255;// etalon[3]; !!!!!!!!!
-
-        __canvas1px.height = 1;
-        __canvas1px.width = 1;
-
-        canvas1pxCtx.putImageData(__imageData, 0, 0);
-
-        return function _fn(x, y, radius, ctx, color){
-
-            var RADIUS = 10;
-            ctx = this.canvas.getContext('2d');
-            var canvasRadius;
-
-            if (_fn[RADIUS]){
-                canvasRadius = _fn[RADIUS];
-
-                ctx.drawImage(canvasRadius, x - RADIUS, y - RADIUS)
-            } else {
-
-                var RR = RADIUS*RADIUS;
-                var coordinates = MathFn.getCircleCoordinates(RADIUS);
-                var len = coordinates.length - 1;
-
-                canvasRadius = document.createElement('canvas');
-                var canvasRadiusContext = canvasRadius.getContext('2d');
-                canvasRadius.height = RR;
-                canvasRadius.width = RR;
-
-                while(len > 0){
-                    console.log(len);
-                    len--;
-                    var coordinate;
-                    coordinate = coordinates[len];
-                    canvasRadiusContext.drawImage(__canvas1px, coordinate[0] + RADIUS, coordinate[1] + RADIUS);
-                }
-
-                _fn[RADIUS] = canvasRadius;
-
-            }
-        }
-    })();
-
-    function drawCurve(touches, ctx){
+    /**
+     * Метод рисует кривые используя нативные для этого средства
+     * @param {object} touches
+     * @param {CanvasRenderingContext2D} ctx
+     * @deprecated Старый метод, из за него вокруг линий добавляются тени
+     * */
+    DrawingTool.prototype.drawCurve = function (touches, ctx){
         if (!touches || !touches.x || typeof(touches.x[0])!=="number") {
             return false;
         }
@@ -158,72 +218,89 @@ ctx.imageSmoothingEnabled = false;
         else {
             ctx.moveTo((touches.x[0] + touches.x[1]) * 0.5, (touches.y[0] + touches.y[1]) * 0.5);
             var i = 1;
-                var abs1 = Math.abs(touches.x[i - 1] - touches.x[i]) + Math.abs(touches.y[i - 1] - touches.y[i])
-                    + Math.abs(touches.x[i] - touches.x[i + 1]) + Math.abs(touches.y[i] - touches.y[i + 1]);
-                var abs2 = Math.abs(touches.x[i - 1] - touches.x[i + 1]) + Math.abs(touches.y[i - 1] - touches.y[i + 1]);
-                if (abs1 > 10 && abs2 > abs1 * 0.8) {
-                    ctx.quadraticCurveTo(touches.x[i], touches.y[i], (touches.x[i] + touches.x[i + 1]) * 0.5, (touches.y[i] + touches.y[i + 1]) * 0.5);
-                } else {
-                    ctx.lineTo((touches.x[i] + touches.x[i+1]) * 0.5, (touches.y[i] + touches.y[i+1]) * 0.5);
-                }
+            var abs1 = Math.abs(touches.x[i - 1] - touches.x[i]) + Math.abs(touches.y[i - 1] - touches.y[i])
+                + Math.abs(touches.x[i] - touches.x[i + 1]) + Math.abs(touches.y[i] - touches.y[i + 1]);
+            var abs2 = Math.abs(touches.x[i - 1] - touches.x[i + 1]) + Math.abs(touches.y[i - 1] - touches.y[i + 1]);
+            if (abs1 > 10 && abs2 > abs1 * 0.8) {
+                ctx.quadraticCurveTo(touches.x[i], touches.y[i], (touches.x[i] + touches.x[i + 1]) * 0.5, (touches.y[i] + touches.y[i + 1]) * 0.5);
+            } else {
+                ctx.lineTo((touches.x[i] + touches.x[i+1]) * 0.5, (touches.y[i] + touches.y[i+1]) * 0.5);
+            }
         }
         ctx.stroke();
         return ctx.closePath();
-    }
-
-
-    function Point(x, y, color){
-        this.x = x;
-        this.y = y;
-    }
-
-    function getRandomInt(min, max) {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-
-    function Curve(points){
-        this.x = [];
-        this.y = [];
-        this.color = [getRandomInt(0, 255), getRandomInt(0, 255), getRandomInt(0, 255), 255];
-
-        var i = points.length, n;
-
-        // для первой точки или прямой (соответственно для 1 или 2х точек)
-        if ( i < 3 ) {
-            for ( n = i; n > 0; n -=1 ) {
-                this.x.push(points[n - 1].x);
-                this.y.push(points[n - 1].y);
-            }
-            // последующие идут как кривые, берём последние 3 точки
-        } else {
-            for ( n = 0; n < 3 ; n += 1 ) {
-                this.x.push(points[i - n - 1].x);
-                this.y.push(points[i - n - 1].y);
-            }
-
-        }
-    }
-
-
-
-    this.start = function(){
-        ctx = canvas.getContext("2d");
-        ctx.lineCap = optionsDraw.lineCap;
-        ctx.lineJoin = optionsDraw.lineJoin;
-        ctx.lineWidth = optionsDraw.lineWidth;
-        ctx.strokeStyle = 'blue';
-
-        canvas.addEventListener('mousedown', onMousedown, false);
-        canvas.addEventListener('mousemove', onMousemove, false);
-        canvas.addEventListener('mouseup', onMouseup, false);
     };
 
-    this.stop = function(){
-        canvas.removeEventListener('mousedown', onMousedown);
-        canvas.removeEventListener('mousemove', onMousemove);
-        canvas.removeEventListener('mouseup', onMouseup);
-    }
-}
+    /**
+     * Метод рисует кривые используя способ вставки изображений
+     * */
+    DrawingTool.prototype.renderLine = (function(){
+        var _canvas1px = document.createElement('canvas');
+        var _canvas1pxCtx = _canvas1px.getContext('2d');
+        var _imageData = _canvas1pxCtx.createImageData(1,1);
 
-DrawingTool.prototype = Object.create(Tool);
-DrawingTool.prototype.constructor = DrawingTool;
+        var etalon = [255, 0, 0 , 255];
+        _imageData.data[0] = etalon[0];
+        _imageData.data[1] = etalon[1];
+        _imageData.data[2] = etalon[2];
+        _imageData.data[3] = 255;
+
+        _canvas1px.height = 1;
+        _canvas1px.width = 1;
+
+        _canvas1pxCtx.putImageData(_imageData, 0, 0);
+
+        return function _fn(x, y, radius, ctx){
+
+            var colorHasChanged = this.colorDrawing[0] !== etalon[0]
+                || this.colorDrawing[1] !== etalon[1]
+                || this.colorDrawing[2] !== etalon[2];
+
+            // если цвет изменился, сохраняем его
+            if (colorHasChanged){
+                etalon = this.colorDrawing;
+            }
+
+            ctx = this.canvas.getContext('2d');
+            var canvasRadius = _fn[radius];
+
+            // подготовить новую картинку если новый радиус или новый цвет
+            if (!canvasRadius || colorHasChanged){
+
+                if (colorHasChanged){
+                    _imageData.data[0] = this.colorDrawing[0];
+                    _imageData.data[1] = this.colorDrawing[1];
+                    _imageData.data[2] = this.colorDrawing[2];
+                    _imageData.data[3] = 255;
+
+                    _canvas1px.height = 1;
+                    _canvas1px.width = 1;
+
+                    _canvas1pxCtx.putImageData(_imageData, 0, 0);
+                }
+
+                var canvasR = document.createElement('canvas');
+                var powRadius = Math.pow(radius, 2);
+                var coordinates = MathFn.getCircleCoordinates(radius);
+                var len = coordinates.length - 1;
+                var canvasRCtx = canvasR.getContext('2d');
+                canvasR.height = powRadius;
+                canvasR.width = powRadius;
+
+                while(len > 0){
+                    len--;
+                    var coordinate;
+                    coordinate = coordinates[len];
+                    canvasRCtx.drawImage(_canvas1px, coordinate[0] + radius, coordinate[1] + radius);
+                }
+
+                _fn[radius] = canvasRadius = canvasR;
+            }
+
+            // поместить картинку
+            ctx.drawImage(canvasRadius, x - radius, y - radius);
+        }
+    })();
+
+    return DrawingTool;
+}(window, document, Object));
