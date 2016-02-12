@@ -1,7 +1,8 @@
 /**
  * @type {HTMLElement}
+ * @param {string} value
  * */
-function InputColor(){
+function InputColor(color){
 
     var API = {
         userSelectColor: {
@@ -14,6 +15,7 @@ function InputColor(){
 
     var input = document.createElement('input');
     input.type = 'color';
+    input.value = '#' + color || "#000033";
 
     var event = function (event){
         API.userSelectColor.detail.color = event.target.value.replace('#', '');

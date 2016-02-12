@@ -1,13 +1,14 @@
 function FigureToolController(canvas) {
 
     var tool = new FigureTool(canvas);
+    var optionsView = window.optionsView;
 
     var process = false;
 
     function mousedown(event) {
         if (process) return;
         process = true;
-        tool.figureStart(event.layerX, event.layerY);
+        tool.figureStart(event.layerX, event.layerY, optionsView.color, MathFn.hexToRgba(optionsView.width));
     }
 
     function mousemove(event) {

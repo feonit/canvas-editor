@@ -1,8 +1,8 @@
 function DrawingToolController(canvas){
 
+    var optionsView = window.optionsView;
+
     var tool = new DrawingTool(canvas);
-    var view = new DrawingToolOptionsView(canvas);
-    document.body.appendChild(view.nodeElement);
 
     var ctx;
 
@@ -17,7 +17,7 @@ function DrawingToolController(canvas){
     };
 
     function mousedown(event){
-        tool.drawingStart(event.layerX, event.layerY, view.color);
+        tool.drawingStart(event.layerX, event.layerY, MathFn.hexToRgb(optionsView.color), optionsView.width);
     }
 
     function mousemove(event){

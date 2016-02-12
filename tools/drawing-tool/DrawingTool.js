@@ -23,6 +23,7 @@
         this.lastLayoutExamplePoint = [];
 
         this.colorDrawing = [100, 15, 1, 255];
+        this.lineWidth = 10;
         this._bufferCanvas = null;
         this._bufferCanvasCtx = null;
         this._bufferPoints = null;
@@ -35,21 +36,18 @@
     /**
      * Начало рисования
      * */
-    DrawingTool.prototype.drawingStart = function(x, y, color){
+    DrawingTool.prototype.drawingStart = function(x, y, color, width){
         if ( this._lastPhase !== this.END_PHASE ) return;
 
         if (color){
-            function hexToRgb(hex) {
-                var bigint = parseInt(hex, 16);
-                var r = (bigint >> 16) & 255;
-                var g = (bigint >> 8) & 255;
-                var b = bigint & 255;
 
-                return [r,g,b,255];
-            }
-            this.colorDrawing = hexToRgb(color);
+            this.colorDrawing = color;
         } else {
             this.colorDrawing = [getRandomInt(0, 255), getRandomInt(0, 255), getRandomInt(0, 255), 255];
+        }
+
+        if (width){
+            this.lineWidth = width;
         }
 
         this._lastPhase = this.START_PHASE;
@@ -119,7 +117,7 @@
         var that = this;
 
         flow.forEach(function(coor){
-            that.renderLine(coor[0], coor[1], 10, ctx, curve.color, curve.raduis);
+            that.renderLine(coor[0], coor[1], that.lineWidth, ctx, curve.color, curve.raduis);
         });
 
         //2 способ хуже

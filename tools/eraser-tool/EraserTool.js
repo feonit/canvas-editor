@@ -16,26 +16,29 @@
         this.canvas = canvas;
         this.ctx = canvas.getContext("2d");
         this.points = null;
-        this.colorValue = 0;
+        this.widthLine = 0;
     }
 
-    EraserTool.prototype.eraserStart = function(x, y){
+    EraserTool.prototype.eraserStart = function(x, y, width){
+        if (width){
+            this.widthLine = width;
+        }
         if (!this.points) {
             this.points = [];
-            this.points.push(new Point(x, y, this.colorValue));
+            this.points.push(new Point(x, y));
             this._render();
         }
     };
 
     EraserTool.prototype.eraserContinue = function(x, y){
         if (this.points){
-            this.points.push(new Point(x, y, this.colorValue));
+            this.points.push(new Point(x, y));
             this._render();
         }
     };
 
     EraserTool.prototype.eraserEnd = function(x, y){
-        this.points.push(new Point(x, y, this.colorValue));
+        this.points.push(new Point(x, y));
 
         this._render();
         this.points = null;
@@ -49,8 +52,8 @@
     };
 
     EraserTool.prototype.cleanAtPoint = function(){
-        //return EraserTool.prototype.cleanSquareAtPoint.apply(this, arguments);
-        return EraserTool.prototype.cleanCircleAtPoint.apply(this, arguments);
+        return EraserTool.prototype.cleanSquareAtPoint.apply(this, arguments);
+        //return EraserTool.prototype.cleanCircleAtPoint.apply(this, arguments);
     };
     /**
      * Метод стирания области относительно полученной координаты
@@ -69,14 +72,14 @@
          * Функия получения массива всех точек стираемой области, относительно полученной координаты
          * */
 
-        var length = 20;
+        var length = this.widthLine;
 
         this.ctx.clearRect(x - length/2, y - length/2, length, length);
     };
 
-    EraserTool.prototype.cleanCircleAtPoint =  function (x, y, radius){
+    EraserTool.prototype.cleanCircleAtPoint =  function (x, y){
 
-        var RADIUS = 5;
+        var RADIUS = this.widthLine;
         var coordinates = this._getCircleCoordinatesWithOffset(x, y, RADIUS);
         var len = coordinates.length - 1;
 

@@ -8,6 +8,10 @@ document.body.appendChild(canvas);
 
 layersManager = new LayersManager(canvas);
 
+var optionsView = new OptionsView();
+document.body.appendChild(optionsView.nodeElement);
+
+
 APP = {};
 
 APP.CREATED_REGION = 'CREATED_REGION';

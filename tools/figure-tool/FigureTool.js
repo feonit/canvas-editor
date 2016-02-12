@@ -21,7 +21,13 @@ function FigureTool(canvas){
     this.colorLine = 'red';
 }
 
-FigureTool.prototype.figureStart = function(x, y){
+FigureTool.prototype.figureStart = function(x, y, color, width){
+    if (color){
+        this.colorLine = color;
+    }
+    if (width){
+        this.sizeWidth = width;
+    }
     this.startPoint = [x, y];
     var ctx = this.canvas.getContext("2d");
     ctx.lineWidth = this.sizeWidth;

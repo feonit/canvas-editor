@@ -92,3 +92,22 @@ function getBezierBasis(i, n, t) {
     // считаем i-й элемент полинома Берштейна
     return (f(n)/(f(i)*f(n - i)))* Math.pow(t, i)*Math.pow(1 - t, n - i);
 }
+
+
+MathFn.hexToRgb = function (hex) {
+    var bigint = parseInt(hex, 16);
+    var r = (bigint >> 16) & 255;
+    var g = (bigint >> 8) & 255;
+    var b = bigint & 255;
+
+    return [r,g,b,255];
+};
+
+MathFn.hexToRgba = function (hex) {
+    var bigint = parseInt(hex, 16);
+    var r = (bigint >> 16) & 255;
+    var g = (bigint >> 8) & 255;
+    var b = bigint & 255;
+
+    return  'rgba(' + r + ',' + g + ', ' + b + ',' + 255;
+};

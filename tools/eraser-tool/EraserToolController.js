@@ -1,8 +1,9 @@
 function EraserToolController(canvas){
     var tool = new EraserTool(canvas);
+    var optionsView = window.optionsView;
 
     function mousedown(event){
-        tool.eraserStart(event.layerX, event.layerY);
+        tool.eraserStart(event.layerX, event.layerY, optionsView.width);
     }
 
     function mousemove(event){
