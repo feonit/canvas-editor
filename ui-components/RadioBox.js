@@ -21,18 +21,21 @@ function RadioBox(names, selectedOf){
 
     names.forEach(function(name, i){
         var input = document.createElement('input');
+        var label = document.createElement('label');
         input.setAttribute('type', 'radio');
         input.setAttribute('name', 'radio-box');
         input.setAttribute('value', name);
-        wrapper.appendChild(input);
+        label.appendChild(input);
 
         var text = document.createElement('span');
         text.innerText = name;
-        wrapper.appendChild(text);
+        label.appendChild(text);
 
         if (name === selectedOf) input.setAttribute('checked', 'checked');
 
         input.addEventListener('click', onClick, false);
+
+        wrapper.appendChild(label);
     });
 
     return wrapper;

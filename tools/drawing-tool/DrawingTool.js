@@ -124,9 +124,7 @@
         image.src = this._bufferCanvas.toDataURL('image/png');
         this.lastLayout = image;
 
-        var regionObject = RegionObject.createRegion(this.lastLayoutExamplePoint[0], this.lastLayoutExamplePoint[1], this.canvas);
-        regionObject.layout = this.lastLayout;
-        layersManager.addRegion(regionObject);
+        APP.newEvent('CREATED_REGION', [this.lastLayoutExamplePoint[0], this.lastLayoutExamplePoint[1], this.canvas]);
     };
 
     /**

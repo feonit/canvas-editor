@@ -8,6 +8,19 @@ document.body.appendChild(canvas);
 
 layersManager = new LayersManager(canvas);
 
+APP = {};
+
+APP.CREATED_REGION = 'CREATED_REGION';
+
+APP.newEvent = function(eventName, data){
+    if (eventName === APP.CREATED_REGION){
+        var regionObject = RegionObject.createRegion.apply(null, data);
+        regionObject.layout = this.lastLayout;
+        layersManager.addRegion(regionObject);
+    }
+};
+
+
 /**
  * Переключатель инструментов
  * */
@@ -17,8 +30,9 @@ layersManager = new LayersManager(canvas);
     toolsDriver.plug(DrawingToolController);
     toolsDriver.plug(EraserToolController);
     toolsDriver.plug(DraggingToolController);
+    toolsDriver.plug(FigureToolController);
 
-    var enabledToolName = 'DrawingToolController';
+    var enabledToolName = 'FigureToolController';
 
     toolsDriver.play(enabledToolName);
 
@@ -52,20 +66,3 @@ layersManager = new LayersManager(canvas);
     });
     checkBox.click();
 }(TransparentTool, CheckBox, document);
-
-/**
- * Утилита: Контрольные точки мыши
- * */
-!function(Mouse, CheckBox, document){
-    var mouse = new Mouse(canvas);
-
-    var checkBox = new CheckBox('Look mouse event point');
-
-    document.body.appendChild(checkBox);
-
-    checkBox.addEventListener('onChange', function(data){
-        data.detail.checked
-            ? mouse.start()
-            : mouse.stop();
-    });
-}(Mouse, CheckBox, document);
