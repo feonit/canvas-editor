@@ -1,6 +1,9 @@
 function DrawingToolController(canvas){
 
     var tool = new DrawingTool(canvas);
+    var view = new DrawingToolOptionsView(canvas);
+    document.body.appendChild(view.nodeElement);
+
     var ctx;
 
     ctx = canvas.getContext("2d");
@@ -14,7 +17,7 @@ function DrawingToolController(canvas){
     };
 
     function mousedown(event){
-        tool.drawingStart(event.layerX, event.layerY);
+        tool.drawingStart(event.layerX, event.layerY, view.color);
     }
 
     function mousemove(event){

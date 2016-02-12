@@ -32,7 +32,7 @@ APP.newEvent = function(eventName, data){
     toolsDriver.plug(DraggingToolController);
     toolsDriver.plug(FigureToolController);
 
-    var enabledToolName = 'FigureToolController';
+    var enabledToolName = 'DrawingToolController';
 
     toolsDriver.play(enabledToolName);
 

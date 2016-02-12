@@ -35,8 +35,22 @@
     /**
      * Начало рисования
      * */
-    DrawingTool.prototype.drawingStart = function(x, y){
+    DrawingTool.prototype.drawingStart = function(x, y, color){
         if ( this._lastPhase !== this.END_PHASE ) return;
+
+        if (color){
+            function hexToRgb(hex) {
+                var bigint = parseInt(hex, 16);
+                var r = (bigint >> 16) & 255;
+                var g = (bigint >> 8) & 255;
+                var b = bigint & 255;
+
+                return [r,g,b,255];
+            }
+            this.colorDrawing = hexToRgb(color);
+        } else {
+            this.colorDrawing = [getRandomInt(0, 255), getRandomInt(0, 255), getRandomInt(0, 255), 255];
+        }
 
         this._lastPhase = this.START_PHASE;
 
@@ -48,7 +62,6 @@
             return Math.floor(Math.random() * (max - min + 1)) + min;
         }
 
-        this.colorDrawing = [getRandomInt(0, 255), getRandomInt(0, 255), getRandomInt(0, 255), 255];
 
         var point = new Point(x, y);
         this._bufferPoints.push(point);

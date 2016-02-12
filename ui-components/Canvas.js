@@ -1,5 +1,5 @@
 /**
- * Custom HTMLCanvasElement
+ * @type {HTMLCanvasElement}
  * */
 function Canvas(options, canvas, ctx){
     options = options || {};

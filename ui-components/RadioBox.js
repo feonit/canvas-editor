@@ -1,10 +1,9 @@
 /**
  * View of collection input-radio
- * @class RadioBox
+ * @type {HTMLElement}
  * @param {string[]} names — Массив имен инструментов
  * */
 function RadioBox(names, selectedOf){
-
     var API = {
         userSelectTool: {
             detail: {

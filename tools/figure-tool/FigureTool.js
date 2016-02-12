@@ -17,7 +17,7 @@ function FigureTool(canvas){
     this.ELLIPSE_TYPE = 'ELLIPSE_TYPE';
 
     this.currentType = 'RECTANGLE_TYPE';
-    this.sizeWidth = 10;
+    this.sizeWidth = 2;
     this.colorLine = 'red';
 }
 
@@ -33,6 +33,7 @@ FigureTool.prototype.figureContinue = function(x, y){
     this.drawFigure();
 };
 FigureTool.prototype.figureEnd = function(x, y){
+    if (!this.currentPoint) return;
     this.drawFigure();
     APP.newEvent('CREATED_REGION', [x, y, this.canvas]);
     this.startPoint = null;

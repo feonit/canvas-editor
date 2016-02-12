@@ -1,3 +1,6 @@
+/**
+ * @type {HTMLElement}
+ * */
 function CheckBox(name){
 
     var API = {
