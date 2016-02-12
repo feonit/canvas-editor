@@ -146,25 +146,24 @@ var RegionObject = (function(){
     /**
      * Метод создания подцветки
      * */
-    RegionObject.prototype.activate = function(){
-        //var ctx = this.canvas.getContext('2d');
-        //this.canvasBeforeActivate = ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
-        //this._originalCoordinates.forEach((function(arr){
-        //    ctx.fillStyle = 'yellow';
-        //    ctx.fillRect( arr[0], arr[1]-1 , 1, 1 ); // -1 смещение
-        //}).bind(this));
+    RegionObject.prototype.activate = function(canvasS){
+        //var ctx = canvasS.getContext('2d');
 
-
-        // обновить переносимую картинку
+         //обновить переносимую картинку
         //var canvas = document.createElement('canvas');
-        //canvas.width = this.canvas.width;
-        //canvas.height = this.canvas.height;
+        //canvas.width = canvasS.width;
+        //canvas.height = canvasS.height;
         //var ctx = canvas.getContext('2d');
         //ctx.drawImage(this._layout, 0, 0);
+
+        //var ctx = this.getLayout().getContext('2d');
+        //this.__canvasBeforeActivate = ctx.getImageData(0, 0, canvasS.width, canvasS.height);
+        //
         //this.borderCoordinates.forEach((function(arr){
         //    ctx.fillStyle = 'yellow';
-        //    ctx.fillRect( arr[0], arr[1]-1 , 1, 1 ); // -1 смещение
+        //    ctx.fillRect( arr[0], arr[1] , 1, 1 ); // -1 смещение
         //}).bind(this));
+
         //var image = new Image();
         //image.height = canvas.height;
         //image.width = canvas.width;
@@ -174,7 +173,14 @@ var RegionObject = (function(){
     /**
      * Метод удаления подцветки
      * */
-    RegionObject.prototype.deactivate = function(){};
+    RegionObject.prototype.deactivate = function(){
+        if (this.__canvasBeforeActivate){
+            //var layout = this.getLayout();
+            //var ctx = layout.getContext('2d');
+            //ctx.putImageData(this.__canvasBeforeActivate, 0, 0);
+            //this.__canvasBeforeActivate = null;
+        }
+    };
 
     return RegionObject;
 }());

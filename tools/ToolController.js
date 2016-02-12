@@ -1,16 +1,16 @@
 /**
  * @class Tool
  * */
-function Tool(){}
+function ToolController(){}
 /**
  * Включение инструмента
  * */
-Tool.prototype.start = function(){
+ToolController.prototype.start = function(){
     throw "method must be implemented";
 };
 /**
  * Отключение инструмента
  * */
-Tool.prototype.stop = function(){
+ToolController.prototype.stop = function(){
     throw "method must be implemented";
 };

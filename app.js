@@ -14,29 +14,11 @@ layersManager = new LayersManager(canvas);
 !function(RadioBox, ToolsDriver, document, Object){
     var toolsDriver = new ToolsDriver(canvas);
 
-    toolsDriver.plug(DrawingTool);
-    toolsDriver.plug(EraserTool);
-    toolsDriver.plug(DraggingTool);
+    toolsDriver.plug(DrawingToolController);
+    toolsDriver.plug(EraserToolController);
+    toolsDriver.plug(DraggingToolController);
 
-    var enabledToolName = 'DrawingTool';
-
-    var draw = toolsDriver.getToolByName('DrawingTool');
-    var regionTool = toolsDriver.getToolByName('DraggingTool');
-
-    function newLayout(layout, point){
-        var regionObject = RegionObject.createRegion(point[0], point[1], canvas);
-        regionObject.layout = layout;
-
-        layersManager.addRegion(regionObject);
-    }
-
-    Object.observe(draw, function(changes){
-        changes.forEach(function(change) {
-            if (change.name === 'lastLayout') {
-                newLayout(draw.lastLayout, draw.lastLayoutExamplePoint);
-            }
-        });
-    });
+    var enabledToolName = 'DrawingToolController';
 
     toolsDriver.play(enabledToolName);
 
@@ -45,7 +27,7 @@ layersManager = new LayersManager(canvas);
     radioBox.addEventListener("userSelectTool", function(data){
         toolsDriver.play(data.detail.name);
 
-        if (data.detail.name === 'EraserTool'){
+        if (data.detail.name === 'EraserToolController'){
             layersManager.dropLayersData();
         }
 

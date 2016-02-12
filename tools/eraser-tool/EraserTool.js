@@ -1,4 +1,6 @@
-var EraserTool = (function(global){
+!function(global){
+
+    global.EraserTool = EraserTool;
 
     var MathFn = global.MathFn;
 
@@ -11,72 +13,40 @@ var EraserTool = (function(global){
      * @arg {HTMLCanvasElement} canvas — холст, над которым происходит затирание
      * */
     function EraserTool(canvas){
-
-        var points = null;
-        var point;
-        var colorValue = 0;
-
         this.canvas = canvas;
         this.ctx = canvas.getContext("2d");
-
-        var that = this;
-
-        function mousedown(event){
-            console.log(event.layerX, event.layerY)
-            console.log(that.ctx.getImageData(event.layerX, event.layerY, 1,1).data)
-            if (!points) {
-                points = [];
-                point = new Point(event.layerX, event.layerY, colorValue);
-                points.push(point);
-                render();
-            }
-        }
-
-        function mousemove(event){
-            if (points){
-                point = new Point(event.layerX, event.layerY, colorValue);
-                points.push(point);
-                render();
-            }
-        }
-
-        function mouseup(event){
-            point = new Point(event.layerX, event.layerY, colorValue);
-            points.push(point);
-
-            render();
-            points = null;
-
-        }
-
-        function render(){
-            var curve = new Curve(points);
-
-            drawEraser(curve);
-        }
-
-
-        function drawEraser(curve){
-            var flow = MathFn.drawBezierCurve(curve);
-            flow.forEach(function(coor){
-                that.cleanAtPoint(coor[0], coor[1]);
-            });
-        }
-
-        this.start = function(){
-            canvas.addEventListener('mousedown', mousedown, false);
-            canvas.addEventListener('mousemove', mousemove, false);
-            canvas.addEventListener('mouseup', mouseup, false);
-        };
-        this.stop = function(){
-            canvas.removeEventListener('mousedown', mousedown);
-            canvas.removeEventListener('mousemove', mousemove);
-            canvas.removeEventListener('mouseup', mouseup);
-        };
+        this.points = null;
+        this.colorValue = 0;
     }
 
-    EraserTool.prototype = Object.create(Tool);
-    EraserTool.prototype.constructor = EraserTool;
+    EraserTool.prototype.eraserStart = function(x, y){
+        if (!this.points) {
+            this.points = [];
+            this.points.push(new Point(x, y, this.colorValue));
+            this._render();
+        }
+    };
+
+    EraserTool.prototype.eraserContinue = function(x, y){
+        if (this.points){
+            this.points.push(new Point(x, y, this.colorValue));
+            this._render();
+        }
+    };
+
+    EraserTool.prototype.eraserEnd = function(x, y){
+        this.points.push(new Point(x, y, this.colorValue));
+
+        this._render();
+        this.points = null;
+    };
+
+    EraserTool.prototype._render = function(){
+        var flow = MathFn.drawBezierCurve(new Curve(this.points));
+        flow.forEach((function(coor){
+            this.cleanAtPoint(coor[0], coor[1]);
+        }).bind(this));
+    };
 
     EraserTool.prototype.cleanAtPoint = function(){
         //return EraserTool.prototype.cleanSquareAtPoint.apply(this, arguments);
@@ -118,7 +88,6 @@ var EraserTool = (function(global){
         }
     };
 
-
     /**
      * Получить координаты всех точек принадлежащих окружности с заданными координатой и радиусом
      * */
@@ -128,9 +97,5 @@ var EraserTool = (function(global){
         return coordinates;
     };
 
-    EraserTool.prototype.clearAll = function(){
-        this.ctx.clearRect(0, 0, this.canvasElement.width, this.canvasElement.height);
-    };
-
     return EraserTool;
-}(window));
+}(window);

@@ -1,6 +1,7 @@
-var DrawingTool = (function(global, document, Object){
+!function(global, document, Object){
 
-    var Tool = global.Tool;
+    global.DrawingTool = DrawingTool;
+
     var Point = global.Point;
     var Curve = global.Curve;
     var Math = global.Math;
@@ -21,14 +22,6 @@ var DrawingTool = (function(global, document, Object){
          * */
         this.lastLayoutExamplePoint = [];
 
-        var optionsDraw = {
-            lineWidth: 20,
-            //lineCap: 'square',
-            //lineJoin: 'square',
-            lineCap: 'round',
-            lineJoin: 'round',
-        };
-
         this.colorDrawing = [100, 15, 1, 255];
         this._bufferCanvas = null;
         this._bufferCanvasCtx = null;
@@ -37,52 +30,7 @@ var DrawingTool = (function(global, document, Object){
         this.CONTINUE_PHASE = 'CONTINUE_PHASE';
         this.END_PHASE = 'END_PHASE';
         this._lastPhase = this.END_PHASE;
-
-        var ctx;
-
-        ctx = canvas.getContext("2d");
-
-        var that = this;
-
-        function mousedown(event){
-            that.drawingStart(event.layerX, event.layerY);
-        }
-
-        function mousemove(event){
-            that.drawingContinue(event.layerX, event.layerY);
-        }
-
-        function mouseup(event){
-            that.drawingEnd(event.layerX, event.layerY);
-        }
-
-        this.start = function(){
-            ctx = canvas.getContext("2d");
-            ctx.lineCap = optionsDraw.lineCap;
-            ctx.lineJoin = optionsDraw.lineJoin;
-            ctx.lineWidth = optionsDraw.lineWidth;
-            ctx.strokeStyle = 'blue';
-
-            ctx.mozImageSmoothingEnabled = false;
-            ctx.webkitImageSmoothingEnabled = false;
-            ctx.msImageSmoothingEnabled = false;
-            ctx.imageSmoothingEnabled = false;
-
-            canvas.addEventListener('mousedown', mousedown, false);
-            canvas.addEventListener('mousemove', mousemove, false);
-            canvas.addEventListener('mouseup', mouseup, false);
-        };
-
-        this.stop = function(){
-            canvas.removeEventListener('mousedown', mousedown);
-            canvas.removeEventListener('mousemove', mousemove);
-            canvas.removeEventListener('mouseup', mouseup);
-        }
     }
-
-    DrawingTool.prototype = Object.create(Tool);
-
-    DrawingTool.prototype.constructor = DrawingTool;
 
     /**
      * Начало рисования
@@ -175,6 +123,10 @@ var DrawingTool = (function(global, document, Object){
         image.width = this._bufferCanvas.width;
         image.src = this._bufferCanvas.toDataURL('image/png');
         this.lastLayout = image;
+
+        var regionObject = RegionObject.createRegion(this.lastLayoutExamplePoint[0], this.lastLayoutExamplePoint[1], this.canvas);
+        regionObject.layout = this.lastLayout;
+        layersManager.addRegion(regionObject);
     };
 
     /**
@@ -303,4 +255,4 @@ var DrawingTool = (function(global, document, Object){
     })();
 
     return DrawingTool;
-}(window, document, Object));
+}(window, document, Object);

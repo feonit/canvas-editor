@@ -10,5 +10,5 @@ function TransparentTool(canvas){
     };
 }
 
-TransparentTool.prototype = Object.create(Tool);
+TransparentTool.prototype = Object.create(ToolController);
 TransparentTool.prototype.constructor = TransparentTool;
