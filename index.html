@@ -3,52 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <title></title>
-
     <style>
-        body{
-            padding: 0;
-            margin: 0;
-        }
         label{
             display: block;
         }
     </style>
 </head>
 <body>
+<canvas id="canvas" width="800" height="400"></canvas>
 
 </body>
 
+<script type="text/javascript" src="src/CanvasEditor.js"></script>
 
+<script type="text/javascript" src="src/Curve&Point.js"></script>
+<script type="text/javascript" src="src/MathFn.js"></script>
+<script type="text/javascript" src="src/LayersManager.js"></script>
+<script type="text/javascript" src="src/RegionObject.js"></script>
+<script type="text/javascript" src="src/ToolsDriver.js"></script>
+<script type="text/javascript" src="src/ToolController.js"></script>
 
-<script type="text/javascript" src="components/Curve&Point.js"></script>
-<script type="text/javascript" src="components/math-fn/MathFn.js"></script>
-<script type="text/javascript" src="components/layers-manager/LayersManager.js"></script>
-<script type="text/javascript" src="components/region-object/RegionObject.js"></script>
-<script type="text/javascript" src="components/region-object/RegionObject.createRegion.js"></script>
+<script type="text/javascript" src="src/tools/DraggingTool.js"></script>
+<script type="text/javascript" src="src/tools/DrawingTool.js"></script>
+<script type="text/javascript" src="src/tools/EraserTool.js"></script>
+<script type="text/javascript" src="src/tools/FigureTool.js"></script>
+<script type="text/javascript" src="src/tools/TransparentToolController.js"></script>
 
-<script type="text/javascript" src="ui-components/Canvas.js"></script>
-<script type="text/javascript" src="ui-components/RadioBox.js"></script>
-<script type="text/javascript" src="ui-components/CheckBox.js"></script>
-<script type="text/javascript" src="ui-components/InputColor.js"></script>
-<script type="text/javascript" src="ui-components/InputSlider.js"></script>
+<script type="text/javascript" src="src/controllers/DraggingToolController.js"></script>
+<script type="text/javascript" src="src/controllers/DrawingToolController.js"></script>
+<script type="text/javascript" src="src/controllers/EraserToolController.js"></script>
+<script type="text/javascript" src="src/controllers/FigureToolController.js"></script>
 
-<script type="text/javascript" src="tools/ToolController.js"></script>
-<script type="text/javascript" src="tools/dragging-tool/DraggingToolController.js"></script>
-<script type="text/javascript" src="tools/dragging-tool/DraggingTool.js"></script>
+<script type="text/javascript" src="example/ui-components/RadioBoxComponent.js"></script>
+<script type="text/javascript" src="example/ui-components/CheckBoxComponent.js"></script>
+<script type="text/javascript" src="example/ui-components/InputColorComponent.js"></script>
+<script type="text/javascript" src="example/ui-components/InputSliderComponent.js"></script>
 
-<script type="text/javascript" src="tools/drawing-tool/DrawingToolController.js"></script>
-<script type="text/javascript" src="tools/drawing-tool/DrawingTool.js"></script>
-
-<script type="text/javascript" src="tools/eraser-tool/EraserToolController.js"></script>
-<script type="text/javascript" src="tools/eraser-tool/EraserTool.js"></script>
-<script type="text/javascript" src="tools/transparent-tool/TransparentTool.js"></script>
-
-<script type="text/javascript" src="tools/figure-tool/FigureToolController.js"></script>
-<script type="text/javascript" src="tools/figure-tool/FigureTool.js"></script>
-
-<script type="text/javascript" src="views/OptionsView.js"></script>
-
-<script type="text/javascript" src="ToolsDriver.js"></script>
-<script type="text/javascript" src="app.js"></script>
+<script type="text/javascript" src="example/views/OptionsView.js"></script>
+<script type="text/javascript" src="example/views/ToolBarView.js"></script>
 <script type="text/javascript" src="test.js"></script>
+
+<script>
+
+    var canvas = document.getElementById('canvas');
+    var ctx = canvas.getContext('2d');
+    //ctx.fillStyle = '#333';
+    //ctx.fillRect(0,0,canvas.width,canvas.height);
+
+    //ctx.fillStyle = 'red';
+    //ctx.fillRect(50,50,2,2);
+    ////
+    //ctx.fillStyle = 'red';
+    //ctx.fillRect(0,0,1,1);
+
+    //ctx.arc(15, 15, 5, 0, 2 * Math.PI, false);
+    //ctx.fillStyle = 'rgb(0,0,255)';
+    //ctx.fill();
+
+    var appInstance = CanvasEditor.create(canvas, {});
+
+    document.body.appendChild((new OptionsView(appInstance)).nodeElement);
+    document.body.appendChild((new ToolBarView(appInstance)).nodeElement);
+
+    window.ctx = ctx;
+    window.canvas = canvas;
+
+</script>
 </html>
