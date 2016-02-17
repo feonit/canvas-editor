@@ -96,7 +96,7 @@
      * */
     EraserTool.prototype._getCircleCoordinatesWithOffset = function(x0, y0, radius){
         var coordinates = MathFn.getCircleCoordinates(radius);
-        coordinates = RegionObject.prototype.getRelationCoordinate(coordinates, x0, y0);
+        coordinates = App.RegionObject.prototype.getRelationCoordinate(coordinates, x0, y0);
         return coordinates;
     };
 

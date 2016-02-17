@@ -34,7 +34,8 @@ App = {
 
         var defaultOptions = {
             lineColor: '440000',
-            lineWidth: 10
+            lineWidth: 10,
+            figureType: 'CIRCLE_TYPE'
         };
 
         this.toolsDriver = new App.ToolsDriver(this, canvas);
@@ -52,6 +53,8 @@ App = {
         this.options.lineColor = options.lineColor || defaultOptions.lineColor;
         /** @public */
         this.options.lineWidth = options.lineWidth || defaultOptions.lineWidth;
+
+        this.options.figureType = options.figureType || defaultOptions.figureType;
     }
 
     CanvasEditor.create = function(canvas, options){
@@ -59,6 +62,13 @@ App = {
             throw 'Lost canvas element';
 
         canvas.setAttribute('oncontextmenu', 'return false;');
+        var ctx = canvas.getContext('2d');
+        ctx.mozImageSmoothingEnabled = false;
+        ctx.webkitImageSmoothingEnabled = false;
+        ctx.msImageSmoothingEnabled = false;
+        ctx.imageSmoothingEnabled = false;
+
+        // todo save and restore param-canvas after destroy
 
         return new CanvasEditor(canvas, options);
     };

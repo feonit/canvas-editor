@@ -5,7 +5,7 @@
     /**
      * @type {HTMLElement}
      * */
-    function CheckBoxComponent(name){
+    function CheckBoxComponent(name, checked){
 
         var API = {
             onChange : {
@@ -29,6 +29,8 @@
         label.appendChild(span);
         input.setAttribute('name', 'check-box');
         input.setAttribute('type', 'checkbox');
+        input.checked = checked;
+
         input.setAttribute('value', name);
         input.addEventListener('change', onChange, false);
         return label;

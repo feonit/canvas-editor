@@ -6,19 +6,12 @@
 
         var tool = new App.tools.DrawingTool(appInstance, canvas);
 
-        var ctx;
-
-        ctx = canvas.getContext("2d");
-
-        var optionsDraw = {
-            lineWidth: 20,
-            //lineCap: 'square',
-            //lineJoin: 'square',
-            lineCap: 'round',
-            lineJoin: 'round',
-        };
 
         function mousedown(event){
+            var ctx = canvas.getContext("2d");
+            ctx = canvas.getContext("2d");
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
             tool.drawingStart(event.layerX, event.layerY, App.MathFn.hexToRgb(appInstance.options.lineColor), appInstance.options.lineWidth);
         }
 
@@ -31,26 +24,15 @@
         }
 
         this.start = function(){
-            ctx = canvas.getContext("2d");
-            ctx.lineCap = optionsDraw.lineCap;
-            ctx.lineJoin = optionsDraw.lineJoin;
-            ctx.lineWidth = optionsDraw.lineWidth;
-            ctx.strokeStyle = 'blue';
-
-            ctx.mozImageSmoothingEnabled = false;
-            ctx.webkitImageSmoothingEnabled = false;
-            ctx.msImageSmoothingEnabled = false;
-            ctx.imageSmoothingEnabled = false;
-
-            canvas.addEventListener('mousedown', mousedown, false);
-            canvas.addEventListener('mousemove', mousemove, false);
-            canvas.addEventListener('mouseup', mouseup, false);
+            document.addEventListener('mousedown', mousedown, false);
+            document.addEventListener('mousemove', mousemove, false);
+            document.addEventListener('mouseup', mouseup, false);
         };
 
         this.stop = function(){
-            canvas.removeEventListener('mousedown', mousedown);
-            canvas.removeEventListener('mousemove', mousemove);
-            canvas.removeEventListener('mouseup', mouseup);
+            document.removeEventListener('mousedown', mousedown);
+            document.removeEventListener('mousemove', mousemove);
+            document.removeEventListener('mouseup', mouseup);
         }
     }
 

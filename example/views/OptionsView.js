@@ -8,7 +8,7 @@ function OptionsView(appInstance){
     var label1 = document.createElement('label');
 
     var text = document.createElement('span');
-    text.textContent = 'Изменить цвет для drawwingToll';
+    text.textContent = 'Цвет:';
     label1.appendChild(text);
     label1.appendChild(colorComponent);
 
@@ -26,7 +26,7 @@ function OptionsView(appInstance){
     var label2 = document.createElement('label');
     var sliderComponent = InputSliderComponent(appInstance.options.lineWidth);
     var text2 = document.createElement('span');
-    text2.textContent = 'Изменить толщину для drawwingToll';
+    text2.textContent = 'Ширина: ';
     label2.appendChild(text2);
     label2.appendChild(sliderComponent);
 

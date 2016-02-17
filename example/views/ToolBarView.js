@@ -11,14 +11,33 @@ function ToolBarView(appInstance){
 
     toolsDriver.play(enabledToolName);
 
-    var radioBox = new RadioBoxComponent(toolsDriver.getKeys(), enabledToolName);
+    var map = {
+        "Рисовать линию": "DrawingToolController",
+        "Стерка": "EraserToolController",
+        "Перенести": "DraggingToolController",
+        "Фигура Эллипс": "FigureToolController-el",
+        "Фигура Прямоугольник": "FigureToolController-sq",
+    };
+
+    var radioBox = new RadioBoxComponent(map, enabledToolName);
 
     radioBox.addEventListener("userSelectTool", function(data){
-        toolsDriver.play(data.detail.name);
 
         if (data.detail.name === 'EraserToolController'){
             appInstance.layersManager.dropLayersData();
         }
+
+        if (data.detail.name === 'FigureToolController-el'){
+            appInstance.options.figureType = 'ELLIPSE_TYPE';
+            return toolsDriver.play("FigureToolController");
+        }
+
+        if (data.detail.name === 'FigureToolController-sq'){
+            appInstance.options.figureType = 'RECTANGLE_TYPE';
+            return toolsDriver.play("FigureToolController");
+        }
+
+        toolsDriver.play(data.detail.name);
 
     }, false);
 
@@ -28,12 +47,11 @@ function ToolBarView(appInstance){
      * Утилита: Задний фон для прозрачности
      * */
     var transparent = new App.tools.TransparentTool(appInstance, canvas);
-    var checkBox = new CheckBoxComponent('TransparentTool');
+    var checkBox = new CheckBoxComponent('Фон', true);
+
+    transparent.start();
 
     wrapper.appendChild(checkBox);
-
-    checkBox.checked = true;
-    transparent.start();
 
     checkBox.addEventListener('onChange', function(data){
         data.detail.checked

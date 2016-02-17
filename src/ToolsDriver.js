@@ -46,8 +46,4 @@
         return this._register[name];
     };
 
-    ToolsDriver.prototype.getKeys = function(){
-        return Object.keys(this._register);
-    };
-
 }(App);

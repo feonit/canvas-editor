@@ -24,7 +24,7 @@
         this.lastLayoutExamplePoint = [];
 
         this.colorDrawing = [100, 15, 1, 255];
-        this.lineWidth = 10;
+        this.lineRaduis = 10;
         this._bufferCanvas = null;
         this._bufferCanvasCtx = null;
         this._bufferPoints = null;
@@ -48,6 +48,7 @@
         }
 
         if (width){
+            this.lineRaduis = width/2;
             this.lineWidth = width;
         }
 
@@ -71,8 +72,8 @@
 
         this._bufferCanvas = this._createCopyOfCanvas(canvas);
         this._bufferCanvasCtx = this._bufferCanvas.getContext('2d');
-        this._render(new Curve(this._bufferPoints), this.ctx);
-        this._render(new Curve(this._bufferPoints), this._bufferCanvasCtx);
+        this._render(new Curve(this._bufferPoints, this.lineRaduis), this.ctx);
+        this._render(new Curve(this._bufferPoints, this.lineRaduis), this._bufferCanvasCtx);
     };
 
     /**
@@ -85,8 +86,8 @@
 
         var point = new Point(x, y);
         this._bufferPoints.push(point);
-        this._render(new Curve(this._bufferPoints), this.ctx);
-        this._render(new Curve(this._bufferPoints), this._bufferCanvasCtx);
+        this._render(new Curve(this._bufferPoints, this.lineRaduis), this.ctx);
+        this._render(new Curve(this._bufferPoints, this.lineRaduis), this._bufferCanvasCtx);
     };
 
     /**
@@ -99,8 +100,8 @@
 
         var point = new Point(x, y);
         this._bufferPoints.push(point);
-        this._render(new Curve(this._bufferPoints), this.ctx);
-        this._render(new Curve(this._bufferPoints), this._bufferCanvasCtx);
+        this._render(new Curve(this._bufferPoints, this.lineRaduis), this.ctx);
+        this._render(new Curve(this._bufferPoints, this.lineRaduis), this._bufferCanvasCtx);
         this._bufferPoints = null;
         this._publicNewLayout();
     };
@@ -117,7 +118,7 @@
         var that = this;
 
         flow.forEach(function(coor){
-            that.renderLine(coor[0], coor[1], that.lineWidth, ctx, curve.color, curve.raduis);
+            that.renderLine(coor[0], coor[1], that.lineRaduis, ctx, curve.color, curve.raduis);
         });
 
         //2 способ хуже
@@ -244,7 +245,7 @@
                 }
 
                 var canvasR = document.createElement('canvas');
-                var powRadius = Math.pow(radius, 2);
+                var powRadius = radius*2;
                 var coordinates = MathFn.getCircleCoordinates(radius);
                 var len = coordinates.length - 1;
                 var canvasRCtx = canvasR.getContext('2d');

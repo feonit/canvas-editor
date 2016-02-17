@@ -18,6 +18,8 @@
   "homepage": "https://github.com/feonit/canvas-editor#readme",
   "devDependencies": {
     "grunt": "^0.4.5",
-    "grunt-contrib-concat": "^0.5.1"
+    "grunt-contrib-concat": "^0.5.1",
+    "grunt-jsdoc-to-markdown": "^1.2.0",
+    "jsdoc-to-markdown": "^1.3.3"
   }
 }

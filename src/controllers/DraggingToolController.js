@@ -24,14 +24,14 @@
         }
 
         this.start = function(){
-            canvas.addEventListener('mousedown', mousedown, false);
-            canvas.addEventListener('mousemove', mousemove, false);
-            canvas.addEventListener('mouseup', mouseup, false);
+            document.addEventListener('mousedown', mousedown, false);
+            document.addEventListener('mousemove', mousemove, false);
+            document.addEventListener('mouseup', mouseup, false);
         };
         this.stop = function(){
-            canvas.removeEventListener('mousedown', mousedown);
-            canvas.removeEventListener('mousemove', mousemove);
-            canvas.removeEventListener('mouseup', mouseup);
+            document.removeEventListener('mousedown', mousedown);
+            document.removeEventListener('mousemove', mousemove);
+            document.removeEventListener('mouseup', mouseup);
         };
     }
 

@@ -5,9 +5,9 @@
     /**
      * View of collection input-radio
      * @type {HTMLElement}
-     * @param {string[]} names — Массив имен инструментов
+     * @param {Object} map — Хеш из заголовков и имен инструментов
      * */
-    function RadioBoxComponent(names, selectedOf){
+    function RadioBoxComponent(map, selectedOf){
         var API = {
             userSelectTool: {
                 detail: {
@@ -22,7 +22,9 @@
             wrapper.dispatchEvent(new CustomEvent("userSelectTool", API["userSelectTool"]));
         };
 
-        names.forEach(function(name, i){
+        for (var title in map){
+            var name = map[title];
+
             var input = document.createElement('input');
             var label = document.createElement('label');
             input.setAttribute('type', 'radio');
@@ -31,7 +33,7 @@
             label.appendChild(input);
 
             var text = document.createElement('span');
-            text.innerText = name;
+            text.innerHTML = title;
             label.appendChild(text);
 
             if (name === selectedOf) input.setAttribute('checked', 'checked');
@@ -39,7 +41,7 @@
             input.addEventListener('click', onClick, false);
 
             wrapper.appendChild(label);
-        });
+        };
 
         return wrapper;
     }

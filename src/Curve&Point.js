@@ -8,10 +8,10 @@
         this.y = y;
     }
 
-    function Curve(points){
+    function Curve(points, raduis){
         this.x = [];
         this.y = [];
-        this.raduis = 10;
+        this.raduis = raduis || 10;
 
         var i = points.length, n;
 
