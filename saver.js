@@ -50,9 +50,9 @@ function save(){
 var canvas = document.getElementsByTagName('canvas')[0];
 
 !function(){
-    var original = App.tools.DrawingTool.prototype.drawingEnd;
+    var original = CanvasEditor.Tool.DrawingTool.prototype.drawingEnd;
 
-    App.tools.DrawingTool.prototype.drawingEnd = function _fn(){
+    CanvasEditor.Tool.DrawingTool.prototype.drawingEnd = function _fn(){
         original.apply(this, arguments);
         save();
     };
@@ -60,9 +60,9 @@ var canvas = document.getElementsByTagName('canvas')[0];
 
 
 !function(){
-    var original = App.tools.DraggingTool.prototype.draggingEnd;
+    var original = CanvasEditor.Tool.DraggingTool.prototype.draggingEnd;
 
-    App.tools.DraggingTool.prototype.draggingEnd = function _fn(){
+    CanvasEditor.Tool.DraggingTool.prototype.draggingEnd = function _fn(){
         original.apply(this, arguments);
         save();
     };
@@ -70,9 +70,9 @@ var canvas = document.getElementsByTagName('canvas')[0];
 
 
 !function(){
-    var original = App.tools.EraserTool.prototype.eraserEnd;
+    var original = CanvasEditor.Tool.EraserTool.prototype.eraserEnd;
 
-    App.tools.EraserTool.prototype.eraserEnd = function _fn(){
+    CanvasEditor.Tool.EraserTool.prototype.eraserEnd = function _fn(){
         original.apply(this, arguments);
         save();
     };
@@ -80,9 +80,9 @@ var canvas = document.getElementsByTagName('canvas')[0];
 
 
 !function(){
-    var original = App.tools.FigureTool.prototype.figureEnd;
+    var original = CanvasEditor.Tool.FigureTool.prototype.figureEnd;
 
-    App.tools.FigureTool.prototype.figureEnd = function _fn(){
+    CanvasEditor.Tool.FigureTool.prototype.figureEnd = function _fn(){
         original.apply(this, arguments);
         save();
     };

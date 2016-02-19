@@ -1,10 +1,10 @@
-!function(App){
+!function(CanvasEditor){
 
-    App.namespace('App.controllers').DraggingToolController = DraggingToolController;
+    CanvasEditor.namespace('CanvasEditor.ToolController').DraggingToolController = DraggingToolController;
 
-    function DraggingToolController(app, canvas){
+    function DraggingToolController(appInstance, canvas){
 
-        var tool = new App.tools.DraggingTool(app, canvas);
+        var tool = new CanvasEditor.Tool.DraggingTool(appInstance, canvas);
 
         function mousedown(event){
             if (event.which == 1){ // выделяем объект левой
@@ -24,18 +24,18 @@
         }
 
         this.start = function(){
-            document.addEventListener('mousedown', mousedown, false);
-            document.addEventListener('mousemove', mousemove, false);
-            document.addEventListener('mouseup', mouseup, false);
+            canvas.addEventListener('mousedown', mousedown, false);
+            canvas.addEventListener('mousemove', mousemove, false);
+            canvas.addEventListener('mouseup', mouseup, false);
         };
         this.stop = function(){
-            document.removeEventListener('mousedown', mousedown);
-            document.removeEventListener('mousemove', mousemove);
-            document.removeEventListener('mouseup', mouseup);
+            canvas.removeEventListener('mousedown', mousedown);
+            canvas.removeEventListener('mousemove', mousemove);
+            canvas.removeEventListener('mouseup', mouseup);
         };
     }
 
-    DraggingToolController.prototype = Object.create(App.ToolController);
+    DraggingToolController.prototype = Object.create(CanvasEditor.ToolController);
     DraggingToolController.prototype.constructor = DraggingToolController;
 
-}(App);
+}(CanvasEditor);

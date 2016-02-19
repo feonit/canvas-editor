@@ -46,7 +46,7 @@ function ToolBarView(appInstance){
     /**
      * Утилита: Задний фон для прозрачности
      * */
-    var transparent = new App.tools.TransparentTool(appInstance, canvas);
+    var transparent = new CanvasEditor.ToolController.TransparentToolController(appInstance, canvas);
     var checkBox = new CheckBoxComponent('Фон', true);
 
     transparent.start();

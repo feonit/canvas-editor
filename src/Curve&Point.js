@@ -1,17 +1,31 @@
-!function(App){
+!function(CanvasEditor){
 
-    App.namespace('App').Point = Point;
-    App.namespace('App').Curve = Curve;
+    CanvasEditor.namespace('CanvasEditor').Point = Point;
+    CanvasEditor.namespace('CanvasEditor').Curve = Curve;
 
+    /**
+     * Точка
+     * @class Point
+     * @memberof CanvasEditor
+     * @param {number} x
+     * @param {number} y
+     * */
     function Point(x, y){
         this.x = x;
         this.y = y;
     }
 
-    function Curve(points, raduis){
+    /**
+     * Кривая линия
+     * @class Curve
+     * @memberof CanvasEditor
+     * @param points
+     * @param {HTMLCanvasElement} radius
+     * */
+    function Curve(points, radius){
         this.x = [];
         this.y = [];
-        this.raduis = raduis || 10;
+        this.radius = radius || 10;
 
         var i = points.length, n;
 
@@ -31,4 +45,4 @@
         }
     }
 
-}(App);
+}(CanvasEditor);

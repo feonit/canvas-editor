@@ -18,8 +18,8 @@ module.exports = function(grunt) {
 
         jsdoc2md: {
             oneOutputFile: {
-                src: 'md.js',
-                dest: 'api/documentation.md'
+                src: 'src/ToolsDriver.js',
+                dest: 'readme.md'
             }
         }
     });

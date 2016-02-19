@@ -72,7 +72,7 @@ function limitCallWrapper(fn, message){
     };
 }
 
-App.RegionObject.createRegion = debugTimeWrapper(App.RegionObject.createRegion, 'REGION CREATED');
-App.RegionObject.prototype.drawPixelsAtCanvas = debugTimeWrapper(App.RegionObject.prototype.drawPixelsAtCanvas, 'LAYOUT FILLED');
+CanvasEditor.RegionObject.createRegion = debugTimeWrapper(CanvasEditor.RegionObject.createRegion, 'REGION CREATED');
+CanvasEditor.RegionObject.prototype.drawPixelsAtCanvas = debugTimeWrapper(CanvasEditor.RegionObject.prototype.drawPixelsAtCanvas, 'LAYOUT FILLED');
 
-App.tools.EraserTool.prototype._getCircleCoordinates = limitCallWrapper(App.tools.EraserTool.prototype._getCircleCoordinates, 'LIMITING CALL');
+//CanvasEditor.tools.EraserTool.prototype._getCircleCoordinates = limitCallWrapper(CanvasEditor.tools.EraserTool.prototype._getCircleCoordinates, 'LIMITING CALL');

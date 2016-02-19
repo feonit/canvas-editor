@@ -1,18 +1,20 @@
-//namespace('App.tools');
+//namespace('CanvasEditor.tools');
 
-!function(App){
+!function(CanvasEditor){
     //used layersManager
 
-    App.namespace('App.tools').DraggingTool = DraggingTool;
+    CanvasEditor.namespace('CanvasEditor.Tool').DraggingTool = DraggingTool;
 
     /**
      * @class DraggingTool
+     * @memberof CanvasEditor.Tool
+     * @param {CanvasEditor} appInstance
      * @param {HTMLCanvasElement} canvas — канвас
      * @arg searchMode — Режим поиска фигуры по цвету или по слоям (COLOR_MODE or LAYER_MODE) todo
      * */
-    function DraggingTool(app, canvas){
+    function DraggingTool(appInstance, canvas){
 
-        this.app = app;
+        this.appInstance = appInstance;
         this.canvas = canvas;
 
         /** @type {ImageData} данные холста до переноса */
@@ -47,18 +49,18 @@
         if (!this.selectedRegionObject){
 
             //пробуем найти регион по индексовой карте (поиск по слою)
-            this.selectedRegionObject = this.app.layersManager._getRegionByPx(x, y);
+            this.selectedRegionObject = this.appInstance.layersManager._getRegionByPx(x, y);
 
             if (!this.selectedRegionObject){
                 // пробуем найти регион волшебной палочкой (поиск по цвету)
-                this.selectedRegionObject = App.RegionObject.createRegion(x, y, canvas);
-                this.app.layersManager.addRegion(this.selectedRegionObject);//?????
+                this.selectedRegionObject = CanvasEditor.RegionObject.createRegion(x, y, canvas);
+                this.appInstance.layersManager.addRegion(this.selectedRegionObject);//?????
             }
 
             this.selectedRegionObject.activate(canvas);
 
             // стереть объект
-            this.app.layersManager.removeRegion(this.selectedRegionObject);//?????
+            this.appInstance.layersManager.removeRegion(this.selectedRegionObject);//?????
 
             // запомнить как выглядит канвас без объекта
             this.beforeDndDataImage = this.canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height);
@@ -94,7 +96,7 @@
             this.selectedRegionObject.saveRecordOffset();
 
             // затем добавляем запись как о новом регионе
-            this.app.layersManager.addRegion(this.selectedRegionObject);
+            this.appInstance.layersManager.addRegion(this.selectedRegionObject);
 
             // заканчиваем процесс
             this.processDnD = false;
@@ -147,4 +149,4 @@
     };
 
     return DraggingTool;
-}(App);
+}(CanvasEditor);

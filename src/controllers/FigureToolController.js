@@ -1,10 +1,10 @@
-!function(App){
+!function(CanvasEditor){
 
-    App.namespace('App.controllers').FigureToolController = FigureToolController;
+    CanvasEditor.namespace('CanvasEditor.ToolController').FigureToolController = FigureToolController;
 
     function FigureToolController(appInstance, canvas) {
 
-        var tool = new App.tools.FigureTool(appInstance, canvas);
+        var tool = new CanvasEditor.Tool.FigureTool(appInstance, canvas);
 
         var process = false;
 
@@ -14,7 +14,7 @@
             tool.figureStart(
                 event.layerX,
                 event.layerY,
-                App.MathFn.hexToRgba(appInstance.options.lineColor),
+                CanvasEditor.MathFn.hexToRgba(appInstance.options.lineColor),
                 appInstance.options.lineWidth,
                 appInstance.options.figureType
             );
@@ -32,14 +32,14 @@
         }
 
         this.start = function () {
-            document.addEventListener('mousedown', mousedown, false);
-            document.addEventListener('mousemove', mousemove, false);
-            document.addEventListener('mouseup', mouseup, false);
+            canvas.addEventListener('mousedown', mousedown, false);
+            canvas.addEventListener('mousemove', mousemove, false);
+            canvas.addEventListener('mouseup', mouseup, false);
         };
         this.stop = function () {
-            document.removeEventListener('mousedown', mousedown);
-            document.removeEventListener('mousemove', mousemove);
-            document.removeEventListener('mouseup', mouseup);
+            canvas.removeEventListener('mousedown', mousedown);
+            canvas.removeEventListener('mousemove', mousemove);
+            canvas.removeEventListener('mouseup', mouseup);
         };
     }
-}(App);
+}(CanvasEditor);

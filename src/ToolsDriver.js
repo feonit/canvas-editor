@@ -1,14 +1,16 @@
-!function(App){
+!function(CanvasEditor){
 
-    App.namespace('App').ToolsDriver = ToolsDriver;
+    CanvasEditor.namespace('CanvasEditor').ToolsDriver = ToolsDriver;
 
     /**
+     * Обеспечивает управление инструментами и получение доступа подключаемых инструментов к канвасу
      * @class ToolsDriver
-     * Обеспечивает управление инструментами и
-     * получение доступа подключаемых инструментов к канвасу
+     * @memberof CanvasEditor
+     * @param {Object} appInstance
+     * @param {HTMLCanvasElement} canvas
      * */
-    function ToolsDriver(app, canvas){
-        this.app = app;
+    function ToolsDriver(appInstance, canvas){
+        this.appInstance = appInstance;
 
         this._canvas = canvas;
 
@@ -24,7 +26,7 @@
      * @param {function} Constructor — конструктор нового инструмента
      * */
     ToolsDriver.prototype.plug = function(Constructor){
-        var tool = new Constructor(this.app, this._canvas);
+        var tool = new Constructor(this.appInstance, this._canvas);
         this._register[tool.constructor.name] = tool;
     };
 
@@ -46,4 +48,4 @@
         return this._register[name];
     };
 
-}(App);
+}(CanvasEditor);

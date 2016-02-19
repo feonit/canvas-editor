@@ -1,8 +1,8 @@
-!function(App){
+!function(CanvasEditor){
 
-    App.namespace('App.tools').EraserTool = EraserTool;
+    CanvasEditor.namespace('CanvasEditor.Tool').EraserTool = EraserTool;
 
-    var MathFn = App.MathFn;
+    var MathFn = CanvasEditor.MathFn;
 
     /**
      * Ластик, позволяет стирать область холста, относительно переданной координаты
@@ -12,7 +12,7 @@
      * @arg {Number} shapeLength — параметры формы ластика: длинна стороны/диагонали
      * @arg {HTMLCanvasElement} canvas — холст, над которым происходит затирание
      * */
-    function EraserTool(app, canvas){
+    function EraserTool(appInstance, canvas){
         this.canvas = canvas;
         this.ctx = canvas.getContext("2d");
         this.points = null;
@@ -25,27 +25,27 @@
         }
         if (!this.points) {
             this.points = [];
-            this.points.push(new App.Point(x, y));
+            this.points.push(new CanvasEditor.Point(x, y));
             this._render();
         }
     };
 
     EraserTool.prototype.eraserContinue = function(x, y){
         if (this.points){
-            this.points.push(new App.Point(x, y));
+            this.points.push(new CanvasEditor.Point(x, y));
             this._render();
         }
     };
 
     EraserTool.prototype.eraserEnd = function(x, y){
-        this.points.push(new App.Point(x, y));
+        this.points.push(new CanvasEditor.Point(x, y));
 
         this._render();
         this.points = null;
     };
 
     EraserTool.prototype._render = function(){
-        var flow = MathFn.drawBezierCurve(new App.Curve(this.points));
+        var flow = MathFn.drawBezierCurve(new CanvasEditor.Curve(this.points));
         flow.forEach((function(coor){
             this.cleanAtPoint(coor[0], coor[1]);
         }).bind(this));
@@ -96,9 +96,9 @@
      * */
     EraserTool.prototype._getCircleCoordinatesWithOffset = function(x0, y0, radius){
         var coordinates = MathFn.getCircleCoordinates(radius);
-        coordinates = App.RegionObject.prototype.getRelationCoordinate(coordinates, x0, y0);
+        coordinates = CanvasEditor.RegionObject.prototype.getRelationCoordinate(coordinates, x0, y0);
         return coordinates;
     };
 
     return EraserTool;
-}(App);
+}(CanvasEditor);

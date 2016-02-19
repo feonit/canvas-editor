@@ -1,35 +1,17 @@
-App = {
-    namespace: function (nsString) {
-        var parts = nsString.split('.'),
-            parent = window.App = window.App || {},
-            i;
-        // отбросить начальный префикс – имя глобального объекта
-        if (parts[0] === 'App') {
-            parts = parts.slice(1);
-        }
-        for (i = 0; i < parts.length; i += 1) {
-            // создать свойство, если оно отсутствует
-            if (typeof parent[parts[i]] === 'undefined') {
-                parent[parts[i]] = {};
-            }
-            parent = parent[parts[i]];
-        }
-        return parent;
-    },
+!function(global, HTMLCanvasElement){
 
-    newEvent : function(eventName, data){
-        if (eventName === this.CREATED_REGION){
-            var regionObject = App.RegionObject.createRegion.apply(null, data);
-            regionObject.layout = this.lastLayout;
-            this.layersManager.addRegion(regionObject);
-        }
-    }
-};
+    global.CanvasEditor = CanvasEditor;
 
-!function(App, HTMLCanvasElement){
-
-    window.CanvasEditor = CanvasEditor;
-
+    /**
+     * Канвас редактор
+     *
+     * @class CanvasEditor
+     *
+     * @param {Object} options
+     * @param {string} options.lineColor
+     * @param {number} options.lineWidth
+     * @param {string} options.figureType
+     * */
     function CanvasEditor(options){
 
         var defaultOptions = {
@@ -38,24 +20,32 @@ App = {
             figureType: 'CIRCLE_TYPE'
         };
 
-        this.toolsDriver = new App.ToolsDriver(this, canvas);
-        this.layersManager = new App.LayersManager(this, canvas);
-        this.CREATED_REGION = 'CREATED_REGION';
+        this.toolsDriver = new CanvasEditor.ToolsDriver(this, canvas);
+        this.layersManager = new CanvasEditor.LayersManager(this, canvas);
 
-        this.toolsDriver.plug(App.controllers.DrawingToolController);
-        this.toolsDriver.plug(App.controllers.EraserToolController);
-        this.toolsDriver.plug(App.controllers.DraggingToolController);
-        this.toolsDriver.plug(App.controllers.FigureToolController);
+        this.toolsDriver.plug(CanvasEditor.ToolController.DrawingToolController);
+        this.toolsDriver.plug(CanvasEditor.ToolController.EraserToolController);
+        this.toolsDriver.plug(CanvasEditor.ToolController.DraggingToolController);
+        this.toolsDriver.plug(CanvasEditor.ToolController.FigureToolController);
 
         this.options = {};
 
-        /** @public */
         this.options.lineColor = options.lineColor || defaultOptions.lineColor;
-        /** @public */
+
         this.options.lineWidth = options.lineWidth || defaultOptions.lineWidth;
 
         this.options.figureType = options.figureType || defaultOptions.figureType;
     }
+
+    CanvasEditor.prototype.CREATED_REGION = 'CREATED_REGION';
+
+    CanvasEditor.prototype.newEvent = function(eventName, data){
+        if (eventName === this.CREATED_REGION){
+            var regionObject = CanvasEditor.RegionObject.createRegion.apply(null, data);
+            regionObject.layout = this.lastLayout;
+            this.layersManager.addRegion(regionObject);
+        }
+    };
 
     CanvasEditor.create = function(canvas, options){
         if ( !canvas instanceof HTMLCanvasElement )
@@ -73,4 +63,22 @@ App = {
         return new CanvasEditor(canvas, options);
     };
 
-}(App, HTMLCanvasElement);
+    CanvasEditor.namespace = function (nsString) {
+        var parts = nsString.split('.'),
+            parent = window.CanvasEditor = window.CanvasEditor || {},
+            i;
+        // отбросить начальный префикс – имя глобального объекта
+        if (parts[0] === 'CanvasEditor') {
+            parts = parts.slice(1);
+        }
+        for (i = 0; i < parts.length; i += 1) {
+            // создать свойство, если оно отсутствует
+            if (typeof parent[parts[i]] === 'undefined') {
+                parent[parts[i]] = {};
+            }
+            parent = parent[parts[i]];
+        }
+        return parent;
+    };
+
+}(window, HTMLCanvasElement);

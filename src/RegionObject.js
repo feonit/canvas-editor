@@ -1,10 +1,14 @@
-!function(App){
+!function(CanvasEditor){
 
-    App.namespace('App').RegionObject = RegionObject;
+    CanvasEditor.namespace('CanvasEditor').RegionObject = RegionObject;
 
     /**
      * @class RegionObject
-     * @param options
+     * @memberof CanvasEditor
+     * @param {Object} options
+     * @param {HTMLCanvasElement} options.canvas
+     * @param {number[][]} options.coordinates
+     * @param {number[][]} options.borderCoordinates
      * */
     function RegionObject(options){
         options = options || {};
@@ -26,11 +30,11 @@
 
         this.offsetY = 0;
 
-        this.canvas = options.canvas;
-
         this._width = options.width;
 
         this._height = options.height;
+
+        this.canvas = options.canvas;
 
         /**
          * Массив координат пикселей объекта на холсте
@@ -191,7 +195,7 @@
      * @param {number} startX — координата X с которой начинается поиск
      * @param {number} startY — координата Y с которой начинается поиск
      * @param {HTMLCanvasElement} canvas — анализируемый холст
-     * @return {RegionObject} объект фигуры
+     * @return {CanvasEditor.RegionObject} объект фигуры
      * */
     RegionObject.createRegion = function (startX, startY, canvas){
         var canvasWidth = canvas.width;
@@ -371,4 +375,4 @@
     };
 
     return RegionObject;
-}(App);
+}(CanvasEditor);

@@ -1,10 +1,10 @@
-!function(App){
+!function(CanvasEditor){
 
-    App.namespace('App.controllers').DrawingToolController = DrawingToolController;
+    CanvasEditor.namespace('CanvasEditor.ToolController').DrawingToolController = DrawingToolController;
 
     function DrawingToolController(appInstance, canvas){
 
-        var tool = new App.tools.DrawingTool(appInstance, canvas);
+        var tool = new CanvasEditor.Tool.DrawingTool(appInstance, canvas);
 
 
         function mousedown(event){
@@ -12,7 +12,7 @@
             ctx = canvas.getContext("2d");
             ctx.lineCap = 'round';
             ctx.lineJoin = 'round';
-            tool.drawingStart(event.layerX, event.layerY, App.MathFn.hexToRgb(appInstance.options.lineColor), appInstance.options.lineWidth);
+            tool.drawingStart(event.layerX, event.layerY, CanvasEditor.MathFn.hexToRgb(appInstance.options.lineColor), appInstance.options.lineWidth);
         }
 
         function mousemove(event){
@@ -24,19 +24,19 @@
         }
 
         this.start = function(){
-            document.addEventListener('mousedown', mousedown, false);
-            document.addEventListener('mousemove', mousemove, false);
-            document.addEventListener('mouseup', mouseup, false);
+            canvas.addEventListener('mousedown', mousedown, false);
+            canvas.addEventListener('mousemove', mousemove, false);
+            canvas.addEventListener('mouseup', mouseup, false);
         };
 
         this.stop = function(){
-            document.removeEventListener('mousedown', mousedown);
-            document.removeEventListener('mousemove', mousemove);
-            document.removeEventListener('mouseup', mouseup);
+            canvas.removeEventListener('mousedown', mousedown);
+            canvas.removeEventListener('mousemove', mousemove);
+            canvas.removeEventListener('mouseup', mouseup);
         }
     }
 
-    DrawingToolController.prototype = Object.create(App.ToolController);
+    DrawingToolController.prototype = Object.create(CanvasEditor.ToolController);
     DrawingToolController.prototype.constructor = DrawingToolController;
 
-}(App);
+}(CanvasEditor);

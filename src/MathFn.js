@@ -1,12 +1,13 @@
-!function(App){
+!function(CanvasEditor){
 
-    var module = App.namespace('App.MathFn');
+    /** @memberof CanvasEditor */
+    var MathFn = CanvasEditor.namespace('CanvasEditor.MathFn');
 
     /**
      * Получить список координат для всех точек принадлежащих к окружности с заданным радиусом
      * Функция кеширует результат по радиусу
      * */
-    module.getCircleCoordinates = function(radius){
+    MathFn.getCircleCoordinates = function(radius){
 
         if (this.getCircleCoordinates[radius]){
             return this.getCircleCoordinates[radius]
@@ -33,7 +34,10 @@
         return coordinates;
     };
 
-    module.drawBezierCurve = function(curve){
+    /**
+     * Генерирует координаты точек основываясь на информации о кривой
+     * */
+    MathFn.drawBezierCurve = function(curve){
         var l = curve.x.length;
 
         var arr = [];
@@ -60,6 +64,30 @@
             flow[1] = Math.round(flow[1]);
         }
         return flow;
+    };
+
+    /**
+     * Переводит цвет в нужный формат
+     * */
+    MathFn.hexToRgb = function (hex) {
+        var bigint = parseInt(hex, 16);
+        var r = (bigint >> 16) & 255;
+        var g = (bigint >> 8) & 255;
+        var b = bigint & 255;
+
+        return [r,g,b,255];
+    };
+
+    /**
+     * Переводит цвет в нужный формат
+     * */
+    MathFn.hexToRgba = function (hex) {
+        var bigint = parseInt(hex, 16);
+        var r = (bigint >> 16) & 255;
+        var g = (bigint >> 8) & 255;
+        var b = bigint & 255;
+
+        return  'rgba(' + r + ',' + g + ', ' + b + ',' + 255;
     };
 
 // arr - массив опорных точек. Точка - двухэлементный массив, (x = arr[0], y = arr[1])
@@ -95,23 +123,4 @@
         return (f(n)/(f(i)*f(n - i)))* Math.pow(t, i)*Math.pow(1 - t, n - i);
     }
 
-
-    module.hexToRgb = function (hex) {
-        var bigint = parseInt(hex, 16);
-        var r = (bigint >> 16) & 255;
-        var g = (bigint >> 8) & 255;
-        var b = bigint & 255;
-
-        return [r,g,b,255];
-    };
-
-    module.hexToRgba = function (hex) {
-        var bigint = parseInt(hex, 16);
-        var r = (bigint >> 16) & 255;
-        var g = (bigint >> 8) & 255;
-        var b = bigint & 255;
-
-        return  'rgba(' + r + ',' + g + ', ' + b + ',' + 255;
-    };
-
-}(App);
+}(CanvasEditor);

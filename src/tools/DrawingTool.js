@@ -1,11 +1,11 @@
-!function(App, document, Object){
+!function(CanvasEditor, document, Object){
 
-    App.namespace('App.tools').DrawingTool = DrawingTool;
+    CanvasEditor.namespace('CanvasEditor.Tool').DrawingTool = DrawingTool;
 
-    var Point = App.Point;
-    var Curve = App.Curve;
+    var Point = CanvasEditor.Point;
+    var Curve = CanvasEditor.Curve;
     var Math = window.Math;
-    var MathFn = App.MathFn;
+    var MathFn = CanvasEditor.MathFn;
 
     function DrawingTool(appInstance, canvas){
 
@@ -108,7 +108,7 @@
 
     /**
      * Сбособ отрисовки кривой линии
-     * @param {Curve} curve
+     * @param {CanvasEditor.Curve} curve
      * @param {CanvasRenderingContext2D} ctx
      * */
     DrawingTool.prototype._render = function (curve, ctx){
@@ -118,7 +118,7 @@
         var that = this;
 
         flow.forEach(function(coor){
-            that.renderLine(coor[0], coor[1], that.lineRaduis, ctx, curve.color, curve.raduis);
+            that.renderLine(coor[0], coor[1], that.lineRaduis, ctx, curve.color, curve.radius);
         });
 
         //2 способ хуже
@@ -137,7 +137,7 @@
         this.lastLayout = image;
 
         //todo
-        App.newEvent('CREATED_REGION', [this.lastLayoutExamplePoint[0], this.lastLayoutExamplePoint[1], this.canvas]);
+        this.appInstance.newEvent('CREATED_REGION', [this.lastLayoutExamplePoint[0], this.lastLayoutExamplePoint[1], this.canvas]);
     };
 
     /**
@@ -268,4 +268,4 @@
     })();
 
     return DrawingTool;
-}(App, document, Object);
+}(CanvasEditor, document, Object);

@@ -1,9 +1,10 @@
-!function(App){
+!function(CanvasEditor){
 
-    App.namespace('App').ToolController = ToolController;
+    CanvasEditor.namespace('CanvasEditor').ToolController = ToolController;
 
     /**
-     * @class Tool
+     * @class ToolController
+     * @memberof CanvasEditor
      * */
     function ToolController(){}
     /**
@@ -19,4 +20,4 @@
         throw "method must be implemented";
     };
 
-}(App);
+}(CanvasEditor);

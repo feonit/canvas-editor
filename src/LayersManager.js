@@ -1,8 +1,14 @@
-!function(App){
+!function(CanvasEditor){
 
-    App.namespace('App').LayersManager = LayersManager;
+    CanvasEditor.namespace('CanvasEditor').LayersManager = LayersManager;
 
-    function LayersManager(app, canvas){
+    /**
+     * @class LayersManager
+     * @memberof CanvasEditor
+     * @param appInstance
+     * @param {HTMLCanvasElement} canvas
+     * */
+    function LayersManager(appInstance, canvas){
 
         this.canvas = canvas;
 
@@ -36,7 +42,7 @@
     /**
      * Метод для записи региона в карту пикселей
      * так как это новый регион, то индекс его становится выше всех, и его соответственно видно поверх всех
-     * @param {RegionObject} regionObject
+     * @param {CanvasEditor.RegionObject} regionObject
      * */
     LayersManager.prototype.addRegion = function(regionObject){
         // не забыть про смещение
@@ -63,6 +69,7 @@
     /**
      * Удаляет регион с холста
      * Отрисовывает те слои которые распологаются под ним
+     * @param {CanvasEditor.RegionObject} removedRegion
      * */
     LayersManager.prototype.removeRegion = function(removedRegion){
         var relationCoordinates = removedRegion.getRelationCoordinate();
@@ -130,7 +137,7 @@
 
     /**
      * Определение номера региона
-     * @param {RegionObject} regionObject
+     * @param {CanvasEditor.RegionObject} regionObject
      * */
     LayersManager.prototype._findIndexOfRegion = function(regionObject){
         var index;
@@ -146,6 +153,9 @@
 
     /**
      * Метод пополнения карты новыми данными
+     * @param {number} x — Координата X
+     * @param {number} y — Координата Y
+     * @param {number} record — индекс
      * */
     LayersManager.prototype._addRecord = function(x, y, record){
         //console.log(coordinateX, coordinateY, record)
@@ -181,4 +191,4 @@
 
     return LayersManager;
 
-}(App);
+}(CanvasEditor);

@@ -1,9 +1,10 @@
-!function(App){
+!function(CanvasEditor){
 
-    App.namespace('App.tools').FigureTool = FigureTool;
+    CanvasEditor.namespace('CanvasEditor.Tool').FigureTool = FigureTool;
 
-    function FigureTool(app, canvas){
+    function FigureTool(appInstance, canvas){
 
+        this.appInstance = appInstance;
         /** @type {HTMLCanvasElement}*/
         this.canvas = canvas;
 
@@ -46,7 +47,7 @@
         if (!this.currentPoint) return;
         this.drawFigure();
 
-        App.newEvent('CREATED_REGION', [x, y, this.canvas]); //todo!
+        this.appInstance.newEvent('CREATED_REGION', [x, y, this.canvas]); //todo!
 
         this.startPoint = null;
         this.currentPoint = null;
@@ -75,4 +76,4 @@
 
     };
 
-}(App);
+}(CanvasEditor);
