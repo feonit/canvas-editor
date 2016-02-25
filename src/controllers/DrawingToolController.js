@@ -12,7 +12,14 @@
             ctx = canvas.getContext("2d");
             ctx.lineCap = 'round';
             ctx.lineJoin = 'round';
-            tool.drawingStart(event.layerX, event.layerY, CanvasEditor.MathFn.hexToRgb(appInstance.options.lineColor), appInstance.options.lineWidth);
+
+            tool.setOptions({
+                color: CanvasEditor.MathFn.hexToRgb(appInstance.options.drawingColor),
+                size: appInstance.options.drawingSize,
+                type: appInstance.options.drawingType
+            });
+
+            tool.drawingStart(event.layerX, event.layerY);
         }
 
         function mousemove(event){

@@ -3,41 +3,36 @@ function OptionsView(appInstance){
     this.nodeElement = null;
 
     var wrapper = document.createElement('div');
-    var colorComponent = InputColorComponent(appInstance.options.lineColor);
+    wrapper.className = 'options-bar';
+    var name = document.createElement('div');
+    name.innerHTML = 'Options Bar';
+    var label, text;
 
-    var label1 = document.createElement('label');
-
-    var text = document.createElement('span');
-    text.textContent = 'Цвет:';
-    label1.appendChild(text);
-    label1.appendChild(colorComponent);
-
-    wrapper.appendChild(label1);
-
-
-    colorComponent.addEventListener("userSelectColor", function(data){
-        //that.color = data.detail.color;
-
-        appInstance.options.lineColor = data.detail.color;
-
-    }, false);
+    var colorComponent = InputColorComponent(appInstance.options.drawingColor);
+    label = document.createElement('label');
+    text = document.createElement('span');
+    text.innerHTML = 'Цвет:';
+    label.appendChild(text);
+    label.appendChild(colorComponent);
+    wrapper.appendChild(label);
 
 
-    var label2 = document.createElement('label');
-    var sliderComponent = InputSliderComponent(appInstance.options.lineWidth);
-    var text2 = document.createElement('span');
-    text2.textContent = 'Ширина: ';
-    label2.appendChild(text2);
-    label2.appendChild(sliderComponent);
+    var sliderComponent = InputSliderComponent(appInstance.options.drawingSize);
+    label = document.createElement('label');
+    text = document.createElement('span');
+    text.innerHTML = 'Ширина: ';
+    label.appendChild(text);
+    label.appendChild(sliderComponent);
+    wrapper.appendChild(label);
 
-    wrapper.appendChild(label2);
 
 
     sliderComponent.addEventListener("userSelectWidth", function(data){
-        //that.width = data.detail.width;
+        appInstance.options.drawingSize = data.detail.width;
+    }, false);
 
-        appInstance.options.lineWidth = data.detail.width;
-
+    colorComponent.addEventListener("userSelectColor", function(data){
+        appInstance.options.drawingColor = data.detail.color;
     }, false);
 
     this.nodeElement = wrapper;

@@ -73,6 +73,6 @@ function limitCallWrapper(fn, message){
 }
 
 CanvasEditor.RegionObject.createRegion = debugTimeWrapper(CanvasEditor.RegionObject.createRegion, 'REGION CREATED');
-CanvasEditor.RegionObject.prototype.drawPixelsAtCanvas = debugTimeWrapper(CanvasEditor.RegionObject.prototype.drawPixelsAtCanvas, 'LAYOUT FILLED');
+CanvasEditor.Tool.DrawingTool.prototype.drawPixelsAtCanvas = debugTimeWrapper(CanvasEditor.Tool.DrawingTool.prototype.drawPixelsAtCanvas, 'LAYOUT FILLED');
 
 //CanvasEditor.tools.EraserTool.prototype._getCircleCoordinates = limitCallWrapper(CanvasEditor.tools.EraserTool.prototype._getCircleCoordinates, 'LIMITING CALL');

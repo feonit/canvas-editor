@@ -36,12 +36,13 @@
             text.innerHTML = title;
             label.appendChild(text);
 
-            if (name === selectedOf) input.setAttribute('checked', 'checked');
+            if (name === selectedOf)
+                input.setAttribute('checked', 'checked');
 
             input.addEventListener('click', onClick, false);
 
             wrapper.appendChild(label);
-        };
+        }
 
         return wrapper;
     }

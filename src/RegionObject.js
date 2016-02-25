@@ -75,43 +75,10 @@
         return this._originalCoordinates;
     };
 
-    /**
-     * Для определенного холста установить по всем координатам свой цвет
-     * @param {HTMLCanvasElement} canvas
-     * @param {number[][]} [coordinates] — список координат
-     * @param {ImageData} [etalonPointImageData] — данные по цвету
-     * todo вызывает блокировку потока, поэтому нужно оптимизировать
-     * */
-    RegionObject.prototype.drawPixelsAtCanvas = function(canvas, coordinates, etalonPointImageData){
-        // проверено drawImage в этом случае работает раза в 4 быстрее чем putImageData, создаю картинку размером в 1 пиксел
-        // нужен оптимизирующий алгаритм для работы drawImage, чтобы избежать попиксельную обработку, основанный на том факте, что цвета соседних пикселей одинаковы
-        var ctx = canvas.getContext('2d');
-        this.__canvas1px = this.__canvas1px || document.createElement('canvas');
-        this.__imageData = this.__imageData || ctx.createImageData(1,1);
-        var data = this.__imageData.data;
-        var etalon = etalonPointImageData || this.etalonPointImageData;
-        data[0] = etalon[0];
-        data[1] = etalon[1];
-        data[2] = etalon[2];
-        data[3] = 255;// etalon[3]; !!!!!!!!!
-
-        this.__canvas1px.height = 1;
-        this.__canvas1px.width = 1;
-
-        var canvas1pxCtx = this.__canvas1px.getContext('2d');
-        canvas1pxCtx.putImageData(this.__imageData, 0, 0);
-
-        var coordinate;
-
-        for (var i = 0, len = coordinates.length; i < len; i++){
-            coordinate = coordinates[i];
-            ctx.drawImage(this.__canvas1px, coordinate[0], coordinate[1]);
-        }
-    };
-
     RegionObject.prototype._drawLayout = function(layout){
         var relationCoordinate = this.getRelationCoordinate();
-        this.drawPixelsAtCanvas(layout, relationCoordinate, this.etalonPointImageData);
+        //todo
+        CanvasEditor.Tool.DrawingTool.prototype.drawPixelsAtCanvas.call(null, layout, relationCoordinate, this.etalonPointImageData);
     };
 
     /**

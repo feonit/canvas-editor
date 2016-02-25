@@ -77,13 +77,3 @@ var canvas = document.getElementsByTagName('canvas')[0];
         save();
     };
 }();
-
-
-!function(){
-    var original = CanvasEditor.Tool.FigureTool.prototype.figureEnd;
-
-    CanvasEditor.Tool.FigureTool.prototype.figureEnd = function _fn(){
-        original.apply(this, arguments);
-        save();
-    };
-}();

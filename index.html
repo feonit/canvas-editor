@@ -7,11 +7,27 @@
         label{
             display: block;
         }
+        .tool-bar{
+            border: 1px solid;
+        }
+        .options-bar{
+            border: 1px solid;
+            border-top: none;
+        }
+        .side-bar{
+            position: absolute;
+            right: 0;
+            top: 0;
+            margin: 10px;
+        }
+        .side-bar > div{
+            padding: 10px;
+        }
     </style>
 </head>
 <body>
 <canvas id="canvas" width="800" height="400"></canvas>
-
+<div class="side-bar"></div>
 </body>
 
 <script type="text/javascript" src="src/CanvasEditor.js"></script>
@@ -26,12 +42,10 @@
 <script type="text/javascript" src="src/tools/DraggingTool.js"></script>
 <script type="text/javascript" src="src/tools/DrawingTool.js"></script>
 <script type="text/javascript" src="src/tools/EraserTool.js"></script>
-<script type="text/javascript" src="src/tools/FigureTool.js"></script>
 
 <script type="text/javascript" src="src/controllers/DraggingToolController.js"></script>
 <script type="text/javascript" src="src/controllers/DrawingToolController.js"></script>
 <script type="text/javascript" src="src/controllers/EraserToolController.js"></script>
-<script type="text/javascript" src="src/controllers/FigureToolController.js"></script>
 <script type="text/javascript" src="src/controllers/TransparentToolController.js"></script>
 
 <script type="text/javascript" src="example/ui-components/RadioBoxComponent.js"></script>
@@ -45,29 +59,28 @@
 <script type="text/javascript" src="saver.js"></script>
 
 <script>
+    var appInstance = new CanvasEditor(document.getElementById('canvas'), {
+        drawingColor: "8080ff",
+        drawingSize: 5
+    });
+
+    var sideBar = document.getElementsByClassName('side-bar')[0];
+    sideBar.appendChild((new ToolBarView(appInstance)).nodeElement);
+    sideBar.appendChild((new OptionsView(appInstance)).nodeElement);
+
+//    Object.defineProperty(appInstance.options, 'drawingColor', {
+//        get(){
+//            return CanvasEditor.MathFn.randomHex();
+//        }
+//    });
+//    Object.defineProperty(appInstance.options, 'drawingSize', {
+//        get(){
+//            var min = 1, max = 20;
+//            return Math.floor(Math.random() * (max - min + 1)) + min;
+//        }
+//    });
 
     var canvas = document.getElementById('canvas');
     var ctx = canvas.getContext('2d');
-    //ctx.fillStyle = '#333';
-    //ctx.fillRect(0,0,canvas.width,canvas.height);
-
-    //ctx.fillStyle = 'red';
-    //ctx.fillRect(50,50,2,2);
-    ////
-    //ctx.fillStyle = 'red';
-    //ctx.fillRect(0,0,1,1);
-
-    //ctx.arc(15, 15, 5, 0, 2 * Math.PI, false);
-    //ctx.fillStyle = 'rgb(0,0,255)';
-    //ctx.fill();
-
-    var appInstance = CanvasEditor.create(canvas, {});
-
-    document.body.appendChild((new OptionsView(appInstance)).nodeElement);
-    document.body.appendChild((new ToolBarView(appInstance)).nodeElement);
-
-    window.ctx = ctx;
-    window.canvas = canvas;
-
 </script>
 </html>

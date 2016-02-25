@@ -7,18 +7,35 @@
      *
      * @class CanvasEditor
      *
+     * @param {HTMLCanvasElement} canvas
      * @param {Object} options
      * @param {string} options.lineColor
      * @param {number} options.lineWidth
      * @param {string} options.figureType
      * */
-    function CanvasEditor(options){
+    function CanvasEditor(canvas, options){
 
         var defaultOptions = {
-            lineColor: '440000',
-            lineWidth: 10,
-            figureType: 'CIRCLE_TYPE'
+            drawingColor: '000000',
+            drawingSize: 10,
+            drawingType: 'CURVE_TYPE'
         };
+
+        if ( !canvas instanceof HTMLCanvasElement )
+            throw 'Lost canvas element';
+
+        canvas.setAttribute('oncontextmenu', 'return false;');
+        var ctx = canvas.getContext('2d');
+        ctx.mozImageSmoothingEnabled = false;
+        ctx.webkitImageSmoothingEnabled = false;
+        ctx.msImageSmoothingEnabled = false;
+        ctx.imageSmoothingEnabled = false;
+
+        this.options = options || {};
+
+        this.options.drawingSize = options.drawingSize || defaultOptions.drawingSize;
+        this.options.drawingType = options.figureType || defaultOptions.figureType;
+        this.options.drawingColor = options.drawingColor || defaultOptions.drawingColor;
 
         this.toolsDriver = new CanvasEditor.ToolsDriver(this, canvas);
         this.layersManager = new CanvasEditor.LayersManager(this, canvas);
@@ -26,15 +43,6 @@
         this.toolsDriver.plug(CanvasEditor.ToolController.DrawingToolController);
         this.toolsDriver.plug(CanvasEditor.ToolController.EraserToolController);
         this.toolsDriver.plug(CanvasEditor.ToolController.DraggingToolController);
-        this.toolsDriver.plug(CanvasEditor.ToolController.FigureToolController);
-
-        this.options = {};
-
-        this.options.lineColor = options.lineColor || defaultOptions.lineColor;
-
-        this.options.lineWidth = options.lineWidth || defaultOptions.lineWidth;
-
-        this.options.figureType = options.figureType || defaultOptions.figureType;
     }
 
     CanvasEditor.prototype.CREATED_REGION = 'CREATED_REGION';
@@ -47,21 +55,7 @@
         }
     };
 
-    CanvasEditor.create = function(canvas, options){
-        if ( !canvas instanceof HTMLCanvasElement )
-            throw 'Lost canvas element';
-
-        canvas.setAttribute('oncontextmenu', 'return false;');
-        var ctx = canvas.getContext('2d');
-        ctx.mozImageSmoothingEnabled = false;
-        ctx.webkitImageSmoothingEnabled = false;
-        ctx.msImageSmoothingEnabled = false;
-        ctx.imageSmoothingEnabled = false;
-
-        // todo save and restore param-canvas after destroy
-
-        return new CanvasEditor(canvas, options);
-    };
+    // todo save and restore param-canvas after destroy
 
     CanvasEditor.namespace = function (nsString) {
         var parts = nsString.split('.'),
