@@ -23,6 +23,9 @@
         .side-bar > div{
             padding: 10px;
         }
+        body{
+            margin: 0;/** todo offset for event position */
+        }
     </style>
 </head>
 <body>
@@ -61,24 +64,24 @@
 <script>
     var appInstance = new CanvasEditor(document.getElementById('canvas'), {
         drawingColor: "8080ff",
-        drawingSize: 5
+        drawingSize: 2
     });
 
     var sideBar = document.getElementsByClassName('side-bar')[0];
     sideBar.appendChild((new ToolBarView(appInstance)).nodeElement);
     sideBar.appendChild((new OptionsView(appInstance)).nodeElement);
 
-//    Object.defineProperty(appInstance.options, 'drawingColor', {
-//        get(){
-//            return CanvasEditor.MathFn.randomHex();
-//        }
-//    });
-//    Object.defineProperty(appInstance.options, 'drawingSize', {
-//        get(){
-//            var min = 1, max = 20;
-//            return Math.floor(Math.random() * (max - min + 1)) + min;
-//        }
-//    });
+    Object.defineProperty(appInstance.options, 'drawingColor', {
+        get(){
+            return CanvasEditor.MathFn.randomHex();
+        }
+    });
+    Object.defineProperty(appInstance.options, 'drawingSize', {
+        get(){
+            var min = 1, max = 20;
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+    });
 
     var canvas = document.getElementById('canvas');
     var ctx = canvas.getContext('2d');

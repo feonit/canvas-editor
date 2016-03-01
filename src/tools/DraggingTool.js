@@ -53,7 +53,7 @@
 
             if (!this.selectedRegionObject){
                 // пробуем найти регион волшебной палочкой (поиск по цвету)
-                this.selectedRegionObject = CanvasEditor.RegionObject.createRegion(x, y, canvas);
+                this.selectedRegionObject = this.appInstance.layersManager.createRegion(canvas, [[x, y]]);
                 this.appInstance.layersManager.addRegion(this.selectedRegionObject);//?????
             }
 

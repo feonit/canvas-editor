@@ -13,6 +13,14 @@
             return this.getCircleCoordinates[radius]
         }
 
+        if (!radius){
+            return [[0,0]];
+        }
+
+        if (radius === 1){
+            return [[0,0],[-1,0],[0,-1],[-1,-1]];
+        }
+
         var x,
             y,
             y1 = -radius,
@@ -21,7 +29,8 @@
 
         for (y = y1; y <= y2; y++){
             var absPart = Math.round(Math.sqrt(Math.pow(radius, 2) - Math.pow((y), 2)));
-            var x1 = -absPart;
+            // here may be -0
+            var x1 = parseInt(-absPart, 10);
             var x2 = absPart;
 
             for (x = x1; x <= x2; x++){
@@ -72,8 +81,8 @@
         var flow = getBezierCurve(arr, 0.01);
 
         for (var i = 0, len = flow.length; i < len; i ++){
-            flow[0] = Math.round(flow[0]);
-            flow[1] = Math.round(flow[1]);
+            flow[i][0] = Math.round(flow[i][0]);
+            flow[i][1] = Math.round(flow[i][1]);
         }
         return flow;
     };
@@ -217,6 +226,9 @@
         if (y0 > y1) y0 = y1; /* .. exchange them */
         y0 += (b+1)/2; y1 = y0-b1;   /* starting pixel */
         a *= 8*a; b1 = 8*b*b;
+
+        // возникают половинки
+        y0 = Math.round(y0);
 
         do {
             setPixel(x1, y0); /*   I. Quadrant */

@@ -24,6 +24,8 @@
         if ( !canvas instanceof HTMLCanvasElement )
             throw 'Lost canvas element';
 
+        this.canvas = canvas;
+
         canvas.setAttribute('oncontextmenu', 'return false;');
         var ctx = canvas.getContext('2d');
         ctx.mozImageSmoothingEnabled = false;
@@ -49,7 +51,7 @@
 
     CanvasEditor.prototype.newEvent = function(eventName, data){
         if (eventName === this.CREATED_REGION){
-            var regionObject = CanvasEditor.RegionObject.createRegion.apply(null, data);
+            var regionObject = this.layersManager.createRegion(data[0], data[1]);
             regionObject.layout = this.lastLayout;
             this.layersManager.addRegion(regionObject);
         }

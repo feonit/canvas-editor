@@ -67,7 +67,7 @@ function ToolBarView(appInstance){
     var transparent = new CanvasEditor.ToolController.TransparentToolController(appInstance, canvas);
     var checkBox = new CheckBoxComponent('Фон', true);
 
-    transparent.start();
+    transparent.start(appInstance.canvas);
 
     wrapper.appendChild(checkBox);
 

@@ -29,6 +29,11 @@
         this.lastLayout = null;
 
         /**
+         * Координаты нарисованной фигуры
+         * */
+        this.coordinatesLine = [];
+
+        /**
          * types
          * */
         this.CURVE_TYPE = 'CURVE_TYPE';
@@ -103,12 +108,13 @@
         this.currentPoint = null;
         this.snapshot = null;
         this._bufferPoints = null;
+        this.coordinatesLine = null;
     };
 
     DrawingTool.prototype.draw = function(){
         var ctx = this.canvas.getContext("2d");
         // очищение
-        ctx.clearRect(0, 0, canvas.width, this.canvas.height);
+        ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         // старье
         ctx.putImageData(this.snapshot, 0, 0);
@@ -116,6 +122,9 @@
         // новье
         if (this.type == this.CURVE_TYPE){
             ctx.drawImage(this._bufferCanvas, 0, 0);
+        } else {
+            var ctxBuf = this._bufferCanvas.getContext('2d');
+            ctxBuf.clearRect(0, 0, this.canvas.width, this.canvas.height);
         }
 
         var x0 = this.startPoint[0];
@@ -126,7 +135,7 @@
 
         switch (this.type){
             case this.CURVE_TYPE:
-                coordinates = CanvasEditor.MathFn.drawBezierCurve(new Curve(this._bufferPoints, this.size/2)); break;
+                coordinates = CanvasEditor.MathFn.drawBezierCurve(new Curve(this._bufferPoints, Math.round(this.size/2))); break;
 
             case this.RECTANGLE_TYPE:
                 coordinates = CanvasEditor.MathFn.rectangle(x0, y0, x1, y1); break;
@@ -160,7 +169,8 @@
                 break;
         }
 
-
+        this.coordinatesLine = coordinates;
+console.log(coordinates)
         if (coordinates.length){
             this.renderCircles(this.canvas, coordinates);
             this.renderCircles(this._bufferCanvas, coordinates);
@@ -173,6 +183,7 @@
      * Создает новое изображение нарисованной линии и сохраняет
      * */
     DrawingTool.prototype._publicNewLayout = function(){
+        // todo почему канвы обычной не достаточно?
         var image = new Image();
         image.height = this._bufferCanvas.height;
         image.width = this._bufferCanvas.width;
@@ -180,7 +191,10 @@
         this.lastLayout = image;
 
         //todo
-        this.appInstance.newEvent('CREATED_REGION', [this.startPoint[0], this.startPoint[1], this._bufferCanvas]);
+        this.appInstance.newEvent('CREATED_REGION', [
+            this._bufferCanvas,
+            this.coordinatesLine
+        ]);
     };
 
     /**
@@ -255,14 +269,11 @@
         _imageData.data[2] = savedColor[2];
         _imageData.data[3] = 255;
 
-        _canvas1pxCtx.mozImageSmoothingEnabled = false;
-        _canvas1pxCtx.webkitImageSmoothingEnabled = false;
-        _canvas1pxCtx.msImageSmoothingEnabled = false;
-        _canvas1pxCtx.imageSmoothingEnabled = false;
-
         _canvas1pxCtx.putImageData(_imageData, 0, 0);
 
-        return function _fn(ctx, x, y, radius, color){
+        var _stored = {};
+
+        return function (ctx, x, y, radius, color){
             var colorHasChanged = color[0] !== savedColor[0]
                 || color[1] !== savedColor[1]
                 || color[2] !== savedColor[2];
@@ -272,7 +283,7 @@
                 savedColor = color;
             }
 
-            var canvasRadius = _fn[radius];
+            var canvasRadius = _stored[radius];
 
             // подготовить новую картинку если новый радиус или новый цвет
             if (!canvasRadius || colorHasChanged){
@@ -291,20 +302,25 @@
 
                 var canvasR = document.createElement('canvas');
                 var powRadius = radius*2;
+                // так как циркуль в 1пиксель радиуса имеет 3 пикселя в диаметре по алгоритму
+                // а когда радиус 0 то диаметр 1пиксель
+                canvasR.height = powRadius + 1;
+                canvasR.width = powRadius + 1;
                 var coordinates = MathFn.getCircleCoordinates(radius);
-                var len = coordinates.length - 1;
+                var len = coordinates.length;
                 var canvasRCtx = canvasR.getContext('2d');
-                canvasR.height = powRadius;
-                canvasR.width = powRadius;
 
+                var coorX, coorY;
                 while(len > 0){
                     len--;
                     var coordinate;
                     coordinate = coordinates[len];
-                    canvasRCtx.drawImage(_canvas1px, coordinate[0] + radius, coordinate[1] + radius);
+                    coorX = coordinate[0] + radius;
+                    coorY = coordinate[1] + radius;
+                    canvasRCtx.drawImage(_canvas1px, coorX, coorY);
                 }
 
-                _fn[radius] = canvasRadius = canvasR;
+                _stored[radius] = canvasRadius = canvasR;
             }
 
             // поместить картинку
@@ -316,11 +332,16 @@
      *
      * */
     DrawingTool.prototype.renderCircles = function(canvas, coordinates){
-        var size = this.size;
         var color = this.color;
         var ctx = canvas.getContext('2d');
+        ctx.mozImageSmoothingEnabled = false;
+        ctx.webkitImageSmoothingEnabled = false;
+        ctx.msImageSmoothingEnabled = false;
+        ctx.imageSmoothingEnabled = false;
+
+        var radius = Math.floor(this.size/2);
         coordinates.forEach((function(coor){
-            DrawingTool.prototype.renderCircle(ctx, coor[0], coor[1], size, color);
+            this.renderCircle(ctx, coor[0], coor[1], radius, color);
         }).bind(this));
     };
 
