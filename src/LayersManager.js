@@ -415,6 +415,70 @@
         );
     };
 
+    LayersManager.prototype.redrawRegions = function(){
+        var store = {};
+        var region;
+        var regionIndex;
+
+        // clear all
+        for (regionIndex in this._regions){
+            region = this._regions[regionIndex];
+            store[regionIndex] = region;
+            this.removeRegion(region);
+        }
+
+        // clean borders
+        this._cleanCanvas();
+
+        // draw all
+        for (regionIndex in store){
+            region = store[regionIndex];
+            store[regionIndex] = region;
+            this.addRegion(region);
+            this.drawRegion(region);
+        }
+    };
+
+    LayersManager.prototype.drawRegion = function(region){
+        // кладем буфер региона на холст добавляя смещение
+        ctx.drawImage(region.getLayout(), region.offsetX, region.offsetY);
+    };
+
+    LayersManager.prototype._cleanCanvas = function(){
+        this.canvas.getContext('2d').clearRect(0, 0, this.canvas.width, this.canvas.height);
+    };
+
+    LayersManager.prototype.searchRegionByCoordinate = function(x, y){
+        // возьмем за правило, что если выделяемый пиксель имеет цвет фона холста ( прозрачный по дефолту ) то сбрасываем событие
+        if (this._pixelIsBackground(x, y)) return false;
+
+        //пробуем найти регион по индексовой карте (поиск по слою)
+        var region = this._getRegionByPx(x, y);
+
+        if (!region){
+            // пробуем найти регион волшебной палочкой (поиск по цвету)
+            region = this.createRegion(canvas, [[x, y]]);
+            this.addRegion(region);
+        }
+
+        return region;
+    };
+
+    /**
+     * @param {number} x
+     * @param {number} y
+     * @return {boolean}
+     * */
+    LayersManager.prototype._pixelIsBackground = function(x, y){
+        var ctx = this.canvas.getContext('2d'),
+            data = ctx.getImageData(x, y, 1, 1).data,
+            BGR_COLOR = [0,0,0,0];
+        return data[0] == BGR_COLOR[0]
+            && data[1] == BGR_COLOR[1]
+            && data[2] == BGR_COLOR[2]
+            && data[3] == BGR_COLOR[3];
+    };
+
     return LayersManager;
 
 }(CanvasEditor);

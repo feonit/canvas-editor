@@ -45,6 +45,7 @@
         this.toolsDriver.plug(CanvasEditor.ToolController.DrawingToolController);
         this.toolsDriver.plug(CanvasEditor.ToolController.EraserToolController);
         this.toolsDriver.plug(CanvasEditor.ToolController.DraggingToolController);
+        this.toolsDriver.plug(CanvasEditor.ToolController.SelectToolController);
     }
 
     CanvasEditor.prototype.CREATED_REGION = 'CREATED_REGION';

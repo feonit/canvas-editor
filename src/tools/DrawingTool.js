@@ -170,7 +170,7 @@
         }
 
         this.coordinatesLine = coordinates;
-console.log(coordinates)
+
         if (coordinates.length){
             this.renderCircles(this.canvas, coordinates);
             this.renderCircles(this._bufferCanvas, coordinates);

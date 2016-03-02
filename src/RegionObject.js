@@ -47,6 +47,8 @@
         this.offsetX = 0;
 
         this.offsetY = 0;
+
+        this._isActived = false;
     }
 
     RegionObject.prototype.getLayout = function(){
@@ -103,40 +105,40 @@
     /**
      * Метод создания подцветки
      * */
-    RegionObject.prototype.activate = function(canvasS){
-        //var ctx = canvasS.getContext('2d');
+    RegionObject.prototype.activate = function(){
+        if (this._isActived) return;
+        this._isActived = true;
+        if (this.borderCoordinates.length){
+            var coordinates = this.getRelationCoordinate(this.borderCoordinates);
+            var layout = this.getLayout();
+            this.__originalLayoutImageData = layout.getContext('2d').getImageData(0, 0, layout.width, layout.height);
+            var imageData = layout.getContext('2d').createImageData(1, 1);
 
-         //обновить переносимую картинку
-        //var canvas = document.createElement('canvas');
-        //canvas.width = canvasS.width;
-        //canvas.height = canvasS.height;
-        //var ctx = canvas.getContext('2d');
-        //ctx.drawImage(this._layout, 0, 0);
 
-        //var ctx = this.getLayout().getContext('2d');
-        //this.__canvasBeforeActivate = ctx.getImageData(0, 0, canvasS.width, canvasS.height);
-        //
-        //this.borderCoordinates.forEach((function(arr){
-        //    ctx.fillStyle = 'yellow';
-        //    ctx.fillRect( arr[0], arr[1] , 1, 1 ); // -1 смещение
-        //}).bind(this));
 
-        //var image = new Image();
-        //image.height = canvas.height;
-        //image.width = canvas.width;
-        //this._layout = image;
+            for (var i=0, len=coordinates.length; i < len; i++){
+
+                var colorData = CanvasEditor.MathFn.getRandomColorData();
+
+                imageData.data[0] = colorData[0];
+                imageData.data[1] = colorData[1];
+                imageData.data[2] = colorData[2];
+                imageData.data[3] = colorData[3];
+
+                layout.getContext('2d').putImageData(imageData, coordinates[i][0], coordinates[i][1]);
+            }
+        }
     };
 
     /**
      * Метод удаления подцветки
      * */
     RegionObject.prototype.deactivate = function(){
-        //if (this.__canvasBeforeActivate){
-            //var layout = this.getLayout();
-            //var ctx = layout.getContext('2d');
-            //ctx.putImageData(this.__canvasBeforeActivate, 0, 0);
-            //this.__canvasBeforeActivate = null;
-        //}
+        if (!this._isActived) return;
+        this._isActived = false;
+        var layout = this.getLayout();
+        layout.getContext('2d').clearRect(0, 0, layout.width, layout.height);
+        layout.getContext('2d').putImageData(this.__originalLayoutImageData, 0, 0);
     };
 
     return RegionObject;

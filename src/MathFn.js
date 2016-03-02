@@ -330,15 +330,16 @@
         }
     };
 
-    //function getRandomInt(min, max) {
-    //    return Math.floor(Math.random() * (max - min + 1)) + min;
-    //}
+    function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
 
     MathFn.randomHex = function(){
         return Math.floor(Math.random()*16777215).toString(16);
     };
 
-    //colorDrawing = [getRandomInt(0, 255), getRandomInt(0, 255), getRandomInt(0, 255), 255];
-
+    MathFn.getRandomColorData = function(){
+        return [getRandomInt(0, 255), getRandomInt(0, 255), getRandomInt(0, 255), 255];
+    }
 
 }(CanvasEditor);

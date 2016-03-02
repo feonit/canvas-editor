@@ -42,21 +42,13 @@
     }
 
     DraggingTool.prototype.draggingStart = function(x, y){
-        // возьмем за правило, что если выделяемый пиксель имеет цвет фона холста ( прозрачный по дефолту ) то сбрасываем событие
-        if (this._pixelIsBackground(x, y)) return;
-
         // если не выделен, выделяем
         if (!this.selectedRegionObject){
 
-            //пробуем найти регион по индексовой карте (поиск по слою)
-            this.selectedRegionObject = this.appInstance.layersManager._getRegionByPx(x, y);
+            // берем объект
+            this.selectedRegionObject = this.appInstance.layersManager.searchRegionByCoordinate(x, y);
 
-            if (!this.selectedRegionObject){
-                // пробуем найти регион волшебной палочкой (поиск по цвету)
-                this.selectedRegionObject = this.appInstance.layersManager.createRegion(canvas, [[x, y]]);
-                this.appInstance.layersManager.addRegion(this.selectedRegionObject);//?????
-            }
-
+            // активизируем
             this.selectedRegionObject.activate(canvas);
 
             // стереть объект
@@ -116,20 +108,6 @@
             this.selectedRegionObject = null;
         }
     };
-    /**
-     * @param {number} x
-     * @param {number} y
-     * @return {boolean}
-     * */
-    DraggingTool.prototype._pixelIsBackground = function(x, y){
-        var ctx = this.canvas.getContext('2d'),
-            data = ctx.getImageData(x, y, 1, 1).data,
-            BGR_COLOR = [0,0,0,0];
-        return data[0] == BGR_COLOR[0]
-            && data[1] == BGR_COLOR[1]
-            && data[2] == BGR_COLOR[2]
-            && data[3] == BGR_COLOR[3];
-    };
 
     /**
      * Имитация переноса.
@@ -144,8 +122,7 @@
         // возвращаем в исходное состояние до переноса но уже без самого региона
         ctx.putImageData(this.beforeDndDataImage, 0, 0);
 
-        // кладем буфер региона на холст добавляя смещение
-        ctx.drawImage(this.selectedRegionObject.getLayout(), this.selectedRegionObject.offsetX, this.selectedRegionObject.offsetY);
+        this.appInstance.layersManager.drawRegion(this.selectedRegionObject);
     };
 
     return DraggingTool;

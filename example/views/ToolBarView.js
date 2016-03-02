@@ -23,6 +23,7 @@ function ToolBarView(appInstance){
         "Рисовать Прямоугольник": "DrawingToolController-sq",
         "Рисовать Прямую": "DrawingToolController-li",
         "Рисовать Стрелка": "DrawingToolController-ar",
+        "Выделить/Удалить выделенное (Del)": "SelectToolController"
     };
 
     var modeName = "DrawingToolController-cu";
@@ -55,6 +56,10 @@ function ToolBarView(appInstance){
             return toolsDriver.play("DrawingToolController");
         }
 
+        if (data.detail.name === 'SelectToolController'){
+            return toolsDriver.play("SelectToolController");
+        }
+
         toolsDriver.play(data.detail.name);
 
     }, false);
@@ -64,7 +69,7 @@ function ToolBarView(appInstance){
     /**
      * Утилита: Задний фон для прозрачности
      * */
-    var transparent = new CanvasEditor.ToolController.TransparentToolController(appInstance, canvas);
+    var transparent = new CanvasEditor.ToolController.TransparentToolController(appInstance, appInstance.canvas);
     var checkBox = new CheckBoxComponent('Фон', true);
 
     transparent.start(appInstance.canvas);
