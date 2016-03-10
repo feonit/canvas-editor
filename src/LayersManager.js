@@ -8,49 +8,110 @@
      * @param appInstance
      * @param {HTMLCanvasElement} canvas
      * */
-    function LayersManager(appInstance, canvas){
+    function LayersManager(appInstance, canvas, options){
+        options = options || {};
 
-        this.canvas = canvas;
+        Object.defineProperty(this, 'canvas', {value: canvas});
 
-        /**
-         * Каждый новый слой имеет свой номер, который инкрементируется начиная с дефолтового значения
-         * @type {number}
-         * */
-        this._INDEX_DEFAULT = 0;
+        this.pixelsMap = new CanvasEditor.PixelsMap(options['PixelsMap']);
 
-        /**
-         * Объект Карта отвечает за информацию по соотношению каждого пикселя из карты к группе слоев
-         * накладываемых друг на друга в определенном порядке
-         * Карта отображения координаты пикселя в порядок слоев расположенных на нем
-         * @type {Object}
-         * */
-        this._map = {};
+        this.objectsOrder = new CanvasEditor.ObjectsOrder(options['ObjectsOrder']);
 
-        /**
-         * Номер последнего слоя
-         * @type {number}
-         * */
-        this._currentIndex = this._INDEX_DEFAULT;
 
-        /**
-         * Список слоев по номерам
-         * @type {Object}
-         * */
-        this._regions = {};
+        /** @lends LayersManager */
+        this.reset();
     }
+
+    /**
+     * Индекс первого слоя
+     * */
+    LayersManager.prototype.BACKGROUND_INDEX = 0;
+
+    /**
+     * Сбросить состояние
+     * */
+    LayersManager.prototype.reset = function(){
+        this.pixelsMap = new CanvasEditor.PixelsMap();
+        this.objectsOrder = new CanvasEditor.ObjectsOrder();
+
+        this.addRegion(this._createBackgroundRegion());
+    };
+
+    /**
+     * @return {RegionObject} объект фигуры
+     * */
+    LayersManager.prototype._createBackgroundRegion = function(){
+        var imageData = this.canvas.getContext('2d').getImageData(0,0,this.canvas.width, this.canvas.height);
+        var coordinates = [];
+        for (var x = 0, lenX = this.canvas.width; x < lenX; x++){
+            //coordinates.length === this.canvas.height*this.canvas.width;
+            for (var y = 0, lenY = this.canvas.height; y < lenY; y++){
+                coordinates.push([x,y])
+            }
+        }
+        return new CanvasEditor.RegionObject({
+            imageData: imageData,
+            coordinates: coordinates,
+            height: this.canvas.height,
+            width: this.canvas.width,
+        });
+    };
 
     /**
      * Метод для записи региона в карту пикселей
      * так как это новый регион, то индекс его становится выше всех, и его соответственно видно поверх всех
-     * @param {CanvasEditor.RegionObject} regionObject
+     * @param {RegionObject} regionObject
      * */
     LayersManager.prototype.addRegion = function(regionObject){
-        // не забыть про смещение
-        var offsetX = regionObject.offsetX;
-        var offsetY = regionObject.offsetY;
+        this.addRecordsAboutRegion(regionObject);
+        this.objectsOrder.addObject(regionObject);
+    };
 
-        var newIndex = ++this._currentIndex;
-        var coordinates = regionObject.getOriginalCoordinates();
+    /**
+     * Удаляет регион с холста
+     * Отрисовывает те слои которые распологаются под ним
+     * @param {CanvasEditor.RegionObject} regionObject
+     * */
+    LayersManager.prototype.removeRegion = function(regionObject){
+        this.removeRecordsAboutRegion(regionObject);
+
+        // удалить из порядка
+        this.objectsOrder.removeObject(regionObject);
+
+        // этот способ просто перерисосывает все слои
+        this.redrawLayers();
+    };
+
+    /**
+     *
+     * */
+    LayersManager.prototype.removeRecordsAboutRegion = function(regionObject, offsetX, offsetY){
+        // не забыть про смещение
+        var offsetX = typeof offsetX === 'undefined' ? regionObject.offsetX : offsetX;
+        var offsetY = typeof offsetY === 'undefined' ? regionObject.offsetY : offsetY;
+
+        var coordinates = regionObject.getRelationCoordinate(null, offsetX, offsetY);
+        var coordinate;
+        var coordinateX;
+        var coordinateY;
+
+        if (coordinates.length){
+            for (var i = 0, len = coordinates.length; i < len; i += 1){
+                coordinate = coordinates[i];
+                coordinateX = coordinates[i][0];
+                coordinateY = coordinates[i][1];
+
+                this.pixelsMap.deleteRecord(coordinateX, coordinateY, regionObject);
+            }
+        }
+    };
+
+    /**
+     *
+     * */
+    LayersManager.prototype.addRecordsAboutRegion = function(regionObject){
+        // не забыть про смещение
+        var coordinates = regionObject.getRelationCoordinate();
         var coordinate;
         var coordinateX;
         var coordinateY;
@@ -60,153 +121,170 @@
                 coordinateX = coordinates[i][0];
                 coordinateY = coordinates[i][1];
 
-                this._addRecord(coordinateX + offsetX, coordinateY + offsetY, newIndex);
+                this.pixelsMap.addRecord(coordinateX, coordinateY, regionObject);
             }
         }
-        this._regions[newIndex] = regionObject;
     };
 
     /**
-     * Удаляет регион с холста
-     * Отрисовывает те слои которые распологаются под ним
-     * @param {CanvasEditor.RegionObject} removedRegion
+     * Меняет подядок региона и Синхронизирует с _map
      * */
-    LayersManager.prototype.removeRegion = function(removedRegion){
-        var relationCoordinates = removedRegion.getRelationCoordinate();
-        var removedRegionIndex = this._findIndexOfRegion(removedRegion);
-        var coordinate;
-        var coordinateX;
-        var coordinateY;
+    LayersManager.prototype.moveRegionToTop = function(regionObject){
+        var orderIsChanged = this.objectsOrder.moveToTop(regionObject);;
 
-        // отсортировать каждый пиксел области по индексу слоя
-        var sort = {};
-
-        var ctx = this.canvas.getContext('2d');
-
-        // незабываем подчистить связь региона и индекса
-        delete this._regions[removedRegionIndex];
-
-        for (var i = 0, len = relationCoordinates.length; i < len; i++){
-            coordinate = relationCoordinates[i];
-            coordinateX = coordinate[0];
-            coordinateY = coordinate[1];
-
-            // для каждого пиксела удаляем запись об удаляемом регионе
-            this._removeRecord(coordinateX, coordinateY, removedRegionIndex);
-
-            // находим последний регион для этого пиксела
-            var region = this._getRegionByPx(coordinateX, coordinateY);
-
-            if (region){
-                var index = this._findIndexOfRegion(region);
-
-                if (!sort[index]) sort[index] = [];
-
-                sort[index].push(coordinate);
-
-                ctx.clearRect(coordinateX, coordinateY, 1, 1); // -1 смещение
-
-            } else {
-                ctx.clearRect(coordinateX, coordinateY, 1, 1); // -1 смещение
-            }
-
-        }
-
-        for( var key in sort){
-            region = this._regions[key];
-            relationCoordinates = sort[key];
-            this.drawPixelsAtCanvas(this.canvas, relationCoordinates, region.etalonPointImageData);
+        if (orderIsChanged){
+            // не забыть переписать карту
+            //this._reWriteMap();
+            // todo нужно переписать не полностью а только текущий объект
+            this.removeRecordsAboutRegion(regionObject);
+            this.addRecordsAboutRegion(regionObject);
         }
     };
 
-    LayersManager.prototype.drawPixelsAtCanvas = function(canvas, coordinates, etalonPointImageData){
+    /**
+     * todo можно оптимизировать, переписав не всю карту а только часть
+     * */
+    LayersManager.prototype.changePosition = function(regionObject){
+        regionObject.saveRecordOffset();
+        //this._reWriteMap();
+
+        // удалить в по координатам из предыдущей позиции
+        var record = regionObject.getPrevRecord();
+        this.removeRecordsAboutRegion(regionObject, record[0], record[1]);
+
+        this.addRecordsAboutRegion(regionObject);
+    };
+
+    /**
+     * @deprecated
+     * */
+    LayersManager.prototype.putPixelsAtCanvas = function(canvas, coordinates, etalonPointImageData){
         var canvasCtx = canvas.getContext('2d');
         var imageData = canvasCtx.createImageData(1,1);
         var data = imageData.data;
         data[0] = etalonPointImageData[0];
         data[1] = etalonPointImageData[1];
         data[2] = etalonPointImageData[2];
-        data[3] = 255;// etalon[3]; !!!!!!!!!
-        var canvas1px = document.createElement('canvas');
-        canvas1px.height = 1;
-        canvas1px.width = 1;
-        var canvas1pxCtx = canvas1px.getContext('2d');
-        canvas1pxCtx.putImageData(imageData, 0, 0);
+        data[3] = etalonPointImageData[3];
+
         var coordinate, i, len;
         for (i = 0, len = coordinates.length; i < len; i++){
             coordinate = coordinates[i];
-            canvasCtx.drawImage(canvas1px, coordinate[0], coordinate[1]);
+            canvasCtx.putImageData(imageData, coordinate[0], coordinate[1]);
         }
     };
 
     /**
-     * Метод поиска региона по карте пикселей с определенной координатой
-     * @param {number} x — Координата X
-     * @param {number} y — Координата Y
-     * @param {number} [offset=0] — Смещение по истории
+     * @param {HTMLCanvasElement} canvas — холст
+     * @param {number[][]} coordinateLine — исходные координаты (линия 1-но пиксельной фигуры)
+     * @return {CanvasEditor.RegionObject} объект фигуры
      * */
-    LayersManager.prototype._getRegionByPx = function(x, y, offset){
-        offset = offset || 0;
-        if (this._map[x] && this._map[x][y] ){
-            var history = this._map[x][y];
-            var lastRecordIndex = history.length - 1 + offset;
+    LayersManager.prototype.createRegion = function(canvas, coordinateLine){
+        var beginWithX = coordinateLine[0][0];
+        var beginWithY = coordinateLine[0][1];
+        var etalonPointImageData = canvas.getContext('2d').getImageData(beginWithX, beginWithY, 1, 1).data;
+        var searchedData = this._searchPixels(beginWithX, beginWithY, canvas);
+        var coordinates = searchedData[0];
+        var borderCoordinates = searchedData[1];
 
-            return this._regions[history[lastRecordIndex]];
+        return new CanvasEditor.RegionObject({
+            height: canvas.height,
+            width: canvas.width,
+            coordinates: coordinates,
+            color: etalonPointImageData,
+            borderCoordinates: borderCoordinates,
+            coordinateLine: coordinateLine,
+        });
+    };
+
+    /**
+     * Перерисовать слои, не изменяя данных
+     * Не отрисовывает активные элементы
+     * */
+    LayersManager.prototype.redrawLayers = function(){
+        var i, len;
+        var region;
+        var canvas = this.canvas;
+
+        this._cleanCanvas();
+
+        var objects = this.objectsOrder.getObjects();
+        for (i = 0, len = objects.length; i < len; i++){
+            region = objects[i];
+
+            region.drawAtCanvas(canvas);
         }
     };
 
     /**
-     * Определение номера региона
-     * @param {CanvasEditor.RegionObject} regionObject
+     *
      * */
-    LayersManager.prototype._findIndexOfRegion = function(regionObject){
-        var index;
-
-        for (var key in this._regions){
-            if (this._regions[key] === regionObject){
-                index = parseInt(key, 10);
-            }
-        }
-
-        return index;
+    LayersManager.prototype.drawActivateRegion = function(objectRegion){
+        objectRegion.activate();
+        this.redrawLayers();
     };
 
     /**
-     * Метод пополнения карты новыми данными
-     * @param {number} x — Координата X
-     * @param {number} y — Координата Y
-     * @param {number} record — индекс
+     *
      * */
-    LayersManager.prototype._addRecord = function(x, y, record){
-        //console.log(coordinateX, coordinateY, record)
-        if (!this._map[x])
-            this._map[x] = {};
-
-        if (!this._map[x][y]){
-            this._map[x][y] = []; // <- история индексов для пиксела
-        }
-
-        this._map[x][y].push(record);
+    LayersManager.prototype.drawDeactivateRegion = function(objectRegion){
+        objectRegion.deactivate();
+        this.redrawLayers();
     };
 
     /**
-     * Метод удаления данных из карты
+     *
      * */
-    LayersManager.prototype._removeRecord = function(x, y, record){
-        if ( this._map[x] && this._map[x][y] ){
-            var index = this._map[x][y].indexOf(record);
-            if (index !== -1){
-                var removedRecord = this._map[x][y].splice(index, 1)[0];
-            }
-        }
-
-        return removedRecord;
+    LayersManager.prototype.drawToTopRegion = function(objectRegion){
+        this.moveRegionToTop(objectRegion);
+        this.redrawLayers();
     };
 
-    LayersManager.prototype.dropLayersData = function(){
-        this._regions = {};
-        this._map = {};
-        this._currentIndex = this._INDEX_DEFAULT;
+    /**
+     * Поиск объекта по заданной координате
+     * @param {number} x — координата X
+     * @param {number} y — координата Y
+     * @return {boolean|RegionObject} false - если объект не найден
+     * */
+    LayersManager.prototype.searchRegionByCoordinate = function(x, y){
+        // возьмем за правило, что если выделяемый пиксель имеет цвет фона холста ( прозрачный по дефолту ) то сбрасываем событие
+        if (this._pixelIsBackground(x, y))
+            return false;
+
+        // пробуем найти регион по индексовой карте (поиск по слою)
+        var region = this.pixelsMap.getRecord(x, y);
+
+        // это сырой первичный слой
+        // todo ссылка на объект
+
+        var isRawRegion;
+
+        if (region){
+            isRawRegion = this.objectsOrder.getIndex(region) === this.BACKGROUND_INDEX;
+        }
+
+        // пробуем найти регион волшебной палочкой (поиск по цвету)
+        if (!region || isRawRegion){
+            region = this.createRegion(this.canvas, [[x, y]]);
+
+            // после того как выдрали с сырого слоя специальные координаты,
+            // нужно стереть их из него!
+            var CLEAN_COLOR = [0, 0, 0, 0];
+            //todo нужно взять оригинальные координаты
+
+            // заполнить дефолтовым цветом
+            var raw = this.objectsOrder.getObject(this.BACKGROUND_INDEX);
+            this.putPixelsAtCanvas(raw.getLayout(), region.getRelationCoordinate(), CLEAN_COLOR);
+
+            this.addRegion(region);
+        }
+
+        // его и вправду нет
+        if (!region){
+            return false;
+        }
+
+        return region;
     };
 
     /**
@@ -389,85 +467,10 @@
     };
 
     /**
-     * @param {} canvas
-     * @param {number[][]} coordinateLine — исходные координаты 1-но пиксельной фигуры
-     * @return {CanvasEditor.RegionObject} объект фигуры
-     * */
-    LayersManager.prototype.createRegion = function(canvas, coordinateLine){
-        var beginWithX = coordinateLine[0][0];
-        var beginWithY = coordinateLine[0][1];
-        var etalonPointImageData = canvas.getContext('2d').getImageData(beginWithX, beginWithY, 1, 1).data;
-        var searched = this._searchPixels(beginWithX, beginWithY, canvas);
-
-        // вместо генерации можно было бы получить сразу используя вторую канву
-        var layoutCanvas = document.createElement('canvas');
-        layoutCanvas.height = canvas.height;
-        layoutCanvas.width = canvas.width;
-
-        this.drawPixelsAtCanvas(layoutCanvas, searched[0], etalonPointImageData);
-
-        return new CanvasEditor.RegionObject(
-            layoutCanvas,
-            etalonPointImageData,
-            searched[0],
-            searched[1],
-            coordinateLine
-        );
-    };
-
-    LayersManager.prototype.redrawRegions = function(){
-        var store = {};
-        var region;
-        var regionIndex;
-
-        // clear all
-        for (regionIndex in this._regions){
-            region = this._regions[regionIndex];
-            store[regionIndex] = region;
-            this.removeRegion(region);
-        }
-
-        // clean borders
-        this._cleanCanvas();
-
-        // draw all
-        for (regionIndex in store){
-            region = store[regionIndex];
-            store[regionIndex] = region;
-            this.addRegion(region);
-            this.drawRegion(region);
-        }
-    };
-
-    LayersManager.prototype.drawRegion = function(region){
-        // кладем буфер региона на холст добавляя смещение
-        ctx.drawImage(region.getLayout(), region.offsetX, region.offsetY);
-    };
-
-    LayersManager.prototype._cleanCanvas = function(){
-        this.canvas.getContext('2d').clearRect(0, 0, this.canvas.width, this.canvas.height);
-    };
-
-    LayersManager.prototype.searchRegionByCoordinate = function(x, y){
-        // возьмем за правило, что если выделяемый пиксель имеет цвет фона холста ( прозрачный по дефолту ) то сбрасываем событие
-        if (this._pixelIsBackground(x, y)) return false;
-
-        //пробуем найти регион по индексовой карте (поиск по слою)
-        var region = this._getRegionByPx(x, y);
-
-        if (!region){
-            // пробуем найти регион волшебной палочкой (поиск по цвету)
-            region = this.createRegion(canvas, [[x, y]]);
-            this.addRegion(region);
-        }
-
-        return region;
-    };
-
-    /**
-     * @param {number} x
-     * @param {number} y
-     * @return {boolean}
+     * Проверяет, пустой ли пиксел по заданной координате
+     * @param {number} x — координата X
+     * @param {number} y — координата Y
+     * @return {boolean} true если пустой
      * */
     LayersManager.prototype._pixelIsBackground = function(x, y){
         var ctx = this.canvas.getContext('2d'),
@@ -478,6 +481,19 @@
             && data[2] == BGR_COLOR[2]
             && data[3] == BGR_COLOR[3];
     };
+
+    /**
+     * Очистить холст полностью
+     * */
+    LayersManager.prototype._cleanCanvas = function(){
+        this.canvas.getContext('2d').clearRect(0, 0, this.canvas.width, this.canvas.height);
+    };
+
+
+
+
+
+
 
     return LayersManager;
 

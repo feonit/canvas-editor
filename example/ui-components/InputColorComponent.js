@@ -1,12 +1,10 @@
 !function(global){
 
-    global.InputColorComponent = InputColorComponent;
-
     /**
      * @type {HTMLElement}
      * @param {string} value
      * */
-    function InputColorComponent(color){
+    global.InputColorComponent = function (color){
 
         var API = {
             userSelectColor: {

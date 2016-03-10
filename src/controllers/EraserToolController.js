@@ -7,7 +7,8 @@
         var tool = new CanvasEditor.Tool.EraserTool(appInstance, canvas);
 
         function mousedown(event){
-            tool.eraserStart(event.layerX, event.layerY, appInstance.options.lineWidth);
+            tool.setOptions({ size:  appInstance.settings.eraserSize });
+            tool.eraserStart(event.layerX, event.layerY);
         }
 
         function mousemove(event){

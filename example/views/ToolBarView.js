@@ -1,86 +1,75 @@
-function ToolBarView(appInstance){
+!function(CanvasEditor, global){
 
-    var wrapper = document.createElement('div');
-    wrapper.className = 'tool-bar';
-    var name = document.createElement('div');
-    name.innerHTML = 'Tool Bar';
-    wrapper.appendChild(name);
+    global.ToolBarView = function (appInstance){
 
-    /**
-     * Переключатель инструментов
-     * */
+        var wrapper = this.nodeElement = document.createElement('div');
+        wrapper.className = 'tool-bar';
+        var name = document.createElement('div');
+        name.innerHTML = 'Инструменты:';
+        wrapper.appendChild(name);
 
-    var toolsDriver = appInstance.toolsDriver;
-    var enabledToolName = 'DrawingToolController';
+        /**
+         * Переключатель инструментов
+         * */
 
-    toolsDriver.play(enabledToolName);
+        var toolsDriver = appInstance.toolsDriver;
+        var enabledToolName = 'DrawingToolController';
 
-    var map = {
-        "Стерка": "EraserToolController",
-        "Перенести": "DraggingToolController",
-        "Рисовать Линию": "DrawingToolController-cu",
-        "Рисовать Эллипс": "DrawingToolController-el",
-        "Рисовать Прямоугольник": "DrawingToolController-sq",
-        "Рисовать Прямую": "DrawingToolController-li",
-        "Рисовать Стрелка": "DrawingToolController-ar",
-        "Выделить/Удалить выделенное (Del)": "SelectToolController"
-    };
+        toolsDriver.play(enabledToolName);
 
-    var modeName = "DrawingToolController-cu";
-    var radioBox = new RadioBoxComponent(map, modeName || enabledToolName);
+        var map = {
+            "Стерка": "EraserToolController",
+            "Перенести": "DraggingToolController",
+            "Рисовать Линию": "DrawingToolController-cu",
+            "Рисовать Эллипс": "DrawingToolController-el",
+            "Рисовать Прямоугольник": "DrawingToolController-sq",
+            "Рисовать Прямую": "DrawingToolController-li",
+            "Рисовать Стрелка": "DrawingToolController-ar",
+            "Выделить/Удалить выделенное (Del)": "SelectToolController"
+        };
 
-    radioBox.addEventListener("userSelectTool", function(data){
+        var modeName = "DrawingToolController-cu";
+        var radioBox = new RadioBoxComponent(map, modeName || enabledToolName);
 
-        if (data.detail.name === 'DrawingToolController-cu'){
-            appInstance.options.drawingType = 'CURVE_TYPE';
-            return toolsDriver.play("DrawingToolController");
-        }
+        radioBox.addEventListener("userSelectTool", function(data){
 
-        if (data.detail.name === 'DrawingToolController-el'){
-            appInstance.options.drawingType = 'ELLIPSE_TYPE';
-            return toolsDriver.play("DrawingToolController");
-        }
+            switch (data.detail.name){
+                case 'DrawingToolController-cu':
+                    toolsDriver.play("DrawingToolController");
+                    appInstance.settings.drawingType = 'CURVE_TYPE';
+                    break;
 
-        if (data.detail.name === 'DrawingToolController-sq'){
-            appInstance.options.drawingType = 'RECTANGLE_TYPE';
-            return toolsDriver.play("DrawingToolController");
-        }
+                case 'DrawingToolController-el':
+                    appInstance.settings.drawingType = 'ELLIPSE_TYPE';
+                    toolsDriver.play("DrawingToolController");
+                    break;
 
-        if (data.detail.name === 'DrawingToolController-li'){
-            appInstance.options.drawingType = 'LINE_TYPE';
-            return toolsDriver.play("DrawingToolController");
-        }
+                case 'DrawingToolController-sq':
+                    appInstance.settings.drawingType = 'RECTANGLE_TYPE';
+                    toolsDriver.play("DrawingToolController");
 
-        if (data.detail.name === 'DrawingToolController-ar'){
-            appInstance.options.drawingType = 'ARROW_TYPE';
-            return toolsDriver.play("DrawingToolController");
-        }
+                    break;
+                case 'DrawingToolController-li':
+                    appInstance.settings.drawingType = 'LINE_TYPE';
+                    toolsDriver.play("DrawingToolController");
+                    break;
+                case 'DrawingToolController-ar':
+                    appInstance.settings.drawingType = 'ARROW_TYPE';
+                    toolsDriver.play("DrawingToolController");
+                    break;
 
-        if (data.detail.name === 'SelectToolController'){
-            return toolsDriver.play("SelectToolController");
-        }
+                case 'SelectToolController':
+                    toolsDriver.play("SelectToolController");
+                    break;
 
-        toolsDriver.play(data.detail.name);
+                default :
+                    toolsDriver.play(data.detail.name);
+            }
 
-    }, false);
 
-    wrapper.appendChild(radioBox);
+        }, false);
 
-    /**
-     * Утилита: Задний фон для прозрачности
-     * */
-    var transparent = new CanvasEditor.ToolController.TransparentToolController(appInstance, appInstance.canvas);
-    var checkBox = new CheckBoxComponent('Фон', true);
+        wrapper.appendChild(radioBox);
+    }
 
-    transparent.start(appInstance.canvas);
-
-    wrapper.appendChild(checkBox);
-
-    checkBox.addEventListener('onChange', function(data){
-        data.detail.checked
-            ? transparent.start()
-            : transparent.stop();
-    });
-
-    this.nodeElement = wrapper;
-}
+}(CanvasEditor, window);

@@ -32,11 +32,11 @@
         if (index === -1){
             this.selectedObjects.push(regionObject);
             regionObject.activate();
-            this.appInstance.layersManager.redrawRegions();
+            this.appInstance.layersManager.redrawLayers();
         } else {
             this.selectedObjects.splice(index, 1);
             regionObject.deactivate();
-            this.appInstance.layersManager.redrawRegions();
+            this.appInstance.layersManager.redrawLayers();
         }
         return regionObject;
     };
@@ -48,7 +48,7 @@
         this.selectedObjects.forEach((function(regionObject){
             this.appInstance.layersManager.removeRegion(regionObject);
         }).bind(this));
-        this.appInstance.layersManager.redrawRegions();
+        this.appInstance.layersManager.redrawLayers();
         this.selectedObjects = [];
     };
 
@@ -60,7 +60,7 @@
             regionObject.deactivate();
         }).bind(this));
 
-        this.appInstance.layersManager.redrawRegions();
+        this.appInstance.layersManager.redrawLayers();
         this.selectedObjects = [];
     }
 

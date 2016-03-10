@@ -16,12 +16,17 @@
         this.canvas = canvas;
         this.ctx = canvas.getContext("2d");
         this.points = null;
-        this.widthLine = 0;
+        this.size = 0;
     }
+
+    EraserTool.prototype.setOptions = function(options){
+        options = options || {};
+        options.size && (this.size = options.size);
+    };
 
     EraserTool.prototype.eraserStart = function(x, y, width){
         if (width){
-            this.widthLine = width;
+            this.size = width;
         }
         if (!this.points) {
             this.points = [];
@@ -72,14 +77,14 @@
          * Функия получения массива всех точек стираемой области, относительно полученной координаты
          * */
 
-        var length = this.widthLine;
+        var length = this.size;
 
         this.ctx.clearRect(x - length/2, y - length/2, length, length);
     };
 
     EraserTool.prototype.cleanCircleAtPoint =  function (x, y){
 
-        var RADIUS = this.widthLine;
+        var RADIUS = this.size;
         var coordinates = this._getCircleCoordinatesWithOffset(x, y, RADIUS);
         var len = coordinates.length - 1;
 
@@ -96,6 +101,8 @@
      * */
     EraserTool.prototype._getCircleCoordinatesWithOffset = function(x0, y0, radius){
         var coordinates = MathFn.getCircleCoordinates(radius);
+
+        //todo
         coordinates = CanvasEditor.RegionObject.prototype.getRelationCoordinate(coordinates, x0, y0);
         return coordinates;
     };

@@ -1,12 +1,10 @@
 !function(global){
 
-    global.InputSliderComponent = InputSliderComponent;
-
     /**
      * @type {HTMLElement}
      * @param {number} value
      * */
-    function InputSliderComponent(value){
+    global.InputSliderComponent = function (value){
 
         var API = {
             userSelectWidth: {

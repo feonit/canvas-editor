@@ -1,8 +1,4 @@
-//namespace('CanvasEditor.tools');
-
 !function(CanvasEditor){
-    //used layersManager
-
     CanvasEditor.namespace('CanvasEditor.Tool').DraggingTool = DraggingTool;
 
     /**
@@ -13,89 +9,100 @@
      * @arg searchMode — Режим поиска фигуры по цвету или по слоям (COLOR_MODE or LAYER_MODE) todo
      * */
     function DraggingTool(appInstance, canvas){
+        Object.defineProperty(this, 'appInstance', {value: appInstance});
+        Object.defineProperty(this, 'canvas', {value: canvas});
 
-        this.appInstance = appInstance;
-        this.canvas = canvas;
+        /**
+         * Координата начала переноса
+         * @type {number[]}
+         * */
+        this.coordinateStart = [];
 
-        /** @type {ImageData} данные холста до переноса */
-        this.beforeDndDataImage = null;
-
-        /** @type {number} */
-        this.dndStartPositionX = null;
-
-        /** @type {number} */
-        this.dndStartPositionY = null;
-
-        /** @type {number} */
-        this.offsetXBeforeDnd = null;
-
-        /** @type {number} */
-        this.offsetYBeforeDnd = null;
+        /**
+         * Исходное смещение региона до начала переноса
+         * @type {number[]}
+         * */
+        this.firstOffset = [];
 
         /**
          * Текущий переносимый регион
+         * @type {RegionObject}
          * */
         this.selectedRegionObject = null;
 
-        // объявляет начало и конец переноса
-        this.processDnD = false;
+        /**
+         * Определяет начало и конец переноса
+         * @type {boolean}
+         * */
+        this.processing = false;
+
+        /**
+         * Определяет был ли перенос
+         * @type {boolean}
+         * */
+        this.moved = false;
     }
 
     DraggingTool.prototype.draggingStart = function(x, y){
         // если не выделен, выделяем
         if (!this.selectedRegionObject){
 
-            // берем объект
-            this.selectedRegionObject = this.appInstance.layersManager.searchRegionByCoordinate(x, y);
+            // пробуем найти объект
+            var regionObject = this.appInstance.layersManager.searchRegionByCoordinate(x, y);
 
-            // активизируем
-            this.selectedRegionObject.activate(canvas);
+            // все таки там пусто
+            if (!regionObject)
+                return;
 
-            // стереть объект
-            this.appInstance.layersManager.removeRegion(this.selectedRegionObject);//?????
-
-            // запомнить как выглядит канвас без объекта
-            this.beforeDndDataImage = this.canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height);
-
-            this._drawLayout();
+            this.selectedRegionObject = regionObject;
         }
 
+        // 1 активизируем
+        this.appInstance.layersManager.drawActivateRegion(this.selectedRegionObject);
+
+        // 2 поднять объект
+        this.appInstance.layersManager.drawToTopRegion(this.selectedRegionObject);
+
         // начало процесса перемещения
-        this.processDnD = true;
+        this.processing = true;
+        this.moved = false;
 
-        // запоминаем исходную позицию
-        this.offsetXBeforeDnd = 0;
-        this.offsetYBeforeDnd = 0;
+        // запоминаем начальную координату
+        this.coordinateStart = [x, y];
 
-        this.dndStartPositionX = x;
-        this.dndStartPositionY = y;
-        this.offsetXBeforeDnd = this.selectedRegionObject.offsetX;
-        this.offsetYBeforeDnd = this.selectedRegionObject.offsetY;
+        // запоминаем исходное смещение объекта
+        this.firstOffset[0] = this.selectedRegionObject.offsetX;
+        this.firstOffset[1] = this.selectedRegionObject.offsetY;
     };
 
     DraggingTool.prototype.draggingContinue = function(x, y){
-        if (this.processDnD){
-            this.selectedRegionObject.offsetX = this.offsetXBeforeDnd + x - this.dndStartPositionX;
-            this.selectedRegionObject.offsetY = this.offsetYBeforeDnd + y - this.dndStartPositionY;
-            this._drawLayout();
+        if (this.processing){
+            this.selectedRegionObject.offsetX = this.firstOffset[0] + x - this.coordinateStart[0];
+            this.selectedRegionObject.offsetY = this.firstOffset[1] + y - this.coordinateStart[1];
+            this.appInstance.layersManager.redrawLayers();
+            this.moved = true;
         }
     };
+
     DraggingTool.prototype.draggingEnd = function(x, y){
-        if (this.processDnD){
-            this.selectedRegionObject.deactivate();
+        if (this.processing){
 
-            // save final offset
-            this.selectedRegionObject.saveRecordOffset();
+            // 1 деактивизируем
+            this.appInstance.layersManager.drawDeactivateRegion(this.selectedRegionObject);
 
-            // затем добавляем запись как о новом регионе
-            this.appInstance.layersManager.addRegion(this.selectedRegionObject);
+            // 2
+            this.appInstance.layersManager.redrawLayers();
+
+            // 3 save final offset
+            if (this.moved){
+                this.appInstance.layersManager.changePosition(this.selectedRegionObject);
+            }
 
             // заканчиваем процесс
-            this.processDnD = false;
+            this.processing = false;
 
             // сброс данных
             this.selectedRegionObject = null;
-            this.beforeDndDataImage = null;
         }
     };
 
@@ -104,25 +111,9 @@
         // если не пусто, значит какой то объект выделен
         if (this.selectedRegionObject){
             // убираем выделение путем восстанавления первоначального состояния
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
             this.selectedRegionObject = null;
         }
-    };
-
-    /**
-     * Имитация переноса.
-     * Перерисовывает на холсте фейковое изображение на заданные отступы.
-     * */
-    DraggingTool.prototype._drawLayout = function (){
-        var ctx = this.canvas.getContext('2d');
-
-        // очищаем холст
-        ctx.clearRect(0,0, this.canvas.width, this.canvas.height);
-
-        // возвращаем в исходное состояние до переноса но уже без самого региона
-        ctx.putImageData(this.beforeDndDataImage, 0, 0);
-
-        this.appInstance.layersManager.drawRegion(this.selectedRegionObject);
     };
 
     return DraggingTool;

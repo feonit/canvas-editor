@@ -14,9 +14,9 @@
             ctx.lineJoin = 'round';
 
             tool.setOptions({
-                color: CanvasEditor.MathFn.hexToRgb(appInstance.options.drawingColor),
-                size: appInstance.options.drawingSize,
-                type: appInstance.options.drawingType
+                color: CanvasEditor.MathFn.hexToRgb(appInstance.settings.drawingColor),
+                size: appInstance.settings.drawingSize,
+                type: appInstance.settings.drawingType
             });
 
             tool.drawingStart(event.layerX, event.layerY);

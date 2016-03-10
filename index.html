@@ -30,6 +30,7 @@
 </head>
 <body>
 <canvas id="canvas" width="800" height="400"></canvas>
+<canvas id="canvasDouble" width="800" height="400"></canvas>
 <div class="side-bar"></div>
 </body>
 
@@ -37,6 +38,9 @@
 
 <script type="text/javascript" src="src/Curve&Point.js"></script>
 <script type="text/javascript" src="src/MathFn.js"></script>
+<script type="text/javascript" src="src/Mediator.js"></script>
+<script type="text/javascript" src="src/PixelsMap.js"></script>
+<script type="text/javascript" src="src/ObjectsOrder.js"></script>
 <script type="text/javascript" src="src/LayersManager.js"></script>
 <script type="text/javascript" src="src/RegionObject.js"></script>
 <script type="text/javascript" src="src/ToolsDriver.js"></script>
@@ -50,8 +54,11 @@
 <script type="text/javascript" src="src/controllers/DraggingToolController.js"></script>
 <script type="text/javascript" src="src/controllers/DrawingToolController.js"></script>
 <script type="text/javascript" src="src/controllers/EraserToolController.js"></script>
-<script type="text/javascript" src="src/controllers/TransparentToolController.js"></script>
 <script type="text/javascript" src="src/controllers/SelectToolController.js"></script>
+
+<script type="text/javascript" src="src/utils/SaveLocalUtilController.js"></script>
+<script type="text/javascript" src="src/utils/SaveServerUtilController.js"></script>
+<script type="text/javascript" src="src/utils/TransparentUtilController.js"></script>
 
 <script type="text/javascript" src="example/ui-components/RadioBoxComponent.js"></script>
 <script type="text/javascript" src="example/ui-components/CheckBoxComponent.js"></script>
@@ -60,32 +67,50 @@
 
 <script type="text/javascript" src="example/views/OptionsView.js"></script>
 <script type="text/javascript" src="example/views/ToolBarView.js"></script>
+<script type="text/javascript" src="example/views/UtilsBarView.js"></script>
 <script type="text/javascript" src="test.js"></script>
-<script type="text/javascript" src="saver.js"></script>
+
+<img id="img" src="public/background-image.jpg" hidden>
 
 <script>
-    var appInstance = new CanvasEditor(document.getElementById('canvas'), {
-        drawingColor: "8080ff",
-        drawingSize: 2
-    });
 
-    var sideBar = document.getElementsByClassName('side-bar')[0];
-    sideBar.appendChild((new ToolBarView(appInstance)).nodeElement);
-    sideBar.appendChild((new OptionsView(appInstance)).nodeElement);
+    window.onload = function(){
 
-    Object.defineProperty(appInstance.options, 'drawingColor', {
-        get(){
-            return CanvasEditor.MathFn.randomHex();
-        }
-    });
-    Object.defineProperty(appInstance.options, 'drawingSize', {
-        get(){
-            var min = 1, max = 20;
-            return Math.floor(Math.random() * (max - min + 1)) + min;
-        }
-    });
+        var canvas = document.getElementById('canvas');
+        var img = document.getElementById('img');
+        var ctx = canvas.getContext('2d');
 
-    var canvas = document.getElementById('canvas');
-    var ctx = canvas.getContext('2d');
+//        ctx.drawImage(img, 0, 0);
+
+        var appInstance = new CanvasEditor(document.getElementById('canvas'), {
+            settings: {
+                drawingColor: "8080ff",
+                drawingSize: 2
+            }
+        });
+
+//        var options = appInstance.getTotalState();
+//        var appInstanceDouble = new CanvasEditor(document.getElementById('canvasDouble'), options);
+
+        window.appInstance = appInstance;
+
+        var sideBar = document.getElementsByClassName('side-bar')[0];
+        sideBar.appendChild((new ToolBarView(appInstance)).nodeElement);
+        sideBar.appendChild((new OptionsView(appInstance)).nodeElement);
+        sideBar.appendChild((new UtilsBarView(appInstance)).nodeElement);
+
+        Object.defineProperty(appInstance.settings, 'drawingColor', {
+            get(){
+                return CanvasEditor.MathFn.randomHex();
+            }
+        });
+        Object.defineProperty(appInstance.settings, 'drawingSize', {
+            get(){
+                var min = 10, max = 20;
+                return Math.floor(Math.random() * (max - min + 1)) + min;
+            }
+        });
+    };
+
 </script>
 </html>

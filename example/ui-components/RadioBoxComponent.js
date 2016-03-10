@@ -1,13 +1,12 @@
 !function(global){
 
-    global.RadioBoxComponent = RadioBoxComponent;
-
     /**
      * View of collection input-radio
      * @type {HTMLElement}
      * @param {Object} map — Хеш из заголовков и имен инструментов
+     * @param {string} selectedOf
      * */
-    function RadioBoxComponent(map, selectedOf){
+    global.RadioBoxComponent = function RadioBoxComponent(map, selectedOf){
         var API = {
             userSelectTool: {
                 detail: {

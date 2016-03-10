@@ -191,10 +191,12 @@
         this.lastLayout = image;
 
         //todo
-        this.appInstance.newEvent('CREATED_REGION', [
-            this._bufferCanvas,
-            this.coordinatesLine
-        ]);
+        if (this.coordinatesLine && this.coordinatesLine.length){
+            this.appInstance.newEvent('CREATED_REGION', [
+                this._bufferCanvas,
+                this.coordinatesLine
+            ]);
+        }
     };
 
     /**
@@ -236,7 +238,7 @@
         data[0] = etalon[0];
         data[1] = etalon[1];
         data[2] = etalon[2];
-        data[3] = 255;// etalon[3]; !!!!!!!!!
+        data[3] = etalon[3];
 
         this.__canvas1px.height = 1;
         this.__canvas1px.width = 1;

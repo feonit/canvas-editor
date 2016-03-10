@@ -8,7 +8,7 @@ function OptionsView(appInstance){
     name.innerHTML = 'Options Bar';
     var label, text;
 
-    var colorComponent = InputColorComponent(appInstance.options.drawingColor);
+    var colorComponent = InputColorComponent(appInstance.settings.drawingColor);
     label = document.createElement('label');
     text = document.createElement('span');
     text.innerHTML = 'Цвет:';
@@ -17,7 +17,7 @@ function OptionsView(appInstance){
     wrapper.appendChild(label);
 
 
-    var sliderComponent = InputSliderComponent(appInstance.options.drawingSize);
+    var sliderComponent = InputSliderComponent(appInstance.settings.drawingSize);
     label = document.createElement('label');
     text = document.createElement('span');
     text.innerHTML = 'Ширина: ';
@@ -28,11 +28,12 @@ function OptionsView(appInstance){
 
 
     sliderComponent.addEventListener("userSelectWidth", function(data){
-        appInstance.options.drawingSize = data.detail.width;
+        appInstance.settings.drawingSize = data.detail.width;
+        appInstance.settings.eraserSize = data.detail.width;
     }, false);
 
     colorComponent.addEventListener("userSelectColor", function(data){
-        appInstance.options.drawingColor = data.detail.color;
+        appInstance.settings.drawingColor = data.detail.color;
     }, false);
 
     this.nodeElement = wrapper;

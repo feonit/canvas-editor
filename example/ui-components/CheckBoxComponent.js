@@ -1,11 +1,12 @@
 !function(global){
 
-    global.CheckBoxComponent = CheckBoxComponent;
-
     /**
+     * @class {CheckBoxComponent}
      * @type {HTMLElement}
+     * @param {string} name
+     * @param {boolean} checked
      * */
-    function CheckBoxComponent(name, checked){
+    global.CheckBoxComponent = function (name, checked){
 
         var API = {
             onChange : {
