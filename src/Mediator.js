@@ -1,4 +1,5 @@
 !function(CanvasEditor){
+
     CanvasEditor.namespace('CanvasEditor').Mediator = Mediator;
 
     /**

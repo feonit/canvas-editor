@@ -24,11 +24,6 @@
         this.snapshot = null;
 
         /**
-         * Публикуемое изображение
-         * */
-        this.lastLayout = null;
-
-        /**
          * Координаты нарисованной фигуры
          * */
         this.coordinatesLine = [];
@@ -108,7 +103,7 @@
         this.currentPoint = null;
         this.snapshot = null;
         this._bufferPoints = null;
-        this.coordinatesLine = null;
+        this.object = null;
     };
 
     DrawingTool.prototype.draw = function(){
@@ -131,70 +126,93 @@
         var y0 = this.startPoint[1];
         var x1 = this.currentPoint[0];
         var y1 = this.currentPoint[1];
-        var coordinates = [];
 
+        var object;
         switch (this.type){
             case this.CURVE_TYPE:
-                coordinates = CanvasEditor.MathFn.drawBezierCurve(new Curve(this._bufferPoints, Math.round(this.size/2))); break;
+                object = new CanvasEditor.CurveRegion({
+                    points: this._bufferPoints,
+                    size: Math.round(this.size/2),
+                    color: this.color,
+                    width: this.canvas.width,
+                    height: this.canvas.height
+                });
+                break;
 
             case this.RECTANGLE_TYPE:
-                coordinates = CanvasEditor.MathFn.rectangle(x0, y0, x1, y1); break;
+                object = new CanvasEditor.RectangleRegion({
+                    x0:x0,
+                    y0:y0,
+                    x1:x1,
+                    y1:y1,
+                    size: Math.round(this.size/2),
+                    color: this.color,
+                    width: this.canvas.width,
+                    height: this.canvas.height
+                });
+                break;
 
             case this.ELLIPSE_TYPE:
-                coordinates = CanvasEditor.MathFn.plotEllipseRect(x0, y0, x1, y1); break;
+                object = new CanvasEditor.EllipseRegion({
+                    x0:x0,
+                    y0:y0,
+                    x1:x1,
+                    y1:y1,
+                    size: Math.round(this.size/2),
+                    color: this.color,
+                    width: this.canvas.width,
+                    height: this.canvas.height
+                });
+                break;
 
             case this.LINE_TYPE:
-                coordinates = CanvasEditor.MathFn.bline(x0, y0, x1, y1);
+                object = new CanvasEditor.LineRegion({
+                    x0:x0,
+                    y0:y0,
+                    x1:x1,
+                    y1:y1,
+                    size: Math.round(this.size/2),
+                    color: this.color,
+                    width: this.canvas.width,
+                    height: this.canvas.height
+                });
                 break;
 
             case this.ARROW_TYPE:
-                if (Math.abs(x1-x0)<2 && Math.abs(x1-x0)<2) return;
+                if ( Math.abs(x1-x0) < 2 && Math.abs(x1-x0) < 2 )
+                    return;
 
-                var ARROW_RADIAN = Math.PI/6;
-                var ARROW_LENGTH = 0.3;
-
-                coordinates = CanvasEditor.MathFn.bline(x0, y0, x1, y1);
-
-                var halfX = Math.round(x1 - (x1-x0)*ARROW_LENGTH);
-                var halfY = Math.round(y1 - (y1-y0)*ARROW_LENGTH);
-                var coorLine1 = MathFn.turn(halfX, halfY, x1, y1, -ARROW_RADIAN);
-                var line1 = CanvasEditor.MathFn.bline(x1, y1, coorLine1[0], coorLine1[1]);
-
-                var coorLine2 = MathFn.turn(halfX, halfY, x1, y1, ARROW_RADIAN);
-                var line2 = CanvasEditor.MathFn.bline(x1, y1, coorLine2[0], coorLine2[1]);
-
-                coordinates = coordinates.concat(line1);
-                coordinates = coordinates.concat(line2);
-
+                object = new CanvasEditor.ArrowComplex({
+                    x0:x0,
+                    y0:y0,
+                    x1:x1,
+                    y1:y1,
+                    size: Math.round(this.size/2),
+                    color: this.color,
+                    width: this.canvas.width,
+                    height: this.canvas.height
+                });
                 break;
         }
 
-        this.coordinatesLine = coordinates;
+        this.object = object;
 
-        if (coordinates.length){
-            this.renderCircles(this.canvas, coordinates);
-            this.renderCircles(this._bufferCanvas, coordinates);
-            //this.drawPixelsAtCanvas(this.canvas, coordinates);
-            //this.drawPixelsAtCanvas(this._bufferCanvas, coordinates);
-        }
+        object.renderCircles(this.canvas);
+        object.renderCircles(this._bufferCanvas);
+
+        //this.drawPixelsAtCanvas(this.canvas, object.getCoordinates());
+        //this.drawPixelsAtCanvas(this._bufferCanvas, object.getCoordinates());
     };
 
     /**
      * Создает новое изображение нарисованной линии и сохраняет
      * */
     DrawingTool.prototype._publicNewLayout = function(){
-        // todo почему канвы обычной не достаточно?
-        var image = new Image();
-        image.height = this._bufferCanvas.height;
-        image.width = this._bufferCanvas.width;
-        image.src = this._bufferCanvas.toDataURL('image/png');
-        this.lastLayout = image;
 
         //todo
-        if (this.coordinatesLine && this.coordinatesLine.length){
+        if (this.object){
             this.appInstance.newEvent('CREATED_REGION', [
-                this._bufferCanvas,
-                this.coordinatesLine
+                this.object
             ]);
         }
     };
@@ -254,98 +272,9 @@
         }
     };
 
-    /**
-     * Метод рисует кривые используя способ вставки изображений
-     * */
-    DrawingTool.prototype.renderCircle = (function(){
-        var _canvas1px = document.createElement('canvas');
-        _canvas1px.height = 1;
-        _canvas1px.width = 1;
 
-        var _canvas1pxCtx = _canvas1px.getContext('2d');
-        var _imageData = _canvas1pxCtx.createImageData(1,1);
 
-        var savedColor = [255, 0, 0 , 255];
-        _imageData.data[0] = savedColor[0];
-        _imageData.data[1] = savedColor[1];
-        _imageData.data[2] = savedColor[2];
-        _imageData.data[3] = 255;
 
-        _canvas1pxCtx.putImageData(_imageData, 0, 0);
-
-        var _stored = {};
-
-        return function (ctx, x, y, radius, color){
-            var colorHasChanged = color[0] !== savedColor[0]
-                || color[1] !== savedColor[1]
-                || color[2] !== savedColor[2];
-
-            // если цвет изменился, сохраняем его
-            if (colorHasChanged){
-                savedColor = color;
-            }
-
-            var canvasRadius = _stored[radius];
-
-            // подготовить новую картинку если новый радиус или новый цвет
-            if (!canvasRadius || colorHasChanged){
-
-                if (colorHasChanged){
-                    _imageData.data[0] = color[0];
-                    _imageData.data[1] = color[1];
-                    _imageData.data[2] = color[2];
-                    _imageData.data[3] = 255;
-
-                    _canvas1px.height = 1;
-                    _canvas1px.width = 1;
-
-                    _canvas1pxCtx.putImageData(_imageData, 0, 0);
-                }
-
-                var canvasR = document.createElement('canvas');
-                var powRadius = radius*2;
-                // так как циркуль в 1пиксель радиуса имеет 3 пикселя в диаметре по алгоритму
-                // а когда радиус 0 то диаметр 1пиксель
-                canvasR.height = powRadius + 1;
-                canvasR.width = powRadius + 1;
-                var coordinates = MathFn.getCircleCoordinates(radius);
-                var len = coordinates.length;
-                var canvasRCtx = canvasR.getContext('2d');
-
-                var coorX, coorY;
-                while(len > 0){
-                    len--;
-                    var coordinate;
-                    coordinate = coordinates[len];
-                    coorX = coordinate[0] + radius;
-                    coorY = coordinate[1] + radius;
-                    canvasRCtx.drawImage(_canvas1px, coorX, coorY);
-                }
-
-                _stored[radius] = canvasRadius = canvasR;
-            }
-
-            // поместить картинку
-            ctx.drawImage(canvasRadius, x - radius, y - radius);
-        }
-    })();
-
-    /**
-     *
-     * */
-    DrawingTool.prototype.renderCircles = function(canvas, coordinates){
-        var color = this.color;
-        var ctx = canvas.getContext('2d');
-        ctx.mozImageSmoothingEnabled = false;
-        ctx.webkitImageSmoothingEnabled = false;
-        ctx.msImageSmoothingEnabled = false;
-        ctx.imageSmoothingEnabled = false;
-
-        var radius = Math.floor(this.size/2);
-        coordinates.forEach((function(coor){
-            this.renderCircle(ctx, coor[0], coor[1], radius, color);
-        }).bind(this));
-    };
 
     return DrawingTool;
 }(CanvasEditor, Math, document, Object);

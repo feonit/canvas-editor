@@ -101,8 +101,8 @@
 
     CanvasEditor.prototype.newEvent = function(eventName, data){
         if (eventName === this.CREATED_REGION){
-            var regionObject = this.layersManager.createRegion(data[0], data[1]);
-            this.layersManager.addRegion(regionObject);
+            var object = data[0];
+            this.layersManager.addRegion(object);
         }
     };
 
