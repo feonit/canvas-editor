@@ -3,21 +3,23 @@
     CanvasEditor.namespace('CanvasEditor').ObjectsOrder = ObjectsOrder;
 
     /**
-     * Класс хранит в себе последовательность объектов, и предоставляет методы по работе с ней
-     * @param {Object} options
-     * @param {Object[]} options.order
+     * Класс представляет собой коллекцию объектов в определенной последовательности и 
+     * предоставляет методы по работе с ней
+     * @class
+     * @param {Object} [options] — опции
+     * @param {Object[]} options.objects — коллекция объектов
      * */
     function ObjectsOrder(options){
         options = options || {};
 
         /**
-         * Список объектов
+         * @prop {RegionObject[]} objects Список объектов
          * */
-        this.order = [];
+        this.objects = [];
 
-        if (options.order){
+        if (options.objects){
             var that = this;
-            options.order.forEach(function(arg){
+            options.objects.forEach(function(arg){
                 that.addObject(new CanvasEditor.RegionObject(arg['RegionObject']));
             })
         }
@@ -26,64 +28,72 @@
 
     /**
      * Добавить объект в конец
-     * @param {Object} obj
+     * @param {RegionObject} obj — объект
      * */
     ObjectsOrder.prototype.addObject = function(obj){
-        return this.order.push(obj);
+        this.objects.push(obj);
     };
 
     /**
-     * Передать по индексу
+     * Получить по индексу
+     * @param {number} index — индекс обекта
+     * @return {RegionObject}
      * */
     ObjectsOrder.prototype.getObject = function(index){
-        return this.order[index];
+        return this.objects[index];
     };
 
     /**
-     * Определить индекс
+     * Получить индекс определенного объекта
+     * @param {RegionObject} obj — объект
+     * @return {number} индекс объекта
      * */
     ObjectsOrder.prototype.getIndex = function(obj){
-        var index = this.order.indexOf(obj);
+        var index = this.objects.indexOf(obj);
         return index == -1 ? false : index;
     };
 
     /**
      * Найти и удалить объект из списка
-     * @param {Object} obj
+     * @param {RegionObject} obj — объект
+     * @return {boolean} false, если объект не найден
      * */
     ObjectsOrder.prototype.removeObject = function(obj){
-        var index = this.order.indexOf(obj);
-        return (index !== -1) && this.order.splice(index, 1);
+        var index = this.objects.indexOf(obj);
+        return (index !== -1) && !!this.objects.splice(index, 1).length;
     };
 
     /**
      * Переместить объект в конец списка
-     * @param {Object} obj
+     * @param {RegionObject} obj — объект
+     * @return {boolean} true, если объект успешно перемещен
      * */
     ObjectsOrder.prototype.moveToTop = function(obj){
         // поменять с последним
-        var indexOfLast = this.order.length - 1;
-        var indexOfCurrent = this.order.indexOf(obj);
+        var indexOfLast = this.objects.length - 1;
+        var indexOfCurrent = this.objects.indexOf(obj);
 
         if (indexOfCurrent !== -1){
-
+            // уже находится в конце
             if (indexOfLast === indexOfCurrent ){
                 return false;
             }
-
             // вытащить из последовательности
-            this.order.splice(indexOfCurrent, 1);
-
+            this.objects.splice(indexOfCurrent, 1);
             // а после, добавить в конец
-            this.order.push(obj);
-
+            this.objects.push(obj);
+            
             return true;
         }
         return false;
     };
 
-    ObjectsOrder.prototype.getObjects = function(obj){
-        return this.order;
+    /**
+     * Получить коллекцию обхектов
+     * @return {RegionObject[]}
+     **/
+    ObjectsOrder.prototype.getObjects = function(){
+        return this.objects;
     };
 
 }(CanvasEditor);
