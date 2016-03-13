@@ -34,14 +34,14 @@
         this.pixelsMap = new CanvasEditor.PixelsMap();
         this.objectsOrder = new CanvasEditor.ObjectsOrder();
 
-        this.addRegion(this._createBackgroundRegion());
+        this.addRegion(this._createBackgroundRaster());
     };
 
     /**
      * @return {RegionObject} объект фигуры
      * */
-    LayersManager.prototype._createBackgroundRegion = function(){
-        return new CanvasEditor.BackgroundRegion({
+    LayersManager.prototype._createBackgroundRaster = function(){
+        return new CanvasEditor.BackgroundRaster({
             dataUrl: this.canvas.toDataURL(),
             height: this.canvas.height,
             width: this.canvas.width,
@@ -149,14 +149,14 @@
     /**
      * @deprecated
      * */
-    LayersManager.prototype.putPixelsAtCanvas = function(canvas, coordinates, etalonPointImageData){
+    LayersManager.prototype.putPixelsAtCanvas = function(canvas, coordinates, color){
         var canvasCtx = canvas.getContext('2d');
         var imageData = canvasCtx.createImageData(1,1);
         var data = imageData.data;
-        data[0] = etalonPointImageData[0];
-        data[1] = etalonPointImageData[1];
-        data[2] = etalonPointImageData[2];
-        data[3] = etalonPointImageData[3];
+        data[0] = color[0];
+        data[1] = color[1];
+        data[2] = color[2];
+        data[3] = color[3];
 
         var coordinate, i, len;
         for (i = 0, len = coordinates.length; i < len; i++){
@@ -233,7 +233,7 @@
 
         // пробуем найти регион волшебной палочкой (поиск по цвету)
         if (!region || isRawRegion){
-            region = CanvasEditor.RegionObject.createRegion(this.canvas, [x, y]);
+            region = CanvasEditor.RasterRegion.createObject(this.canvas, [x, y]);
 
             // после того как выдрали с сырого слоя специальные координаты,
             // нужно стереть их из него!

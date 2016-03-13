@@ -24,7 +24,7 @@
             "Рисовать Эллипс": "DrawingToolController-el",
             "Рисовать Прямоугольник": "DrawingToolController-sq",
             "Рисовать Прямую": "DrawingToolController-li",
-            "Рисовать Стрелка": "DrawingToolController-ar",
+            "Рисовать Стрелку": "DrawingToolController-ar",
             "Выделить/Удалить выделенное (Del)": "SelectToolController"
         };
 

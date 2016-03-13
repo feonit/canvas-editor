@@ -1,12 +1,12 @@
 !function(CanvasEditor){
 
-    CanvasEditor.namespace('CanvasEditor').LineRegion = LineRegion;
+    CanvasEditor.namespace('CanvasEditor').LineVector = LineVector;
 
-    var RegionObject = CanvasEditor.RegionObject;
+    var VectorRegion = CanvasEditor.VectorRegion;
 
-    function LineRegion(options){
+    function LineVector(options){
         options = options || {};
-        RegionObject.apply(this, arguments);
+        VectorRegion.apply(this, arguments);
         this.x0 = options.x0;
         this.y0 = options.y0;
         this.x1 = options.x1;
@@ -15,10 +15,10 @@
         this.color = options.color;
     }
 
-    LineRegion.prototype = Object.create(RegionObject.prototype);
-    LineRegion.prototype.constructor = LineRegion;
+    LineVector.prototype = Object.create(VectorRegion.prototype);
+    LineVector.prototype.constructor = LineVector;
 
-    LineRegion.prototype.getCoordinatesLine = function(){
+    LineVector.prototype.getCoordinatesLine = function(){
         if (!this.coordinatesLine){
             function bline(x0, y0, x1, y1) {
                 var px = [];

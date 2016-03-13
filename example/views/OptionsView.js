@@ -5,7 +5,9 @@ function OptionsView(appInstance){
     var wrapper = document.createElement('div');
     wrapper.className = 'options-bar';
     var name = document.createElement('div');
-    name.innerHTML = 'Options Bar';
+    name.innerHTML = 'Опции:';
+    wrapper.appendChild(name);
+
     var label, text;
 
     var colorComponent = InputColorComponent(appInstance.settings.drawingColor);

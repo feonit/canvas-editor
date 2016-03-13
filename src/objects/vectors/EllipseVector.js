@@ -1,12 +1,12 @@
 !function(CanvasEditor){
 
-    CanvasEditor.namespace('CanvasEditor').EllipseRegion = EllipseRegion;
+    CanvasEditor.namespace('CanvasEditor').EllipseVector = EllipseVector;
 
-    var RegionObject = CanvasEditor.RegionObject;
+    var VectorRegion = CanvasEditor.VectorRegion;
 
-    function EllipseRegion(options){
+    function EllipseVector(options){
         options = options || {};
-        RegionObject.apply(this, arguments);
+        VectorRegion.apply(this, arguments);
         this.x0 = options.x0;
         this.y0 = options.y0;
         this.x1 = options.x1;
@@ -15,10 +15,10 @@
         this.color = options.color;
     }
 
-    EllipseRegion.prototype = Object.create(RegionObject.prototype);
-    EllipseRegion.prototype.constructor = EllipseRegion;
+    EllipseVector.prototype = Object.create(VectorRegion.prototype);
+    EllipseVector.prototype.constructor = EllipseVector;
 
-    EllipseRegion.prototype.getCoordinatesLine = function(){
+    EllipseVector.prototype.getCoordinatesLine = function(){
         if (!this.coordinatesLine){
             function plotEllipseRect(x0, y0, x1, y1){
                 var px = [];

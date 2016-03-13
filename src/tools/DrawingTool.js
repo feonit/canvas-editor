@@ -130,7 +130,7 @@
         var object;
         switch (this.type){
             case this.CURVE_TYPE:
-                object = new CanvasEditor.CurveRegion({
+                object = new CanvasEditor.CurveVector({
                     points: this._bufferPoints,
                     size: Math.round(this.size/2),
                     color: this.color,
@@ -140,7 +140,7 @@
                 break;
 
             case this.RECTANGLE_TYPE:
-                object = new CanvasEditor.RectangleRegion({
+                object = new CanvasEditor.RectangleVector({
                     x0:x0,
                     y0:y0,
                     x1:x1,
@@ -153,7 +153,7 @@
                 break;
 
             case this.ELLIPSE_TYPE:
-                object = new CanvasEditor.EllipseRegion({
+                object = new CanvasEditor.EllipseVector({
                     x0:x0,
                     y0:y0,
                     x1:x1,
@@ -166,7 +166,7 @@
                 break;
 
             case this.LINE_TYPE:
-                object = new CanvasEditor.LineRegion({
+                object = new CanvasEditor.LineVector({
                     x0:x0,
                     y0:y0,
                     x1:x1,
@@ -182,7 +182,7 @@
                 if ( Math.abs(x1-x0) < 2 && Math.abs(x1-x0) < 2 )
                     return;
 
-                object = new CanvasEditor.ArrowComplex({
+                object = new CanvasEditor.ArrowVector({
                     x0:x0,
                     y0:y0,
                     x1:x1,

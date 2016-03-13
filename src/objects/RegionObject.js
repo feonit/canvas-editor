@@ -31,14 +31,12 @@
                  * Регион имеет один цвет
                  * @type {ImageData.data}
                  * */
-                this.etalonPointImageData = options.color;
+                this.color = options.color;
 
                 /**
                  *
                  * */
                 this.borderCoordinates = options.borderCoordinates;
-
-                this.coordinatesLine = options.coordinatesLine;
 
                 this.coordinates = options.coordinates || null;
 
@@ -54,30 +52,14 @@
                 this.width = options.width;
                 this.isActived = false;
 
+                Object.defineProperty(this, '_layout', {
+                    value: null,
+                    enumerable: false,
+                    writable: true
+                });
+
             };
         }());
-
-        /**
-         * @param {HTMLCanvasElement} canvas — холст
-         * @param {number[]} coordinate — координата точки на холсте, откуда начнется поиск объекта
-         * @return {RegionObject} объект фигуры
-         * */
-        RegionObject.createRegion = function(canvas, coordinate){
-            var beginWithX = coordinate[0];
-            var beginWithY = coordinate[1];
-            var etalonPointImageData = canvas.getContext('2d').getImageData(beginWithX, beginWithY, 1, 1).data;
-            var searchedData = RegionObject._searchPixels(beginWithX, beginWithY, canvas);
-            var coordinates = searchedData[0];
-            var borderCoordinates = searchedData[1];
-
-            return new RegionObject({
-                height: canvas.height,
-                width: canvas.width,
-                coordinates: coordinates,
-                color: etalonPointImageData,
-                borderCoordinates: borderCoordinates
-            });
-        };
 
         /**
          * Алгоритм поиска области фигуры по координате в режиме поиска по цвету
@@ -259,10 +241,6 @@
         };
 
         RegionObject.prototype.getCoordinates = function(){
-            var coordinatesLine = this.getCoordinatesLine();
-            if (!coordinatesLine.length){
-                throw 'нет сырых точек';
-            }
 
             if (!this.coordinates){
                 var beginWithX = this.coordinatesLine[0][0];
@@ -274,105 +252,6 @@
 
             return this.coordinates;
         };
-
-        RegionObject.prototype.getCoordinatesLine = function(){
-            alert('must be implemented')
-        };
-
-        /**
-         *
-         * */
-        RegionObject.prototype.renderCircles = function(canvas){
-            var coordinates = this.getCoordinatesLine();
-
-            var color = this.color;
-            var ctx = canvas.getContext('2d');
-            ctx.mozImageSmoothingEnabled = false;
-            ctx.webkitImageSmoothingEnabled = false;
-            ctx.msImageSmoothingEnabled = false;
-            ctx.imageSmoothingEnabled = false;
-
-            var radius = Math.floor(this.size/2);
-            coordinates.forEach((function(coor){
-                this.renderCircle(ctx, coor[0], coor[1], radius, color);
-            }).bind(this));
-        };
-
-        /**
-         * Метод рисует кривые используя способ вставки изображений
-         * */
-        RegionObject.prototype.renderCircle = (function(){
-            var _canvas1px = document.createElement('canvas');
-            _canvas1px.height = 1;
-            _canvas1px.width = 1;
-
-            var _canvas1pxCtx = _canvas1px.getContext('2d');
-            var _imageData = _canvas1pxCtx.createImageData(1,1);
-
-            var savedColor = [255, 0, 0 , 255];
-            _imageData.data[0] = savedColor[0];
-            _imageData.data[1] = savedColor[1];
-            _imageData.data[2] = savedColor[2];
-            _imageData.data[3] = 255;
-
-            _canvas1pxCtx.putImageData(_imageData, 0, 0);
-
-            var _stored = {};
-
-            return function (ctx, x, y, radius, color){
-                var colorHasChanged = color[0] !== savedColor[0]
-                    || color[1] !== savedColor[1]
-                    || color[2] !== savedColor[2];
-
-                // если цвет изменился, сохраняем его
-                if (colorHasChanged){
-                    savedColor = color;
-                }
-
-                var canvasRadius = _stored[radius];
-
-                // подготовить новую картинку если новый радиус или новый цвет
-                if (!canvasRadius || colorHasChanged){
-
-                    if (colorHasChanged){
-                        _imageData.data[0] = color[0];
-                        _imageData.data[1] = color[1];
-                        _imageData.data[2] = color[2];
-                        _imageData.data[3] = 255;
-
-                        _canvas1px.height = 1;
-                        _canvas1px.width = 1;
-
-                        _canvas1pxCtx.putImageData(_imageData, 0, 0);
-                    }
-
-                    var canvasR = document.createElement('canvas');
-                    var powRadius = radius*2;
-                    // так как циркуль в 1пиксель радиуса имеет 3 пикселя в диаметре по алгоритму
-                    // а когда радиус 0 то диаметр 1пиксель
-                    canvasR.height = powRadius + 1;
-                    canvasR.width = powRadius + 1;
-                    var coordinates = MathFn.getCircleCoordinates(radius);
-                    var len = coordinates.length;
-                    var canvasRCtx = canvasR.getContext('2d');
-
-                    var coorX, coorY;
-                    while(len > 0){
-                        len--;
-                        var coordinate;
-                        coordinate = coordinates[len];
-                        coorX = coordinate[0] + radius;
-                        coorY = coordinate[1] + radius;
-                        canvasRCtx.drawImage(_canvas1px, coorX, coorY);
-                    }
-
-                    _stored[radius] = canvasRadius = canvasR;
-                }
-
-                // поместить картинку
-                ctx.drawImage(canvasRadius, x - radius, y - radius);
-            }
-        })();
 
         RegionObject.prototype.getLayout = function(){
             if (!this._layout){
@@ -401,19 +280,14 @@
                     }
                 };
 
-                this.renderCircles(layoutCanvas);
+                drawPixelsAtCanvas(layoutCanvas, this.getCoordinates(), this.color);
 
-                //drawPixelsAtCanvas(layoutCanvas, , this.color);
-
-                Object.defineProperty(this, '_layout', {value: layoutCanvas});
+                this._layout = layoutCanvas;
             }
 
             return this._layout;
         };
 
-        RegionObject.prototype.setLayout = function(layout){
-            this._layout = layout;
-        };
 
         RegionObject.prototype.saveRecordOffset = function(){
             this.recordsOffset.push([this.offsetX, this.offsetY])

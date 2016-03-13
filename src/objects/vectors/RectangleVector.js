@@ -1,12 +1,12 @@
 !function(CanvasEditor){
 
-    CanvasEditor.namespace('CanvasEditor').RectangleRegion = RectangleRegion;
+    CanvasEditor.namespace('CanvasEditor').RectangleVector = RectangleVector;
 
-    var RegionObject = CanvasEditor.RegionObject;
+    var VectorRegion = CanvasEditor.VectorRegion;
 
-    function RectangleRegion(options){
+    function RectangleVector(options){
         options = options || {};
-        RegionObject.apply(this, arguments);
+        VectorRegion.apply(this, arguments);
         this.x0 = options.x0;
         this.y0 = options.y0;
         this.x1 = options.x1;
@@ -15,10 +15,10 @@
         this.color = options.color;
     }
 
-    RectangleRegion.prototype = Object.create(RegionObject.prototype);
-    RectangleRegion.prototype.constructor = RectangleRegion;
+    RectangleVector.prototype = Object.create(VectorRegion.prototype);
+    RectangleVector.prototype.constructor = RectangleVector;
 
-    RectangleRegion.prototype.getCoordinatesLine = function(){
+    RectangleVector.prototype.getCoordinatesLine = function(){
         if (!this.coordinatesLine){
             function rectangle(x0, y0, x1, y1){
                 var px = [[x0, y0], [x0, y1], [x1, y0], [x1, y1]];

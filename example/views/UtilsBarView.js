@@ -5,7 +5,7 @@
         var wrapper = document.createElement('div');
         wrapper.className = 'tool-bar';
         var name = document.createElement('div');
-        name.innerHTML = 'Инструменты:';
+        name.innerHTML = 'Утилиты:';
         wrapper.appendChild(name);
 
 
@@ -56,6 +56,27 @@
 
             var util = new CanvasEditor.ToolController.SaveLocalUtilController(appInstance, appInstance.canvas);
             var checkBox = new CheckBoxComponent('Автосохранение локально', isEnabled);
+
+            if (isEnabled){
+                util.start(appInstance, appInstance.canvas);
+            }
+
+            wrapper.appendChild(checkBox);
+
+            checkBox.addEventListener('onChange', function(data){
+                data.detail.checked ? util.start() : util.stop();
+            });
+
+        }();
+
+        /**
+         * Утилита: Рендомный значения
+         * */
+        !function(){
+            var isEnabled = false;
+
+            var util = new CanvasEditor.ToolController.RandomOptionsController(appInstance, appInstance.canvas);
+            var checkBox = new CheckBoxComponent('Случайные значения опций', isEnabled);
 
             if (isEnabled){
                 util.start(appInstance, appInstance.canvas);

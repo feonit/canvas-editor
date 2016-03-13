@@ -1,18 +1,18 @@
 !function(CanvasEditor){
 
-    CanvasEditor.namespace('CanvasEditor').BackgroundRegion = BackgroundRegion;
-    var RegionObject = CanvasEditor.RegionObject;
+    CanvasEditor.namespace('CanvasEditor').BackgroundRaster = BackgroundRaster;
+    var RasterRegion = CanvasEditor.RasterRegion;
 
-    function BackgroundRegion(options){
+    function BackgroundRaster(options){
         options = options || {};
-        RegionObject.apply(this, arguments);
+        RasterRegion.apply(this, arguments);
         this.dataUrl = options.dataUrl;
     }
 
-    BackgroundRegion.prototype = Object.create(RegionObject.prototype);
-    BackgroundRegion.prototype.constructor = BackgroundRegion;
+    BackgroundRaster.prototype = Object.create(RasterRegion.prototype);
+    BackgroundRaster.prototype.constructor = BackgroundRaster;
 
-    BackgroundRegion.prototype.getLayout = function(){
+    BackgroundRaster.prototype.getLayout = function(){
         if (!this._layout){
             var layoutCanvas = document.createElement('canvas');
             layoutCanvas.height = this.height;
@@ -30,7 +30,7 @@
         return this._layout;
     };
 
-    BackgroundRegion.prototype.getCoordinates = function(){
+    BackgroundRaster.prototype.getCoordinates = function(){
         if (!this.coordinates){
             var coordinates = [];
             for (var x = 0, lenX = this.width; x < lenX; x++){

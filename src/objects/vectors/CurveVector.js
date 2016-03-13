@@ -1,23 +1,23 @@
 !function(CanvasEditor){
 
-    CanvasEditor.namespace('CanvasEditor').CurveRegion = CurveRegion;
+    CanvasEditor.namespace('CanvasEditor').CurveVector = CurveVector;
 
     var Curve = CanvasEditor.Curve;
     var MathFn = CanvasEditor.MathFn;
-    var RegionObject = CanvasEditor.RegionObject;
+    var VectorRegion = CanvasEditor.VectorRegion;
 
-    function CurveRegion(options){
+    function CurveVector(options){
         options = options || {};
-        RegionObject.apply(this, arguments);
+        VectorRegion.apply(this, arguments);
         this.points = options.points;
         this.size = options.size;
         this.color = options.color;
     }
 
-    CurveRegion.prototype = Object.create(CanvasEditor.RegionObject.prototype);
-    CurveRegion.prototype.constructor = CurveRegion;
+    CurveVector.prototype = Object.create(CanvasEditor.VectorRegion.prototype);
+    CurveVector.prototype.constructor = CurveVector;
 
-    CurveRegion.prototype.getCoordinatesLine = function(){
+    CurveVector.prototype.getCoordinatesLine = function(){
         if (!this.coordinatesLine){
             var coordinates = [];
             var points = this.points;

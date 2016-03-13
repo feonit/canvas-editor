@@ -1,11 +1,11 @@
 !function(CanvasEditor){
 
-    CanvasEditor.namespace('CanvasEditor').ArrowComplex = ArrowComplex;
-    var RegionObject = CanvasEditor.RegionObject;
+    CanvasEditor.namespace('CanvasEditor').ArrowVector = ArrowVector;
+    var VectorRegion = CanvasEditor.VectorRegion;
 
-    function ArrowComplex(options){
+    function ArrowVector(options){
         options = options || {};
-        RegionObject.apply(this, arguments);
+        VectorRegion.apply(this, arguments);
         this.x0 = options.x0;
         this.y0 = options.y0;
         this.x1 = options.x1;
@@ -14,10 +14,10 @@
         this.color = options.color;
     }
 
-    ArrowComplex.prototype = Object.create(RegionObject.prototype);
-    ArrowComplex.prototype.constructor = ArrowComplex;
+    ArrowVector.prototype = Object.create(VectorRegion.prototype);
+    ArrowVector.prototype.constructor = ArrowVector;
 
-    ArrowComplex.prototype.getCoordinatesLine = function(){
+    ArrowVector.prototype.getCoordinatesLine = function(){
         if (!this.coordinatesLine){
             // Повернуть точку относительно другой на заданный радиан
             function turn(x0, y0, relx, rely, rad){

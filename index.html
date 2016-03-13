@@ -38,13 +38,15 @@
 
 <script type="text/javascript" src="src/MathFn.js"></script>
 <script type="text/javascript" src="src/objects/RegionObject.js"></script>
-<script type="text/javascript" src="src/objects/ArrowComplex.js"></script>
-<script type="text/javascript" src="src/objects/BackgroundRegion.js"></script>
+<script type="text/javascript" src="src/objects/VectorRegion.js"></script>
+<script type="text/javascript" src="src/objects/RasterRegion.js"></script>
+<script type="text/javascript" src="src/objects/vectors/ArrowVector.js"></script>
+<script type="text/javascript" src="src/objects/rasters/BackgroundRaster.js"></script>
 <script type="text/javascript" src="src/Curve&Point.js"></script>
-<script type="text/javascript" src="src/objects/CurveRegion.js"></script>
-<script type="text/javascript" src="src/objects/EllipseRegion.js"></script>
-<script type="text/javascript" src="src/objects/LineRegion.js"></script>
-<script type="text/javascript" src="src/objects/RectangleRegion.js"></script>
+<script type="text/javascript" src="src/objects/vectors/CurveVector.js"></script>
+<script type="text/javascript" src="src/objects/vectors/EllipseVector.js"></script>
+<script type="text/javascript" src="src/objects/vectors/LineVector.js"></script>
+<script type="text/javascript" src="src/objects/vectors/RectangleVector.js"></script>
 
 
 <script type="text/javascript" src="src/Mediator.js"></script>
@@ -67,6 +69,7 @@
 <script type="text/javascript" src="src/utils/SaveLocalUtilController.js"></script>
 <script type="text/javascript" src="src/utils/SaveServerUtilController.js"></script>
 <script type="text/javascript" src="src/utils/TransparentUtilController.js"></script>
+<script type="text/javascript" src="src/utils/RandomOptionsController.js"></script>
 
 <script type="text/javascript" src="example/ui-components/RadioBoxComponent.js"></script>
 <script type="text/javascript" src="example/ui-components/CheckBoxComponent.js"></script>
@@ -76,7 +79,6 @@
 <script type="text/javascript" src="example/views/OptionsView.js"></script>
 <script type="text/javascript" src="example/views/ToolBarView.js"></script>
 <script type="text/javascript" src="example/views/UtilsBarView.js"></script>
-<script type="text/javascript" src="test.js"></script>
 
 <img id="img" src="public/background-image.jpg" hidden>
 
@@ -93,7 +95,7 @@
         var appInstance = new CanvasEditor(document.getElementById('canvas'), {
             settings: {
                 drawingColor: "8080ff",
-                drawingSize: 2
+                drawingSize: 20
             }
         });
 
@@ -107,17 +109,6 @@
         sideBar.appendChild((new OptionsView(appInstance)).nodeElement);
         sideBar.appendChild((new UtilsBarView(appInstance)).nodeElement);
 
-        Object.defineProperty(appInstance.settings, 'drawingColor', {
-            get(){
-                return CanvasEditor.MathFn.randomHex();
-            }
-        });
-        Object.defineProperty(appInstance.settings, 'drawingSize', {
-            get(){
-                var min = 10, max = 20;
-                return Math.floor(Math.random() * (max - min + 1)) + min;
-            }
-        });
     };
 
 </script>
