@@ -233,7 +233,7 @@
 
         // пробуем найти регион волшебной палочкой (поиск по цвету)
         if (!region || isRawRegion){
-            region = CanvasEditor.RegionObject.createRegion(this.canvas, [[x, y]]);
+            region = CanvasEditor.RegionObject.createRegion(this.canvas, [x, y]);
 
             // после того как выдрали с сырого слоя специальные координаты,
             // нужно стереть их из него!

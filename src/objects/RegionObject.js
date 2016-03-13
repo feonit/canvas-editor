@@ -59,23 +59,23 @@
 
         /**
          * @param {HTMLCanvasElement} canvas — холст
-         * @return {CanvasEditor.RegionObject} объект фигуры
+         * @param {number[]} coordinate — координата точки на холсте, откуда начнется поиск объекта
+         * @return {RegionObject} объект фигуры
          * */
-        RegionObject.createRegion = function(canvas){
-            var coordinatesLine = this.getCoordinatesLine();
-            var beginWithX = coordinatesLine[0][0];
-            var beginWithY = coordinatesLine[0][1];
+        RegionObject.createRegion = function(canvas, coordinate){
+            var beginWithX = coordinate[0];
+            var beginWithY = coordinate[1];
             var etalonPointImageData = canvas.getContext('2d').getImageData(beginWithX, beginWithY, 1, 1).data;
             var searchedData = RegionObject._searchPixels(beginWithX, beginWithY, canvas);
             var coordinates = searchedData[0];
             var borderCoordinates = searchedData[1];
 
-            return new CanvasEditor.RegionObject({
+            return new RegionObject({
                 height: canvas.height,
                 width: canvas.width,
                 coordinates: coordinates,
                 color: etalonPointImageData,
-                borderCoordinates: borderCoordinates,
+                borderCoordinates: borderCoordinates
             });
         };
 
