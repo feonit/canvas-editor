@@ -19,8 +19,15 @@
 
     CurveRegion.prototype.getCoordinatesLine = function(){
         if (!this.coordinatesLine){
-            this.coordinatesLine = MathFn.drawBezierCurve(new Curve(this.points, Math.round(this.size/2)));
-            //console.log(this.coordinatesLine.length)
+            var coordinates = [];
+            var points = this.points;
+            var size = Math.round(this.size/2);
+            points.forEach(function(point, index){
+                var part = points.slice(0, index + 1);
+                var calc = MathFn.drawBezierCurve(new Curve(part, size));
+                coordinates = coordinates.concat(calc);
+            });
+            this.coordinatesLine = coordinates;
         }
         return this.coordinatesLine;
     }

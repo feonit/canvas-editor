@@ -110,7 +110,6 @@
             flow[i][0] = Math.round(flow[i][0]);
             flow[i][1] = Math.round(flow[i][1]);
         }
-        console.log(arr)
 
         return flow;
     }
