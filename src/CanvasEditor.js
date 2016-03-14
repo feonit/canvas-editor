@@ -42,7 +42,7 @@
         this.settings.drawingColor = options.settings.drawingColor || defaultOptions.drawingColor;
 
         this.toolsDriver = new CanvasEditor.ToolsDriver(this, canvas);
-        this.layersManager = new CanvasEditor.LayersManager(this, canvas, options['LayersManager']);
+        this.layersManager = new CanvasEditor.RegionManager(this, canvas, options['RegionManager']);
         this.mediator = new CanvasEditor.Mediator();
 
         this.toolsDriver.plug(CanvasEditor.ToolController.DrawingToolController);
@@ -131,7 +131,7 @@
             "ObjectsOrder": CanvasEditor.ObjectsOrder,
             "RegionObject": CanvasEditor.RegionObject,
             "CanvasEditor": CanvasEditor,
-            "LayersManager": CanvasEditor.LayersManager,
+            "RegionManager": CanvasEditor.RegionManager,
         };
 
         var data = {};

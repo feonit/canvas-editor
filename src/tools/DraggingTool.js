@@ -95,7 +95,7 @@
 
             // 3 save final offset
             if (this.moved){
-                this.appInstance.layersManager.changePosition(this.selectedRegionObject);
+                this.appInstance.layersManager.applyOtherOffset(this.selectedRegionObject);
             }
 
             // заканчиваем процесс

@@ -65,10 +65,10 @@
         });
 
         // Первая запись гласит о нулевом смещении
+        /** @lends RegionObject */
         this.saveRecordOffset();
     }
 
-    /** @lends RegionObject.prototype */
     RegionObject.prototype = {
         constructor: RegionObject,
 
