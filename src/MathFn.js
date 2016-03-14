@@ -71,6 +71,17 @@
         return  'rgb(' + data[0]+','+data[1]+','+ data[2]+')';
     };
 
+    //MathFn.dataToHex = function(data){
+    //    var r = data[0];
+    //    var g = data[1];
+    //    var b = data[2];
+    //    return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+    //};
+    //
+    //MathFn.rgbToHex = function(r, g, b) {
+    //    return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+    //};
+
     function getRandomInt(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }

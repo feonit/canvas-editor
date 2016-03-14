@@ -62,7 +62,11 @@
     /**
      * Начало рисования
      * */
-    DrawingTool.prototype.drawingStart = function(x, y){ if ( this._lastPhase !== this._END_PHASE ) return; this._lastPhase = this._START_PHASE;
+    DrawingTool.prototype.drawingStart = function(x, y){ if (
+        this._lastPhase !== this._END_PHASE )
+            return;
+        this._lastPhase = this._START_PHASE;
+
         // начальная позиция
         this.currentPoint = this.startPoint = [x, y];
 
@@ -81,7 +85,11 @@
     /**
      * Продолжение рисования
      * */
-    DrawingTool.prototype.drawingContinue = function(x, y){ if ( this._lastPhase === this._END_PHASE ) return; this._lastPhase = this._CONTINUE_PHASE;
+    DrawingTool.prototype.drawingContinue = function(x, y){
+        if ( this._lastPhase === this._END_PHASE )
+            return;
+        this._lastPhase = this._CONTINUE_PHASE;
+
         this.currentPoint = [x, y];
         if (this.type == this.CURVE_TYPE){
             this._bufferPoints.push(new Point(x, y));
@@ -92,7 +100,11 @@
     /**
      * Конец рисования
      * */
-    DrawingTool.prototype.drawingEnd = function(x, y){ if ( this._lastPhase === this._END_PHASE ) return; this._lastPhase = this._END_PHASE;
+    DrawingTool.prototype.drawingEnd = function(x, y){ if (
+        this._lastPhase === this._END_PHASE )
+            return;
+        this._lastPhase = this._END_PHASE;
+
         if (this.type == this.CURVE_TYPE){
             this._bufferPoints.push(new Point(x, y));
         }
@@ -132,7 +144,7 @@
             case this.CURVE_TYPE:
                 object = new CanvasEditor.CurveVector({
                     points: this._bufferPoints,
-                    size: Math.round(this.size/2),
+                    size: Math.round(this.size),
                     color: this.color,
                     width: this.canvas.width,
                     height: this.canvas.height
@@ -145,7 +157,7 @@
                     y0:y0,
                     x1:x1,
                     y1:y1,
-                    size: Math.round(this.size/2),
+                    size: Math.round(this.size),
                     color: this.color,
                     width: this.canvas.width,
                     height: this.canvas.height
@@ -158,7 +170,7 @@
                     y0:y0,
                     x1:x1,
                     y1:y1,
-                    size: Math.round(this.size/2),
+                    size: Math.round(this.size),
                     color: this.color,
                     width: this.canvas.width,
                     height: this.canvas.height
@@ -171,7 +183,7 @@
                     y0:y0,
                     x1:x1,
                     y1:y1,
-                    size: Math.round(this.size/2),
+                    size: Math.round(this.size),
                     color: this.color,
                     width: this.canvas.width,
                     height: this.canvas.height
@@ -187,7 +199,7 @@
                     y0:y0,
                     x1:x1,
                     y1:y1,
-                    size: Math.round(this.size/2),
+                    size: Math.round(this.size),
                     color: this.color,
                     width: this.canvas.width,
                     height: this.canvas.height

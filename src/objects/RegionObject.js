@@ -40,13 +40,30 @@
          * Координаты обводки контура
          * @type {number[][]}
          * */
-        this.borderCoordinates = options.borderCoordinates;
+        Object.defineProperty(this, 'borderCoordinates', {
+            value: null,
+            enumerable: false,
+            writable: true
+        });
 
         /**
          * Координаты точек контура
          * @type {number[][]}
          * */
-        this.coordinates = options.coordinates || null;
+        Object.defineProperty(this, 'coordinates', {
+            value: options.coordinates || null,
+            enumerable: false,
+            writable: true
+        });
+
+        /**
+         * Лейоут
+         * */
+        Object.defineProperty(this, '_layout', {
+            value: null,
+            enumerable: false,
+            writable: true
+        });
 
         /**
          * Смещение слоя на главноем холсте после транспортировки.
@@ -57,12 +74,6 @@
         this.height = options.height;
         this.width = options.width;
         this.isActived = false;
-
-        Object.defineProperty(this, '_layout', {
-            value: null,
-            enumerable: false,
-            writable: true
-        });
 
         // Первая запись гласит о нулевом смещении
         /** @lends RegionObject */

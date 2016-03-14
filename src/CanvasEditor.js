@@ -42,7 +42,7 @@
         this.settings.drawingColor = options.settings.drawingColor || defaultOptions.drawingColor;
 
         this.toolsDriver = new CanvasEditor.ToolsDriver(this, canvas);
-        this.layersManager = new CanvasEditor.RegionManager(this, canvas, options['RegionManager']);
+        this.regionManager = new CanvasEditor.RegionManager(this, canvas, options['RegionManager']);
         this.mediator = new CanvasEditor.Mediator();
 
         this.toolsDriver.plug(CanvasEditor.ToolController.DrawingToolController);
@@ -81,7 +81,7 @@
                 appInstance.mediator.publish(appInstance.UPDATE_CANVAS);
 
                 // todo подумать над тем как это лучше организовать
-                that.layersManager.reset();
+                that.regionManager.reset();
             };
         }();
 
@@ -102,7 +102,7 @@
     CanvasEditor.prototype.newEvent = function(eventName, data){
         if (eventName === this.CREATED_REGION){
             var object = data[0];
-            this.layersManager.addRegion(object);
+            this.regionManager.addRegion(object);
         }
     };
 
@@ -127,52 +127,87 @@
     };
 
     CanvasEditor.prototype.getTotalState = function(){
-        var mapping = {
-            "ObjectsOrder": CanvasEditor.ObjectsOrder,
-            "RegionObject": CanvasEditor.RegionObject,
-            "CanvasEditor": CanvasEditor,
-            "RegionManager": CanvasEditor.RegionManager,
-        };
 
         var data = {};
+        var exclusion = {
+            "ToolsDriver": true,
+            "Mediator": true,
+            "PixelsMap": true,
+        };
 
-        function search(obj, link){
-            for (var k in obj){
-                if (obj.hasOwnProperty(k)) {
+        function searchObjectOptions(obj, link){
+            var currentProperty;
+            var constructorName;
 
-                    if (   Array.isArray(obj[k])
-                        && obj[k].length
-                        && mapping[obj[k][0].constructor.name]){
+            for (var propName in obj){
+                if (obj.hasOwnProperty(propName)) {
+                    currentProperty = obj[propName];
 
-                        link[k] = [];
+                    if (typeof currentProperty === "undefined")
+                        continue;
 
-                        obj[k].forEach(function(p){
-                            var name = p.constructor.name;
-                            var optionsItem = {};
-                            search(p, optionsItem);
+                    if (currentProperty === null)
+                        continue;
+
+                    constructorName = currentProperty.constructor.name;
+
+                    function processArray(arr, selfArrLink, itemOfArrName){
+                        selfArrLink[itemOfArrName] = [];
+
+                        // если пустой выходим
+                        if (!arr.length)
+                            return;
+
+                        // если не объекты, присваиваем
+                        if (typeof (arr[0]) !== "object"){
+                            selfArrLink[itemOfArrName] = arr;
+                            return;
+                        }
+
+                        // если опять массив
+                        if (Array.isArray(arr[0])){
+                            arr.forEach(function(itemOfArr, index){
+                                //var newarr = [];
+                                //selfArrLink[itemOfArrName].push(newarr);
+                                processArray(itemOfArr, selfArrLink[itemOfArrName], index);
+                            });
+                            return;
+                        }
+
+                        // если все объекты
+                        arr.forEach(function(itemOfArr){
+                            var optionsOfObject = {};
+                            searchObjectOptions(itemOfArr, optionsOfObject);
                             var item = {};
-                            item[name] = optionsItem;
-                            link[k].push(item);
+                            item[itemOfArr.constructor.name] = optionsOfObject;
+                            selfArrLink[propName].push(item);
                         });
+                    }
 
-                    } else if (typeof obj[k] === "object" ){
-                        if (mapping[obj[k].constructor.name]){
-                            var newLink = link[obj[k].constructor.name] = {};
-                            search(obj[k], newLink);
+                    // свойство массив
+                    if ( Array.isArray(currentProperty)){
+                        processArray(currentProperty, link, propName);
+                    } else
+                    // свойство объект не массив
+                    if (typeof currentProperty === "object" ){
+
+                        if (exclusion[constructorName])
+                            continue;
+
+                        if (constructorName !== "Object"){
+                            var newLink = link[currentProperty.constructor.name] = {};
+                            searchObjectOptions(currentProperty, newLink);
                         } else {
-                            // only simple hash data
-                            if (obj[k].constructor.name === "Object"){
-                                link[k] = obj[k];
-                            }
+                            link[propName] = currentProperty;
                         }
                     } else {
-                        link[k] = obj[k];
+                        link[propName] = currentProperty;
                     }
                 }
             }
         }
 
-        search(this, data);
+        searchObjectOptions(this, data);
 
         return data;
     }

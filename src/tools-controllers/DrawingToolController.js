@@ -6,6 +6,8 @@
 
         var tool = new CanvasEditor.Tool.DrawingTool(appInstance, canvas);
 
+        //todo
+        this.tool = tool;
 
         function mousedown(event){
             var ctx = canvas.getContext("2d");

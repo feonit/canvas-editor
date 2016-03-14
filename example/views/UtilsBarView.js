@@ -63,6 +63,8 @@
 
             wrapper.appendChild(checkBox);
 
+            checkBox.classList.add('todo');
+
             checkBox.addEventListener('onChange', function(data){
                 data.detail.checked ? util.start() : util.stop();
             });
@@ -83,6 +85,29 @@
             }
 
             wrapper.appendChild(checkBox);
+
+            checkBox.addEventListener('onChange', function(data){
+                data.detail.checked ? util.start() : util.stop();
+            });
+
+        }();
+
+        /**
+         * Утилита: Курсор
+         * */
+        !function(){
+            var isEnabled = false;
+
+            var util = new CanvasEditor.ToolController.CursorOptionsUtilController(appInstance, appInstance.canvas);
+            var checkBox = new CheckBoxComponent('Курсор', isEnabled);
+
+            if (isEnabled){
+                util.start(appInstance, appInstance.canvas);
+            }
+
+            wrapper.appendChild(checkBox);
+
+            checkBox.classList.add('todo');
 
             checkBox.addEventListener('onChange', function(data){
                 data.detail.checked ? util.start() : util.stop();

@@ -8,7 +8,11 @@
         RegionObject.apply(this, arguments);
         options = options || {};
 
-        this.coordinatesLine = options.coordinatesLine;
+        Object.defineProperty(this, 'coordinatesLine', {
+            value: null,
+            enumerable: false,
+            writable: true
+        });
     }
 
     VectorRegion.prototype = Object.create(RegionObject.prototype);

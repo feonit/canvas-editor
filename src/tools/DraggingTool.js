@@ -1,4 +1,6 @@
 !function(CanvasEditor){
+
+    /** @namespace CanvasEditor.Tool */
     CanvasEditor.namespace('CanvasEditor.Tool').DraggingTool = DraggingTool;
 
     /**
@@ -48,7 +50,7 @@
         if (!this.selectedRegionObject){
 
             // пробуем найти объект
-            var regionObject = this.appInstance.layersManager.searchRegionByCoordinate(x, y);
+            var regionObject = this.appInstance.regionManager.searchRegionByCoordinate(x, y);
 
             // все таки там пусто
             if (!regionObject)
@@ -58,10 +60,10 @@
         }
 
         // 1 активизируем
-        this.appInstance.layersManager.drawActivateRegion(this.selectedRegionObject);
+        this.appInstance.regionManager.drawActivateRegion(this.selectedRegionObject);
 
         // 2 поднять объект
-        this.appInstance.layersManager.drawToTopRegion(this.selectedRegionObject);
+        this.appInstance.regionManager.drawToTopRegion(this.selectedRegionObject);
 
         // начало процесса перемещения
         this.processing = true;
@@ -79,7 +81,7 @@
         if (this.processing){
             this.selectedRegionObject.offset[0] = this.firstOffset[0] + x - this.coordinateStart[0];
             this.selectedRegionObject.offset[1] = this.firstOffset[1] + y - this.coordinateStart[1];
-            this.appInstance.layersManager.redrawLayers();
+            this.appInstance.regionManager.redrawLayers();
             this.moved = true;
         }
     };
@@ -88,14 +90,14 @@
         if (this.processing){
 
             // 1 деактивизируем
-            this.appInstance.layersManager.drawDeactivateRegion(this.selectedRegionObject);
+            this.appInstance.regionManager.drawDeactivateRegion(this.selectedRegionObject);
 
             // 2
-            this.appInstance.layersManager.redrawLayers();
+            this.appInstance.regionManager.redrawLayers();
 
             // 3 save final offset
             if (this.moved){
-                this.appInstance.layersManager.applyOtherOffset(this.selectedRegionObject);
+                this.appInstance.regionManager.applyOtherOffset(this.selectedRegionObject);
             }
 
             // заканчиваем процесс

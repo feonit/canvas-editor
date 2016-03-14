@@ -26,6 +26,14 @@
         body{
             margin: 0;/** todo offset for event position */
         }
+
+        .todo{
+            color: #777;;
+        }
+        .todo:before{
+            content: '(todo)';
+            font-size: .6em;
+        }
     </style>
 </head>
 <body>
@@ -70,6 +78,7 @@
 <script type="text/javascript" src="src/utils-controllers/SaveServerUtilController.js"></script>
 <script type="text/javascript" src="src/utils-controllers/TransparentUtilController.js"></script>
 <script type="text/javascript" src="src/utils-controllers/RandomOptionsController.js"></script>
+<script type="text/javascript" src="src/utils-controllers/CursorOptionsUtilController.js"></script>
 
 <script type="text/javascript" src="example/ui-components/RadioBoxComponent.js"></script>
 <script type="text/javascript" src="example/ui-components/CheckBoxComponent.js"></script>
@@ -95,7 +104,7 @@
         var appInstance = new CanvasEditor(document.getElementById('canvas'), {
             settings: {
                 drawingColor: "8080ff",
-                drawingSize: 20
+                drawingSize: 10
             }
         });
 

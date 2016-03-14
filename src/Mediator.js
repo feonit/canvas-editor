@@ -4,6 +4,7 @@
 
     /**
      * Для связи между модулями
+     * @memberof CanvasEditor
      * @class Mediator
      * */
     function Mediator(){

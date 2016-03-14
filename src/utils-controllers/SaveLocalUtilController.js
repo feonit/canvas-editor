@@ -116,13 +116,13 @@ var StorageManager = (function(){
             //var props = {};
             //var data = {};
             //
-            //for (var k in appInstance.layersManager){
-            //    if(!appInstance.layersManager.hasOwnProperty(k)){continue;}
+            //for (var k in appInstance.regionManager){
+            //    if(!appInstance.regionManager.hasOwnProperty(k)){continue;}
             //
-            //    props[k] = appInstance.layersManager[k];
+            //    props[k] = appInstance.regionManager[k];
             //}
             //
-            //data.layersManager = props;
+            //data.regionManager = props;
             //
             //storageManager.setProperties(data);
         };
