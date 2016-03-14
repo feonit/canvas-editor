@@ -71,14 +71,14 @@
         this.coordinateStart = [x, y];
 
         // запоминаем исходное смещение объекта
-        this.firstOffset[0] = this.selectedRegionObject.offsetX;
-        this.firstOffset[1] = this.selectedRegionObject.offsetY;
+        this.firstOffset[0] = this.selectedRegionObject.offset[0];
+        this.firstOffset[1] = this.selectedRegionObject.offset[1];
     };
 
     DraggingTool.prototype.draggingContinue = function(x, y){
         if (this.processing){
-            this.selectedRegionObject.offsetX = this.firstOffset[0] + x - this.coordinateStart[0];
-            this.selectedRegionObject.offsetY = this.firstOffset[1] + y - this.coordinateStart[1];
+            this.selectedRegionObject.offset[0] = this.firstOffset[0] + x - this.coordinateStart[0];
+            this.selectedRegionObject.offset[1] = this.firstOffset[1] + y - this.coordinateStart[1];
             this.appInstance.layersManager.redrawLayers();
             this.moved = true;
         }

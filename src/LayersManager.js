@@ -76,12 +76,12 @@
     /**
      *
      * */
-    LayersManager.prototype.removeRecordsAboutRegion = function(regionObject, offsetX, offsetY){
+    LayersManager.prototype.removeRecordsAboutRegion = function(regionObject, offset){
         // не забыть про смещение
-        var offsetX = typeof offsetX === 'undefined' ? regionObject.offsetX : offsetX;
-        var offsetY = typeof offsetY === 'undefined' ? regionObject.offsetY : offsetY;
 
-        var coordinates = regionObject.getRelationCoordinate(null, offsetX, offsetY);
+        offset = offset || regionObject.offset;
+
+        var coordinates = regionObject.getRelationCoordinate(null, offset);
         var coordinate;
         var coordinateX;
         var coordinateY;

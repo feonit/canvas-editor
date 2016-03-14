@@ -34,5 +34,4 @@
 
     RasterRegion.prototype = Object.create(RegionObject.prototype);
     RasterRegion.prototype.constructor = RasterRegion;
-
 }();

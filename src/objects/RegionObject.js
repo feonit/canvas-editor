@@ -1,246 +1,78 @@
 !function(CanvasEditor){
 
+    CanvasEditor.namespace('CanvasEditor').RegionObject = RegionObject;
+
     var MathFn = CanvasEditor.MathFn;
 
-    CanvasEditor.namespace('CanvasEditor').RegionObject = (function(){
-        /**
-         * @class RegionObject
-         * @memberof CanvasEditor
-         * @param {HTMLCanvasElement} layout
-         * @param {number[][]} coordinates
-         * @param {number[]} color
-         * @param {number[][]} borderCoordinates
-         * @param {number[][]} coordinatesLine — исходные координаты 1-но пиксельной фигуры
-         * */
-        var RegionObject = (function(){
+    /**
+     * Номер последнего слоя
+     * @type {number}
+     * */
+    var incId = 0;
 
-            /**
-             * Номер последнего слоя
-             * @type {number}
-             * */
-            var incId = 0;
+    /**
+     * @class RegionObject
+     * @memberof CanvasEditor
+     * @param {Object} options
+     * @param {HTMLCanvasElement} options.layout
+     * @param {number[][]} options.coordinates
+     * @param {number[]} options.color
+     * @param {number[][]} options.borderCoordinates
+     * @param {number[][]} options.coordinatesLine — исходные координаты 1-но пиксельной фигуры
+     * */
+    function RegionObject(options){
 
-            return function RegionObject(options){
-
-                options = options || {};
-
-                /** @lends RegionObject */
-                this.id = incId++;
-
-                /**
-                 * Регион имеет один цвет
-                 * @type {ImageData.data}
-                 * */
-                this.color = options.color;
-
-                /**
-                 *
-                 * */
-                this.borderCoordinates = options.borderCoordinates;
-
-                this.coordinates = options.coordinates || null;
-
-                /**
-                 * Смещение слоя на главноем холсте после транспортировки
-                 * Первая запись гласит о нулевом смещении
-                 * @arg {number[][]}
-                 * */
-                this.recordsOffset = [[0,0]];
-                this.offsetX = 0;
-                this.offsetY = 0;
-                this.height = options.height;
-                this.width = options.width;
-                this.isActived = false;
-
-                Object.defineProperty(this, '_layout', {
-                    value: null,
-                    enumerable: false,
-                    writable: true
-                });
-
-            };
-        }());
+        options = options || {};
 
         /**
-         * Алгоритм поиска области фигуры по координате в режиме поиска по цвету
-         * Последовательный поиск всех похожих прилегающих точек, как непосредственно,
-         * так и посредством аналогичных по цвету точек
-         * @param {number} startX — координата X с которой начинается поиск
-         * @param {number} startY — координата Y с которой начинается поиск
-         * @param {HTMLCanvasElement} canvas — анализируемый холст
+         * Уникальный идентификатор объекта
+         * @type {number}
          * */
-        RegionObject._searchPixels = function (startX, startY, canvas){
-            var canvasWidth = canvas.width;
-            var canvasHeight = canvas.height;
-            var imageData = canvas.getContext('2d').getImageData(0, 0, canvasWidth, canvasHeight);
-            var searched = [];
-            var etalonPointImageData = getPointImageData(startX, startY);
-            var coordinate;
-            var i;
-            var len;
-            var pointDataImage;
-            var register = {};
-            var etalonPointImageData0 = etalonPointImageData[0];
-            var etalonPointImageData1 = etalonPointImageData[1];
-            var etalonPointImageData2 = etalonPointImageData[2];
-            var etalonPointImageData3 = etalonPointImageData[3];
-            var x;
-            var y;
-            var arr;
-            var item;
-            var itemCoordinateX;
-            var itemCoordinateY;
-            var incX;
-            var incY;
-            var decX;
-            var decY;
-            var isZeroX;
-            var isZeroY;
-            var isMaxX;
-            var isMaxY;
-            var index = 0;
-            var borderCoordinates = [];
+        this.id = incId++;
 
-            var mapCoordinateToPixel = {};
+        /**
+         * Регион имеет один цвет
+         * @type {number[]}
+         * */
+        this.color = options.color;
 
-            function setRecord(x,y, data){
-                if (!register[x])
-                    register[x] = {};
+        /**
+         * Координаты обводки контура
+         * @type {number[][]}
+         * */
+        this.borderCoordinates = options.borderCoordinates;
 
-                register[x][y] = data;
-                //register[x+y/10000] = 1;
-            }
+        /**
+         * Координаты точек контура
+         * @type {number[][]}
+         * */
+        this.coordinates = options.coordinates || null;
 
-            function getRecord(x,y){
-                return register[x] && register[x][y];
-                //return register[x+y/10000];
-            }
+        /**
+         * Смещение слоя на главноем холсте после транспортировки.
+         * @arg {number[][]}
+         * */
+        this.recordsOffset = [[0,0]];
+        this.offset = [0,0];
+        this.height = options.height;
+        this.width = options.width;
+        this.isActived = false;
 
-            function getPointImageData(x, y){
-                var index = (y * canvasWidth + x) * 4;
-                return imageData.data.slice(index, index + 4);
-            }
+        Object.defineProperty(this, '_layout', {
+            value: null,
+            enumerable: false,
+            writable: true
+        });
 
-            searched.push([startX,startY]);
-            setRecord(startX,startY, etalonPointImageData);
+        // Первая запись гласит о нулевом смещении
+        this.saveRecordOffset();
+    }
 
-            //var TOP = 1;
-            //var RIGHT = 2;
-            //var BOTTOM = 4;
-            //var LEFT = 8;
-            //
-            //var TOP_LEFT = TOP | LEFT;
-            //var TOP_RIGHT = TOP | RIGHT;
-            //var BOTTOM_LEFT = BOTTOM | LEFT;
-            //var BOTTOM_RIGHT = BOTTOM | RIGHT;
+    /** @lends RegionObject.prototype */
+    RegionObject.prototype = {
+        constructor: RegionObject,
 
-
-            // использование живой очереди вместо рекурсии, потому что
-            // она обуславливает другую последовательность обработки пикселов
-            // + стрек выполнения рекурсий имеет ограничение
-            while ( searched.length > index ){
-                coordinate = searched[index];
-
-                index++;
-
-                x = coordinate[0];
-                y = coordinate[1];
-
-                // Координаты непосредственных соседних точек
-                // четырех связность быстрее чем восьмисвязность
-
-                arr = [];
-
-                incX = x + 1;
-                incY = y + 1;
-                decX = x - 1;
-                decY = y - 1;
-
-                isZeroX = (x === 0);
-                isZeroY = (y === 0);
-
-                isMaxX = (x === canvasWidth);
-                isMaxY = (y === canvasHeight);
-
-                if (isZeroX || isZeroY || isMaxX || isMaxY){
-
-                    if (decY > 0 && decY < canvasHeight){
-                        arr[0] = [ x, decY ];
-                    }
-
-                    if (incX > 0 && incX < canvasWidth){
-                        arr[arr.length] = [ incX, y ];
-                    }
-
-                    if (incY > 0 && incY < canvasHeight){
-                        arr[arr.length] = [ x, incY ];
-                    }
-
-                    if (decX > 0 && decX < canvasWidth){
-                        arr[arr.length] = [ decX, y ];
-                    }
-
-                } else {
-                    arr = [ [ x, decY ], [ decX, y ], [ incX, y ], [ x, incY ] ];
-                    //arr.concat( [ x-1, decY ], [ decX, y+1 ], [ incX, y-1 ], [ x+1, incY ] );// восьмисвязный
-                }
-
-                //if (isZeroX || isZeroY || isMaxX || isMaxY){
-                //    switch ((isZeroX && LEFT) | (isZeroY && TOP) | (isMaxX && RIGHT) | (isMaxY && BOTTOM)){
-                //        case 1:  arr = [              [ decX, y ], [ incX, y ], [ x, incY ] ]; break;
-                //        case 2:  arr = [ [ x, decY ], [ decX, y ],              [ x, incY ] ]; break;
-                //        case 4:  arr = [ [ x, decY ], [ decX, y ], [ incX, y ]              ]; break;
-                //        case 8:  arr = [ [ x, decY ],              [ incX, y ], [ x, incY ] ]; break;
-                //        case 9:  arr = [                           [ incX, y ], [ x, incY ] ]; break;
-                //        case 3:  arr = [              [ decX, y ]             , [ x, incY ] ]; break;
-                //        case 12: arr = [ [ x, decY ],              [ incX, y ]              ]; break;
-                //        case 6:  arr = [ [ x, decY ], [ decX, y ]                           ]; break;
-                //        default:
-                //            arr = [ [ x, decY ], [ decX, y ], [ incX, y ], [ x, incY ] ]; break;
-                //    }
-                //} else {
-                //    arr = [ [ x, decY ], [ decX, y ], [ incX, y ], [ x, incY ] ];
-                //}
-
-                // 2 Выбрать из набора точки, которые еще не проходили проверку
-
-                for (i = 0, len = arr.length; i < len; i += 1){
-
-                    item = arr[i];
-                    itemCoordinateX = item[0];
-                    itemCoordinateY = item[1];
-                    // если точка не зарегистрирована
-                    if ( ! getRecord(itemCoordinateX, itemCoordinateY) ){
-
-                        // найти ее данные
-                        pointDataImage = getPointImageData(itemCoordinateX, itemCoordinateY);
-
-                        // если данные совпадают
-                        if (
-                            pointDataImage[0] === etalonPointImageData0
-                            && pointDataImage[1] === etalonPointImageData1
-                            && pointDataImage[2] === etalonPointImageData2
-                        //&& pointDataImage[3] === etalonPointImageData3 // чтобы бордер с альфой оставить
-                        ){
-
-                            // не теряем информацию о пикселе
-                            // добавить в коллекцию
-                            searched.push(item);
-                        } else {
-                            borderCoordinates.push(item);
-                        }
-
-                        // а заодно добавить их в регистр (в регистр попадают все точки, прошедшие проверку на схожесть с эталонной)
-                        setRecord(itemCoordinateX, itemCoordinateY, pointDataImage);
-                    }
-                }
-
-            }
-
-            return [searched, borderCoordinates];
-        };
-
-        RegionObject.prototype.getCoordinates = function(){
+        getCoordinates : function(){
 
             if (!this.coordinates){
                 var beginWithX = this.coordinatesLine[0][0];
@@ -251,9 +83,9 @@
             }
 
             return this.coordinates;
-        };
+        },
 
-        RegionObject.prototype.getLayout = function(){
+        getLayout : function(){
             if (!this._layout){
                 var layoutCanvas = document.createElement('canvas');
                 layoutCanvas.height = this.height;
@@ -278,7 +110,7 @@
                         coordinate = coordinates[i];
                         canvasCtx.drawImage(canvas1px, coordinate[0], coordinate[1]);
                     }
-                };
+                }
 
                 drawPixelsAtCanvas(layoutCanvas, this.getCoordinates(), this.color);
 
@@ -286,21 +118,21 @@
             }
 
             return this._layout;
-        };
+        },
 
-
-        RegionObject.prototype.saveRecordOffset = function(){
-            this.recordsOffset.push([this.offsetX, this.offsetY])
-        };
+        saveRecordOffset : function(){
+            this.recordsOffset.push([this.offset[0], this.offset[1]])
+        },
 
         /**
          * Сгенерировать новый набор оригинальных координат с применением актуального отступа
+         * @param {number[][]} coordinates
+         * @param {number[]} offset
          * */
-        RegionObject.prototype.getRelationCoordinate = function(coordinates, offsetX, offsetY){
+        getRelationCoordinate : function(coordinates, offset){
             var relation = [];
-            var offsetX = typeof offsetX === 'undefined' ? this.offsetX : offsetX;
-            var offsetY = typeof offsetY === 'undefined' ? this.offsetY : offsetY;
-            var coordinates = coordinates || this.getCoordinates();
+
+            coordinates = coordinates || this.getCoordinates();
 
             for (var i = 0, len = coordinates.length; i < len; i+=1 ) {
                 relation[i] = [];
@@ -308,34 +140,34 @@
                 relation[i][1] = coordinates[i][1];
             }
 
-            this._addOffsetToCoordinate(relation, offsetX, offsetY);
+            offset = offset || this.offset;
+
+            this._addOffsetToCoordinate(relation, offset);
 
             return relation;
-        };
+        },
 
-        RegionObject.prototype.getPrevRecord = function(){
-            var record = this.recordsOffset[this.recordsOffset.length - 2];
-            return record;
-        };
+        getPrevRecord : function(){
+            return this.recordsOffset[this.recordsOffset.length - 2];
+        },
 
         /**
          * Добавить отступ набору координат
          * @param {number[][]} coordinates
-         * @param {number} offsetX
-         * @param {number} offsetY
+         * @param {number[]} offset
          * */
-        RegionObject.prototype._addOffsetToCoordinate = function(coordinates, offsetX, offsetY){
+        _addOffsetToCoordinate : function(coordinates, offset){
             for (var i = 0, len = coordinates.length; i < len; i+=1 ){
-                coordinates[i][0] += offsetX;
-                coordinates[i][1] += offsetY;
+                coordinates[i][0] += offset[0];
+                coordinates[i][1] += offset[1];
             }
             return coordinates;
-        };
+        },
 
         /**
          * Метод создания подцветки
          * */
-        RegionObject.prototype.activate = function(){
+        activate : function(){
             if (this.isActived) return;
             this.isActived = true;
             if (this.borderCoordinates && this.borderCoordinates.length){
@@ -352,7 +184,7 @@
                 // отрисовать бордер
                 var imageData = layout.getContext('2d').createImageData(1, 1);
                 for (var i=0, len=coordinates.length; i < len; i++){
-                    var colorData = CanvasEditor.MathFn.getRandomColorData();
+                    var colorData = MathFn.getRandomColorData();
 
                     imageData.data[0] = colorData[0];
                     imageData.data[1] = colorData[1];
@@ -366,25 +198,202 @@
                 Object.defineProperty(this, '__storedBorderImageData', {value: layout.getContext('2d').getImageData(0, 0, layout.width, layout.height)});
 
             }
-        };
+        },
 
         /**
          * Метод удаления подцветки, путем восстановление ранее сохраненной копии оригинального лейаута
          * */
-        RegionObject.prototype.deactivate = function(){
+        deactivate : function(){
             if (!this.isActived) return;
             this.isActived = false;
             var layout = this.getLayout();
             layout.getContext('2d').clearRect(0, 0, layout.width, layout.height);
             layout.getContext('2d').putImageData(this.__originalLayoutImageData, 0, 0);
-        };
+        },
 
-        RegionObject.prototype.drawAtCanvas = function(canvas){
+        drawAtCanvas : function(canvas){
             // кладем буфер региона на холст добавляя смещение
-            canvas.getContext('2d').drawImage(this.getLayout(), this.offsetX, this.offsetY);
-        };
+            canvas.getContext('2d').drawImage(this.getLayout(), this.offset[0], this.offset[1]);
+        }
+    };
 
-        return RegionObject;
-    }());
+    /**
+     * Алгоритм поиска области фигуры по координате в режиме поиска по цвету
+     * Последовательный поиск всех похожих прилегающих точек, как непосредственно,
+     * так и посредством аналогичных по цвету точек
+     * @param {number} startX — координата X с которой начинается поиск
+     * @param {number} startY — координата Y с которой начинается поиск
+     * @param {HTMLCanvasElement} canvas — анализируемый холст
+     * */
+    RegionObject._searchPixels = function (startX, startY, canvas){
+        var canvasWidth = canvas.width;
+        var canvasHeight = canvas.height;
+        var imageData = canvas.getContext('2d').getImageData(0, 0, canvasWidth, canvasHeight);
+        var searched = [];
+        var etalonPointImageData = getPointImageData(startX, startY);
+        var coordinate;
+        var i;
+        var len;
+        var pointDataImage;
+        var register = {};
+        var etalonPointImageData0 = etalonPointImageData[0];
+        var etalonPointImageData1 = etalonPointImageData[1];
+        var etalonPointImageData2 = etalonPointImageData[2];
+        var etalonPointImageData3 = etalonPointImageData[3];
+        var x;
+        var y;
+        var arr;
+        var item;
+        var itemCoordinateX;
+        var itemCoordinateY;
+        var incX;
+        var incY;
+        var decX;
+        var decY;
+        var isZeroX;
+        var isZeroY;
+        var isMaxX;
+        var isMaxY;
+        var index = 0;
+        var borderCoordinates = [];
+
+        var mapCoordinateToPixel = {};
+
+        function setRecord(x,y, data){
+            if (!register[x])
+                register[x] = {};
+
+            register[x][y] = data;
+            //register[x+y/10000] = 1;
+        }
+
+        function getRecord(x,y){
+            return register[x] && register[x][y];
+            //return register[x+y/10000];
+        }
+
+        function getPointImageData(x, y){
+            var index = (y * canvasWidth + x) * 4;
+            return imageData.data.slice(index, index + 4);
+        }
+
+        searched.push([startX,startY]);
+        setRecord(startX,startY, etalonPointImageData);
+
+        //var TOP = 1;
+        //var RIGHT = 2;
+        //var BOTTOM = 4;
+        //var LEFT = 8;
+        //
+        //var TOP_LEFT = TOP | LEFT;
+        //var TOP_RIGHT = TOP | RIGHT;
+        //var BOTTOM_LEFT = BOTTOM | LEFT;
+        //var BOTTOM_RIGHT = BOTTOM | RIGHT;
+
+
+        // использование живой очереди вместо рекурсии, потому что
+        // она обуславливает другую последовательность обработки пикселов
+        // + стрек выполнения рекурсий имеет ограничение
+        while ( searched.length > index ){
+            coordinate = searched[index];
+
+            index++;
+
+            x = coordinate[0];
+            y = coordinate[1];
+
+            // Координаты непосредственных соседних точек
+            // четырех связность быстрее чем восьмисвязность
+
+            arr = [];
+
+            incX = x + 1;
+            incY = y + 1;
+            decX = x - 1;
+            decY = y - 1;
+
+            isZeroX = (x === 0);
+            isZeroY = (y === 0);
+
+            isMaxX = (x === canvasWidth);
+            isMaxY = (y === canvasHeight);
+
+            if (isZeroX || isZeroY || isMaxX || isMaxY){
+
+                if (decY > 0 && decY < canvasHeight){
+                    arr[0] = [ x, decY ];
+                }
+
+                if (incX > 0 && incX < canvasWidth){
+                    arr[arr.length] = [ incX, y ];
+                }
+
+                if (incY > 0 && incY < canvasHeight){
+                    arr[arr.length] = [ x, incY ];
+                }
+
+                if (decX > 0 && decX < canvasWidth){
+                    arr[arr.length] = [ decX, y ];
+                }
+
+            } else {
+                arr = [ [ x, decY ], [ decX, y ], [ incX, y ], [ x, incY ] ];
+                //arr.concat( [ x-1, decY ], [ decX, y+1 ], [ incX, y-1 ], [ x+1, incY ] );// восьмисвязный
+            }
+
+            //if (isZeroX || isZeroY || isMaxX || isMaxY){
+            //    switch ((isZeroX && LEFT) | (isZeroY && TOP) | (isMaxX && RIGHT) | (isMaxY && BOTTOM)){
+            //        case 1:  arr = [              [ decX, y ], [ incX, y ], [ x, incY ] ]; break;
+            //        case 2:  arr = [ [ x, decY ], [ decX, y ],              [ x, incY ] ]; break;
+            //        case 4:  arr = [ [ x, decY ], [ decX, y ], [ incX, y ]              ]; break;
+            //        case 8:  arr = [ [ x, decY ],              [ incX, y ], [ x, incY ] ]; break;
+            //        case 9:  arr = [                           [ incX, y ], [ x, incY ] ]; break;
+            //        case 3:  arr = [              [ decX, y ]             , [ x, incY ] ]; break;
+            //        case 12: arr = [ [ x, decY ],              [ incX, y ]              ]; break;
+            //        case 6:  arr = [ [ x, decY ], [ decX, y ]                           ]; break;
+            //        default:
+            //            arr = [ [ x, decY ], [ decX, y ], [ incX, y ], [ x, incY ] ]; break;
+            //    }
+            //} else {
+            //    arr = [ [ x, decY ], [ decX, y ], [ incX, y ], [ x, incY ] ];
+            //}
+
+            // 2 Выбрать из набора точки, которые еще не проходили проверку
+
+            for (i = 0, len = arr.length; i < len; i += 1){
+
+                item = arr[i];
+                itemCoordinateX = item[0];
+                itemCoordinateY = item[1];
+                // если точка не зарегистрирована
+                if ( ! getRecord(itemCoordinateX, itemCoordinateY) ){
+
+                    // найти ее данные
+                    pointDataImage = getPointImageData(itemCoordinateX, itemCoordinateY);
+
+                    // если данные совпадают
+                    if (
+                        pointDataImage[0] === etalonPointImageData0
+                        && pointDataImage[1] === etalonPointImageData1
+                        && pointDataImage[2] === etalonPointImageData2
+                    //&& pointDataImage[3] === etalonPointImageData3 // чтобы бордер с альфой оставить
+                    ){
+
+                        // не теряем информацию о пикселе
+                        // добавить в коллекцию
+                        searched.push(item);
+                    } else {
+                        borderCoordinates.push(item);
+                    }
+
+                    // а заодно добавить их в регистр (в регистр попадают все точки, прошедшие проверку на схожесть с эталонной)
+                    setRecord(itemCoordinateX, itemCoordinateY, pointDataImage);
+                }
+            }
+
+        }
+
+        return [searched, borderCoordinates];
+    };
 
 }(CanvasEditor);
