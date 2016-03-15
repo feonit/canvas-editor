@@ -2,7 +2,7 @@
     APP.namespace('APP');
     var PixelsMap = APP.PixelsMap;
     var ObjectsOrder = APP.ObjectsOrder;
-    var BackgroundRaster = APP.BackgroundRaster;
+    var BackgroundRaster = APP.objects.BackgroundRaster;
     var RasterRegion = APP.RasterRegion;
     /**
      * @class RegionManager
@@ -14,11 +14,14 @@
 
         Object.defineProperty(this, 'canvas', {value: canvas});
 
-        this.pixelsMap = new PixelsMap(options['PixelsMap']);
-        this.objectsOrder = new ObjectsOrder(options['ObjectsOrder']);
+        this.pixelsMap = new PixelsMap();
 
-        /** @lends RegionManager */
-        this.reset();
+        this.objectsOrder = new ObjectsOrder(options.objectsOrder);
+
+        if (!options.objectsOrder){// если нет автогенерации
+            /** @lends RegionManager.prototype */
+            this.makeBackgoundRegion();
+        }
     };
     /** @lends RegionManager.prototype */
     APP.RegionManager.prototype = {
@@ -33,12 +36,14 @@
         reset: function(){
             this.pixelsMap = new PixelsMap();
             this.objectsOrder = new ObjectsOrder();
-
+            this.makeBackgoundRegion();
+        },
+        makeBackgoundRegion : function(){
             function createBackgroundRaster(canvas){
                 return new BackgroundRaster({
                     dataUrl: canvas.toDataURL(),
                     height: canvas.height,
-                    width: canvas.width,
+                    width: canvas.width
                 });
             }
 
@@ -175,7 +180,7 @@
                 //todo нужно взять оригинальные координаты
 
                 // заполнить дефолтовым цветом
-                var raw = this.objectsOrder.getObject(this.BACKGROUND_INDEX);
+                var raw = this.objectsOrder.getObjectByIndex(this.BACKGROUND_INDEX);
                 this.putPixelsAtCanvas(raw.getLayout(), region.getRelationCoordinate(), CLEAN_COLOR);
 
                 this.addRegion(region);

@@ -1,88 +1,82 @@
-APP.namespace('APP').getTotalState = (function () {
+APP.namespace('APP').getTotalState = function (instanse) {
 
-     return function () {
+    var data = {};
+    var exclusion =[
+        APP.ToolsDriver,
+        APP.Mediator,
+        APP.PixelsMap
+    ];
 
-        var data = {};
-        var exclusion = {
-            "ToolsDriver": true,
-            "Mediator": true,
-            "PixelsMap": true
-        };
+    function searchObjectOptions(obj, link) {
+        var propValue;
+        var constructor;
 
-        function searchObjectOptions(obj, link) {
-            var currentProperty;
-            var constructorName;
+        for (var propName in obj) {
+            if (obj.hasOwnProperty(propName)) {
+                propValue = obj[propName];
 
-            for (var propName in obj) {
-                if (obj.hasOwnProperty(propName)) {
-                    currentProperty = obj[propName];
+                if (typeof propValue === "undefined")
+                    continue;
 
-                    if (typeof currentProperty === "undefined")
-                        continue;
+                if (propValue === null)
+                    continue;
 
-                    if (currentProperty === null)
-                        continue;
+                constructor = propValue.constructor;
 
-                    constructorName = currentProperty.constructor.name;
+                function processArray(arr, selfArrLink, itemOfArrName) {
+                    selfArrLink[itemOfArrName] = [];
 
-                    function processArray(arr, selfArrLink, itemOfArrName) {
-                        selfArrLink[itemOfArrName] = [];
+                    // если пустой выходим
+                    if (!arr.length)
+                        return;
 
-                        // если пустой выходим
-                        if (!arr.length)
-                            return;
+                    // если не объекты, присваиваем
+                    if (typeof (arr[0]) !== "object") {
+                        selfArrLink[itemOfArrName] = arr;
+                        return;
+                    }
 
-                        // если не объекты, присваиваем
-                        if (typeof (arr[0]) !== "object") {
-                            selfArrLink[itemOfArrName] = arr;
-                            return;
-                        }
-
-                        // если опять массив
-                        if (Array.isArray(arr[0])) {
-                            arr.forEach(function (itemOfArr, index) {
-                                //var newarr = [];
-                                //selfArrLink[itemOfArrName].push(newarr);
-                                processArray(itemOfArr, selfArrLink[itemOfArrName], index);
-                            });
-                            return;
-                        }
-
-                        // если все объекты
-                        arr.forEach(function (itemOfArr) {
-                            var optionsOfObject = {};
-                            searchObjectOptions(itemOfArr, optionsOfObject);
-                            var item = {};
-                            item[itemOfArr.constructor.name] = optionsOfObject;
-                            selfArrLink[propName].push(item);
+                    // если опять массив
+                    if (Array.isArray(arr[0])) {
+                        arr.forEach(function (itemOfArr, index) {
+                            processArray(itemOfArr, selfArrLink[itemOfArrName], index);
                         });
+                        return;
                     }
 
-                    // свойство массив
-                    if (Array.isArray(currentProperty)) {
-                        processArray(currentProperty, link, propName);
-                    } else
-                    // свойство объект не массив
-                    if (typeof currentProperty === "object") {
+                    // если все объекты
+                    arr.forEach(function (itemOfArr) {
+                        var optionsOfObject = {};
+                        searchObjectOptions(itemOfArr, optionsOfObject);
+                        selfArrLink[propName].push(optionsOfObject);
+                    });
+                }
 
-                        if (exclusion[constructorName])
-                            continue;
+                // свойство массив
+                if (Array.isArray(propValue)) {
+                    processArray(propValue, link, propName);
+                } else
+                // свойство объект не массив
+                if (typeof propValue === "object") {
 
-                        if (constructorName !== "Object") {
-                            var newLink = link[currentProperty.constructor.name] = {};
-                            searchObjectOptions(currentProperty, newLink);
-                        } else {
-                            link[propName] = currentProperty;
-                        }
+                    if (exclusion.indexOf(constructor) > -1)
+                        continue;
+
+                    // если его прямой родитель Object
+                    if (constructor.prototype !== Object.prototype) {
+                        var newLink = link[propName] = {};
+                        searchObjectOptions(propValue, newLink);
                     } else {
-                        link[propName] = currentProperty;
+                        link[propName] = propValue;
                     }
+                } else {
+                    link[propName] = propValue;
                 }
             }
         }
-
-        searchObjectOptions(this, data);
-
-        return data;
     }
-})();
+
+    searchObjectOptions(instanse, data);
+
+    return data;
+};

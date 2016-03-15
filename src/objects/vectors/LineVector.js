@@ -1,8 +1,8 @@
 !function(APP){
-    APP.namespace('APP');
+    APP.namespace('APP.objects');
     var VectorRegion = APP.VectorRegion;
 
-    APP.LineVector = function (options){
+    APP.objects.LineVector = function (options){
         options = options || {};
         VectorRegion.apply(this, arguments);
         this.x0 = options.x0;
@@ -12,9 +12,9 @@
         this.size = options.size;
         this.color = options.color;
     };
-    APP.LineVector.prototype = Object.create(VectorRegion.prototype);
-    APP.LineVector.prototype.constructor = APP.LineVector;
-    APP.LineVector.prototype.getCoordinatesLine = function(){
+    APP.objects.LineVector.prototype = Object.create(VectorRegion.prototype);
+    APP.objects.LineVector.prototype.constructor = APP.objects.LineVector;
+    APP.objects.LineVector.prototype.getCoordinatesLine = function(){
         if (!this.coordinatesLine){
             function bline(x0, y0, x1, y1) {
                 var px = [];

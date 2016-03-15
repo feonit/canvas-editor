@@ -1,8 +1,8 @@
 !function(APP){
-    APP.namespace('APP');
+    APP.namespace('APP.objects');
     var VectorRegion = APP.VectorRegion;
 
-    APP.ArrowVector = function (options){
+    APP.objects.ArrowVector = function (options){
         options = options || {};
         VectorRegion.apply(this, arguments);
         this.x0 = options.x0;
@@ -13,9 +13,9 @@
         this.color = options.color;
     };
 
-    APP.ArrowVector.prototype = Object.create(VectorRegion.prototype);
-    APP.ArrowVector.prototype.constructor = APP.ArrowVector;
-    APP.ArrowVector.prototype.getCoordinatesLine = function(){
+    APP.objects.ArrowVector.prototype = Object.create(VectorRegion.prototype);
+    APP.objects.ArrowVector.prototype.constructor = APP.objects.ArrowVector;
+    APP.objects.ArrowVector.prototype.getCoordinatesLine = function(){
         if (!this.coordinatesLine){
             // Повернуть точку относительно другой на заданный радиан
             function turn(x0, y0, relx, rely, rad){

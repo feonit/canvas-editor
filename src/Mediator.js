@@ -11,6 +11,7 @@
     };
     /** @lends ToolsDriver.prototype */
     APP.Mediator.prototype = {
+        constructor: APP.Mediator,
         /**
          * Подписка на событие
          * @param {string} topic — имя события

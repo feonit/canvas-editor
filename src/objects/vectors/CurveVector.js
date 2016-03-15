@@ -1,19 +1,19 @@
 !function(APP){
-    APP.namespace('APP');
+    APP.namespace('APP.objects');
     var Curve = APP.Curve;
     var MathFn = APP.MathFn;
     var VectorRegion = APP.VectorRegion;
 
-    APP.CurveVector = function (options){
+    APP.objects.CurveVector = function (options){
         options = options || {};
         VectorRegion.apply(this, arguments);
         this.points = options.points;
         this.size = options.size;
         this.color = options.color;
     };
-    APP.CurveVector.prototype = Object.create(VectorRegion.prototype);
-    APP.CurveVector.prototype.constructor = APP.CurveVector;
-    APP.CurveVector.prototype.getCoordinatesLine = function(){
+    APP.objects.CurveVector.prototype = Object.create(VectorRegion.prototype);
+    APP.objects.CurveVector.prototype.constructor = APP.objects.CurveVector;
+    APP.objects.CurveVector.prototype.getCoordinatesLine = function(){
         if (!this.coordinatesLine){
             var coordinates = [];
             var points = this.points;

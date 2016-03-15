@@ -1,7 +1,7 @@
 !function(APP){
-    APP.namespace('APP');
+    APP.namespace('APP.objects');
     var VectorRegion = APP.VectorRegion;
-    APP.RectangleVector = function (options){
+    APP.objects.RectangleVector = function (options){
         options = options || {};
         VectorRegion.apply(this, arguments);
         this.x0 = options.x0;
@@ -12,9 +12,9 @@
         this.color = options.color;
     };
 
-    APP.RectangleVector.prototype = Object.create(VectorRegion.prototype);
-    APP.RectangleVector.prototype.constructor = APP.RectangleVector;
-    APP.RectangleVector.prototype.getCoordinatesLine = function(){
+    APP.objects.RectangleVector.prototype = Object.create(VectorRegion.prototype);
+    APP.objects.RectangleVector.prototype.constructor = APP.objects.RectangleVector;
+    APP.objects.RectangleVector.prototype.getCoordinatesLine = function(){
         if (!this.coordinatesLine){
             function rectangle(x0, y0, x1, y1){
                 var px = [[x0, y0], [x0, y1], [x1, y0], [x1, y1]];

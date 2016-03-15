@@ -25,7 +25,7 @@
          * Уникальный идентификатор объекта
          * @type {number}
          * */
-        this.id = incId++;
+        this.id = options.id || incId++;
 
         /**
          * Регион имеет один цвет
@@ -66,15 +66,11 @@
          * Смещение слоя на главноем холсте после транспортировки.
          * @arg {number[][]}
          * */
-        this.recordsOffset = [[0,0]];
-        this.offset = [0,0];
+        this.recordsOffset = options.recordsOffset || [[0,0]];//Первая запись гласит о нулевом смещении
+        this.offset = options.offset || [0,0];
         this.height = options.height;
         this.width = options.width;
         this.isActived = false;
-
-        // Первая запись гласит о нулевом смещении
-        /** @lends RegionObject */
-        this.saveRecordOffset();
     };
 
     APP.RegionObject.prototype = {
@@ -85,7 +81,7 @@
             if (!this.coordinates){
                 var beginWithX = this.coordinatesLine[0][0];
                 var beginWithY = this.coordinatesLine[0][1];
-                var searchedData = RegionObject._searchPixels(beginWithX, beginWithY, this.getLayout());
+                var searchedData = APP.RegionObject._searchPixels(beginWithX, beginWithY, this.getLayout());
                 this.coordinates = searchedData[0];
                 this.borderCoordinates = searchedData[1];
             }

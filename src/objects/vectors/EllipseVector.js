@@ -1,7 +1,7 @@
 !function(APP){
-    APP.namespace('APP');
+    APP.namespace('APP.objects');
     var VectorRegion = APP.VectorRegion;
-    APP.EllipseVector = function (options){
+    APP.objects.EllipseVector = function (options){
         options = options || {};
         VectorRegion.apply(this, arguments);
         this.x0 = options.x0;
@@ -11,9 +11,9 @@
         this.size = options.size;
         this.color = options.color;
     };
-    APP.EllipseVector.prototype = Object.create(VectorRegion.prototype);
-    APP.EllipseVector.prototype.constructor = APP.EllipseVector;
-    APP.EllipseVector.prototype.getCoordinatesLine = function(){
+    APP.objects.EllipseVector.prototype = Object.create(VectorRegion.prototype);
+    APP.objects.EllipseVector.prototype.constructor = APP.objects.EllipseVector;
+    APP.objects.EllipseVector.prototype.getCoordinatesLine = function(){
         if (!this.coordinatesLine){
             function plotEllipseRect(x0, y0, x1, y1){
                 var px = [];

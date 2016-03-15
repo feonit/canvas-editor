@@ -19,7 +19,7 @@
     };
     /** @lends ToolsDriver.prototype */
     APP.ToolsDriver.prototype = {
-        constructor: APP.PixelsMap,
+        constructor: APP.ToolsDriver,
         /**
          * Метод регистрации нового инструмента
          * @param {function} Constructor — конструктор нового инструмента

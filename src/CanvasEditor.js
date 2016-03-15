@@ -52,7 +52,7 @@
         this.settings.drawingColor = options.settings.drawingColor || defaultOptions.drawingColor;
 
         this.toolsDriver = new ToolsDriver(this, canvas);
-        this.regionManager = new RegionManager(this, canvas, options['RegionManager']);
+        this.regionManager = new RegionManager(this, canvas, options.regionManager);
         this.mediator = new Mediator();
 
         this.toolsDriver.plug(DrawingToolController);

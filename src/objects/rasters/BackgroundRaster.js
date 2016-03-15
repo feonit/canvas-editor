@@ -1,17 +1,17 @@
 !function(APP){
-    APP.namespace('APP');
+    APP.namespace('APP.objects');
     var RasterRegion = APP.RasterRegion;
 
-    APP.BackgroundRaster = function (options){
+    APP.objects.BackgroundRaster = function (options){
         options = options || {};
         RasterRegion.apply(this, arguments);
         this.dataUrl = options.dataUrl;
     };
 
-    APP.BackgroundRaster.prototype = Object.create(RasterRegion.prototype);
-    APP.BackgroundRaster.prototype.constructor = APP.BackgroundRaster;
+    APP.objects.BackgroundRaster.prototype = Object.create(RasterRegion.prototype);
+    APP.objects.BackgroundRaster.prototype.constructor = APP.objects.BackgroundRaster;
 
-    APP.BackgroundRaster.prototype.getLayout = function(){
+    APP.objects.BackgroundRaster.prototype.getLayout = function(){
         if (!this._layout){
             var layoutCanvas = document.createElement('canvas');
             layoutCanvas.height = this.height;
@@ -29,7 +29,7 @@
         return this._layout;
     };
 
-    APP.BackgroundRaster.prototype.getCoordinates = function(){
+    APP.objects.BackgroundRaster.prototype.getCoordinates = function(){
         if (!this.coordinates){
             var coordinates = [];
             for (var x = 0, lenX = this.width; x < lenX; x++){

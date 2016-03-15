@@ -1,11 +1,11 @@
 !function(APP, Math, document, Object){
     APP.namespace('APP.tools');
     var Point = APP.Point;
-    var CurveVector = APP.CurveVector;
-    var RectangleVector = APP.RectangleVector;
-    var EllipseVector = APP.EllipseVector;
-    var LineVector = APP.LineVector;
-    var ArrowVector = APP.ArrowVector;
+    var CurveVector = APP.objects.CurveVector;
+    var RectangleVector = APP.objects.RectangleVector;
+    var EllipseVector = APP.objects.EllipseVector;
+    var LineVector = APP.objects.LineVector;
+    var ArrowVector = APP.objects.ArrowVector;
 
     APP.tools.DrawingTool = function (appInstance, canvas){
 
