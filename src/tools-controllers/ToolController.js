@@ -1,23 +1,19 @@
-!function(CanvasEditor){
-
-    CanvasEditor.namespace('CanvasEditor').ToolController = ToolController;
-
+!function(APP){
+    APP.namespace('APP');
     /**
      * @class ToolController
-     * @memberof CanvasEditor
      * */
-    function ToolController(){}
+    APP.ToolController = function (){};
     /**
      * Включение инструмента
      * */
-    ToolController.prototype.start = function(){
+    APP.ToolController.prototype.start = function(){
         throw "method must be implemented";
     };
     /**
      * Отключение инструмента
      * */
-    ToolController.prototype.stop = function(){
+    APP.ToolController.prototype.stop = function(){
         throw "method must be implemented";
     };
-
-}(CanvasEditor);
+}(APP);

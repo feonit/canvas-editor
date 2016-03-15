@@ -1,8 +1,8 @@
-!function(CanvasEditor){
+!function(APP, Math){
+    APP.namespace('APP.controllers');
+    var ToolController = APP.ToolController;
 
-    CanvasEditor.namespace('CanvasEditor.ToolController').CursorOptionsUtilController = CursorOptionsUtilController;
-
-    function CursorOptionsUtilController(appInstance, canvas){
+    APP.controllers.CursorOptionsUtilController = function (appInstance, canvas){
 
         var cursor = "";
         var strokeStyle;
@@ -38,9 +38,9 @@
             canvas.addEventListener('mousemove', mousemove, false);
             canvas.addEventListener('mouseout', mouseout, false);
 
-            phase = appInstance.toolsDriver._register.DrawingToolController.tool._lastPhase;
+            phase = appInstance.toolsDriver._instanceTool._lastPhase;
 
-            Object.defineProperty(appInstance.toolsDriver._register.DrawingToolController.tool, '_lastPhase', {
+            Object.defineProperty(appInstance.toolsDriver._instanceTool, '_lastPhase', {
                 set(value){
                     if (value !== "END_PHASE"){
                         prevent = true;
@@ -66,9 +66,7 @@
                 {value: phase, writable: true, enumerable: true, configurable: true});
 
         };
-    }
-
-    CursorOptionsUtilController.prototype = Object.create(CanvasEditor.ToolController);
-    CursorOptionsUtilController.prototype.constructor = CursorOptionsUtilController;
-
-}(CanvasEditor);
+    };
+    APP.controllers.CursorOptionsUtilController.prototype = Object.create(ToolController);
+    APP.controllers.CursorOptionsUtilController.prototype.constructor = APP.controllers.CursorOptionsUtilController;
+}(APP, Math);

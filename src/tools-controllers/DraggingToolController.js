@@ -1,10 +1,11 @@
-!function(CanvasEditor){
+!function(APP){
+    APP.namespace('APP.controllers');
+    var ToolController = APP.ToolController;
+    var DraggingTool = APP.tools.DraggingTool;
 
-    CanvasEditor.namespace('CanvasEditor.ToolController').DraggingToolController = DraggingToolController;
+    APP.controllers.DraggingToolController = function (appInstance, canvas){
 
-    function DraggingToolController(appInstance, canvas){
-
-        var tool = new CanvasEditor.Tool.DraggingTool(appInstance, canvas);
+        var tool = new DraggingTool(appInstance, canvas);
 
         function mousedown(event){
             if (event.which == 1){ // выделяем объект левой
@@ -33,9 +34,7 @@
             canvas.removeEventListener('mousemove', mousemove);
             canvas.removeEventListener('mouseup', mouseup);
         };
-    }
-
-    DraggingToolController.prototype = Object.create(CanvasEditor.ToolController);
-    DraggingToolController.prototype.constructor = DraggingToolController;
-
-}(CanvasEditor);
+    };
+    APP.controllers.DraggingToolController.prototype = Object.create(ToolController);
+    APP.controllers.DraggingToolController.prototype.constructor = APP.controllers.DraggingToolController;
+}(APP);

@@ -1,51 +1,55 @@
-!function(CanvasEditor){
-
-    CanvasEditor.namespace('CanvasEditor').ToolsDriver = ToolsDriver;
-
+!function(APP){
+    APP.namespace('APP');
     /**
      * Обеспечивает управление инструментами и получение доступа подключаемых инструментов к канвасу
      * @class ToolsDriver
-     * @memberof CanvasEditor
+     * @memberof APP
      * @param {Object} appInstance
      * @param {HTMLCanvasElement} canvas
      * */
-    function ToolsDriver(appInstance, canvas){
+    APP.ToolsDriver = function (appInstance, canvas){
         this.appInstance = appInstance;
-
         this._canvas = canvas;
-
         /*@arg Набор инструментов по работе с холстом (Eraser, Cursor, Draw)*/
-        this._register = {};
-
+        this._register = [];
+        /* текущий */
+        this._instanceTool = null;
         /*@arg {Object} Активный инструмент, ссылка на него*/
         this._activedTool = null;
-    }
-
-    /**
-     * Метод регистрации нового инструмента
-     * @param {function} Constructor — конструктор нового инструмента
-     * */
-    ToolsDriver.prototype.plug = function(Constructor){
-        var tool = new Constructor(this.appInstance, this._canvas);
-        this._register[tool.constructor.name] = tool;
     };
-
-    /**
-     * Метод активизации инструмента
-     * @param {string} name - имя инструмента
-     * */
-    ToolsDriver.prototype.play = function(name){
-        if (name || this._register[name] || (this._activedTool && this._activedTool.constructor.name !== name)){
-            if (this._activedTool){
-                this._activedTool.stop();
+    /** @lends ToolsDriver.prototype */
+    APP.ToolsDriver.prototype = {
+        constructor: APP.PixelsMap,
+        /**
+         * Метод регистрации нового инструмента
+         * @param {function} Constructor — конструктор нового инструмента
+         * */
+        plug : function(Constructor){
+            this._register.push(Constructor);
+        },
+        /**
+         * Метод активизации инструмента
+         * @param {Object} Tool - имя инструмента
+         * */
+        play : function(Tool){
+            if (!Tool){
+                return;
             }
-            this._activedTool = this._register[name];
-            this._activedTool.start();
+            if ((this._register.indexOf[Tool] < 0)){
+                this.plug(Tool)
+            }
+
+            if (this._activedTool === Tool){
+                return;
+            }
+
+            if (this._instanceTool){
+                this._instanceTool.stop();
+            }
+            this.plug(Tool);
+            this._instanceTool = new Tool(this.appInstance, this._canvas);
+            this._activedTool = Tool;
+            this._instanceTool.start();
         }
     };
-
-    ToolsDriver.prototype.getToolByName = function(name){
-        return this._register[name];
-    };
-
-}(CanvasEditor);
+}(APP);

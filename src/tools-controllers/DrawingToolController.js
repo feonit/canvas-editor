@@ -1,10 +1,12 @@
-!function(CanvasEditor){
+!function(APP){
+    APP.namespace('APP.controllers');
+    var ToolController = APP.ToolController;
+    var DrawingTool = APP.tools.DrawingTool;
+    var MathFn = APP.MathFn;
 
-    CanvasEditor.namespace('CanvasEditor.ToolController').DrawingToolController = DrawingToolController;
+    APP.controllers.DrawingToolController = function (appInstance, canvas){
 
-    function DrawingToolController(appInstance, canvas){
-
-        var tool = new CanvasEditor.Tool.DrawingTool(appInstance, canvas);
+        var tool = new DrawingTool(appInstance, canvas);
 
         //todo
         this.tool = tool;
@@ -16,7 +18,7 @@
             ctx.lineJoin = 'round';
 
             tool.setOptions({
-                color: CanvasEditor.MathFn.hexToRgb(appInstance.settings.drawingColor),
+                color: MathFn.hexToRgb(appInstance.settings.drawingColor),
                 size: appInstance.settings.drawingSize,
                 type: appInstance.settings.drawingType
             });
@@ -43,9 +45,7 @@
             canvas.removeEventListener('mousemove', mousemove);
             canvas.removeEventListener('mouseup', mouseup);
         }
-    }
-
-    DrawingToolController.prototype = Object.create(CanvasEditor.ToolController);
-    DrawingToolController.prototype.constructor = DrawingToolController;
-
-}(CanvasEditor);
+    };
+    APP.controllers.DrawingToolController.prototype = Object.create(ToolController);
+    APP.controllers.DrawingToolController.prototype.constructor = APP.controllers.DrawingToolController;
+}(APP);

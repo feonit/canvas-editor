@@ -1,9 +1,6 @@
-!function(CanvasEditor){
-
-    CanvasEditor.namespace('CanvasEditor').RegionObject = RegionObject;
-
-    var MathFn = CanvasEditor.MathFn;
-
+!function(APP){
+    APP.namespace('APP');
+    var MathFn = APP.MathFn;
     /**
      * Номер последнего слоя
      * @type {number}
@@ -12,7 +9,7 @@
 
     /**
      * @class RegionObject
-     * @memberof CanvasEditor
+     * @memberof APP
      * @param {Object} options
      * @param {HTMLCanvasElement} options.layout
      * @param {number[][]} options.coordinates
@@ -20,7 +17,7 @@
      * @param {number[][]} options.borderCoordinates
      * @param {number[][]} options.coordinatesLine — исходные координаты 1-но пиксельной фигуры
      * */
-    function RegionObject(options){
+    APP.RegionObject = function (options){
 
         options = options || {};
 
@@ -41,7 +38,7 @@
          * @type {number[][]}
          * */
         Object.defineProperty(this, 'borderCoordinates', {
-            value: null,
+            value: options.borderCoordinates || null,
             enumerable: false,
             writable: true
         });
@@ -78,10 +75,10 @@
         // Первая запись гласит о нулевом смещении
         /** @lends RegionObject */
         this.saveRecordOffset();
-    }
+    };
 
-    RegionObject.prototype = {
-        constructor: RegionObject,
+    APP.RegionObject.prototype = {
+        constructor: APP.RegionObject,
 
         getCoordinates : function(){
 
@@ -236,7 +233,7 @@
      * @param {number} startY — координата Y с которой начинается поиск
      * @param {HTMLCanvasElement} canvas — анализируемый холст
      * */
-    RegionObject._searchPixels = function (startX, startY, canvas){
+    APP.RegionObject._searchPixels = function (startX, startY, canvas){
         var canvasWidth = canvas.width;
         var canvasHeight = canvas.height;
         var imageData = canvas.getContext('2d').getImageData(0, 0, canvasWidth, canvasHeight);
@@ -406,5 +403,4 @@
 
         return [searched, borderCoordinates];
     };
-
-}(CanvasEditor);
+}(APP);

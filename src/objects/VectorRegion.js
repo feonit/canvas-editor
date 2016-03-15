@@ -1,10 +1,9 @@
-!function(){
+!function(APP){
+    APP.namespace('APP');
+    var RegionObject = APP.RegionObject;
+    var MathFn = APP.MathFn;
 
-    CanvasEditor.namespace('CanvasEditor').VectorRegion = VectorRegion;
-    var RegionObject = CanvasEditor.RegionObject;
-    var MathFn = CanvasEditor.MathFn;
-
-    function VectorRegion(options){
+    APP.VectorRegion = function (options){
         RegionObject.apply(this, arguments);
         options = options || {};
 
@@ -13,16 +12,16 @@
             enumerable: false,
             writable: true
         });
-    }
+    };
 
-    VectorRegion.prototype = Object.create(RegionObject.prototype);
-    VectorRegion.prototype.constructor = VectorRegion;
+    APP.VectorRegion.prototype = Object.create(RegionObject.prototype);
+    APP.VectorRegion.prototype.constructor = APP.VectorRegion;
 
-    VectorRegion.prototype.getCoordinatesLine = function(){
+    APP.VectorRegion.prototype.getCoordinatesLine = function(){
         alert('must be implemented')
     };
 
-    VectorRegion.prototype.getCoordinates = function(){
+    APP.VectorRegion.prototype.getCoordinates = function(){
         var coordinatesLine = this.getCoordinatesLine();
         if (!coordinatesLine.length){
             throw 'нет сырых точек';
@@ -39,7 +38,7 @@
         return this.coordinates;
     };
 
-    VectorRegion.prototype.getLayout = function(){
+    APP.VectorRegion.prototype.getLayout = function(){
         if (!this._layout){
             var layoutCanvas = document.createElement('canvas');
             layoutCanvas.height = this.height;
@@ -55,7 +54,7 @@
      * Функция отрисовывает окружности по заданным координатам с заданным цветом
      * @public
      * */
-     VectorRegion.prototype.renderCircles = function(canvas){
+    APP.VectorRegion.prototype.renderCircles = function(canvas){
          var coordinates = this.getCoordinatesLine();
          var color = this.color;
         var ctx = canvas.getContext('2d');
@@ -147,4 +146,4 @@
         }
     })();
 
-}();
+}(APP);

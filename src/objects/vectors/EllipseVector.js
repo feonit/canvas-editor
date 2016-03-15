@@ -1,10 +1,7 @@
-!function(CanvasEditor){
-
-    CanvasEditor.namespace('CanvasEditor').EllipseVector = EllipseVector;
-
-    var VectorRegion = CanvasEditor.VectorRegion;
-
-    function EllipseVector(options){
+!function(APP){
+    APP.namespace('APP');
+    var VectorRegion = APP.VectorRegion;
+    APP.EllipseVector = function (options){
         options = options || {};
         VectorRegion.apply(this, arguments);
         this.x0 = options.x0;
@@ -13,12 +10,10 @@
         this.y1 = options.y1;
         this.size = options.size;
         this.color = options.color;
-    }
-
-    EllipseVector.prototype = Object.create(VectorRegion.prototype);
-    EllipseVector.prototype.constructor = EllipseVector;
-
-    EllipseVector.prototype.getCoordinatesLine = function(){
+    };
+    APP.EllipseVector.prototype = Object.create(VectorRegion.prototype);
+    APP.EllipseVector.prototype.constructor = APP.EllipseVector;
+    APP.EllipseVector.prototype.getCoordinatesLine = function(){
         if (!this.coordinatesLine){
             function plotEllipseRect(x0, y0, x1, y1){
                 var px = [];
@@ -58,6 +53,5 @@
             this.coordinatesLine = plotEllipseRect(this.x0, this.y0, this.x1, this.y1);
         }
         return this.coordinatesLine;
-    }
-
-}(CanvasEditor);
+    };
+}(APP);

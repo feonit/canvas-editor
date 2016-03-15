@@ -1,8 +1,9 @@
-!function(CanvasEditor){
+!function(APP){
+    APP.namespace('APP.controllers');
+    var ToolController = APP.ToolController;
+    var MathFn = APP.MathFn;
 
-    CanvasEditor.namespace('CanvasEditor.ToolController').RandomOptionsController = RandomOptionsController;
-
-    function RandomOptionsController(appInstance, canvas){
+    APP.controllers.RandomOptionsController = function (appInstance, canvas){
         var drawingColor;
         var drawingSize;
 
@@ -12,7 +13,7 @@
 
             Object.defineProperty(appInstance.settings, 'drawingColor', {
                 get(){
-                    return CanvasEditor.MathFn.randomHex();
+                    return MathFn.randomHex();
                 }
             });
             Object.defineProperty(appInstance.settings, 'drawingSize', {
@@ -28,9 +29,7 @@
             Object.defineProperty(appInstance.settings, 'drawingColor', {value: drawingColor, writable: true, enumerable: true, configurable: true});
             Object.defineProperty(appInstance.settings, 'drawingSize', {value: drawingSize, writable: true, enumerable: true, configurable: true});
         };
-    }
-
-    RandomOptionsController.prototype = Object.create(CanvasEditor.ToolController);
-    RandomOptionsController.prototype.constructor = RandomOptionsController;
-
-}(CanvasEditor);
+    };
+    APP.controllers.RandomOptionsController.prototype = Object.create(ToolController);
+    APP.controllers.RandomOptionsController.prototype.constructor = APP.controllers.RandomOptionsController;
+}(APP);

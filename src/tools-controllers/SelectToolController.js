@@ -1,10 +1,10 @@
-!function(CanvasEditor){
+!function(APP){
+    APP.namespace('APP.controllers');
+    var ToolController = APP.ToolController;
+    var SelectTool = APP.tools.SelectTool;
+    APP.controllers.SelectToolController = function (appInstance, canvas){
 
-    CanvasEditor.namespace('CanvasEditor.ToolController').SelectToolController = SelectToolController;
-
-    function SelectToolController(appInstance, canvas){
-
-        var tool = new CanvasEditor.Tool.SelectTool(appInstance, canvas);
+        var tool = new SelectTool(appInstance, canvas);
 
         function mousedown(event){
             tool.selectObjectByCoordinate(event.layerX, event.layerY);
@@ -28,9 +28,7 @@
 
             tool.reset();
         }
-    }
-
-    SelectToolController.prototype = Object.create(CanvasEditor.ToolController);
-    SelectToolController.prototype.constructor = SelectToolController;
-
-}(CanvasEditor);
+    };
+    APP.controllers.SelectToolController.prototype = Object.create(ToolController);
+    APP.controllers.SelectToolController.prototype.constructor = APP.controllers.SelectToolController;
+}(APP);

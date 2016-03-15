@@ -25,9 +25,11 @@
     <canvas id="canvas" width="800" height="400"></canvas>
 </body>
 <script>
-    var appInstance = CanvasEditor.create(document.getElementById('canvas'), {
-        lineColor: '006600',
-        lineWidth: 10
+    var appInstance = new APP.CanvasEditor(document.getElementById('canvas'), {
+        settings: {
+            drawingColor: "8080ff",
+            drawingSize: 10
+        }
     });
     document.body.appendChild((new OptionsView(appInstance)).nodeElement);
     document.body.appendChild((new ToolBarView(appInstance)).nodeElement);

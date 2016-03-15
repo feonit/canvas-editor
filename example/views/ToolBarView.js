@@ -13,53 +13,61 @@
          * */
 
         var toolsDriver = appInstance.toolsDriver;
-        var enabledToolName = 'DrawingToolController';
+        var enabledTool = APP.controllers.DrawingToolController;
 
-        toolsDriver.play(enabledToolName);
+        toolsDriver.play(enabledTool);
 
         var map = {
             "Стерка": "EraserToolController",
             "Перенести": "DraggingToolController",
-            "Рисовать Линию": "DrawingToolController-cu",
-            "Рисовать Эллипс": "DrawingToolController-el",
-            "Рисовать Прямоугольник": "DrawingToolController-sq",
-            "Рисовать Прямую": "DrawingToolController-li",
-            "Рисовать Стрелку": "DrawingToolController-ar",
+            "Рисовать Линию": "-cu",
+            "Рисовать Эллипс": "-el",
+            "Рисовать Прямоугольник": "-sq",
+            "Рисовать Прямую": "-li",
+            "Рисовать Стрелку": "-ar",
             "Выделить/Удалить выделенное (Del)": "SelectToolController"
         };
 
-        var modeName = "DrawingToolController-cu";
-        var radioBox = new RadioBoxComponent(map, modeName || enabledToolName);
+        var modeName = "-cu";
+        var radioBox = new RadioBoxComponent(map, modeName);
 
         radioBox.addEventListener("userSelectTool", function(data){
 
             switch (data.detail.name){
-                case 'DrawingToolController-cu':
-                    toolsDriver.play("DrawingToolController");
+                case "-cu":
+                    toolsDriver.play(APP.controllers.DrawingToolController);
                     appInstance.settings.drawingType = 'CURVE_TYPE';
                     break;
 
-                case 'DrawingToolController-el':
+                case '-el':
                     appInstance.settings.drawingType = 'ELLIPSE_TYPE';
-                    toolsDriver.play("DrawingToolController");
+                    toolsDriver.play(APP.controllers.DrawingToolController);
                     break;
 
-                case 'DrawingToolController-sq':
+                case '-sq':
                     appInstance.settings.drawingType = 'RECTANGLE_TYPE';
-                    toolsDriver.play("DrawingToolController");
+                    toolsDriver.play(APP.controllers.DrawingToolController);
 
                     break;
-                case 'DrawingToolController-li':
+                case '-li':
                     appInstance.settings.drawingType = 'LINE_TYPE';
-                    toolsDriver.play("DrawingToolController");
+                    toolsDriver.play(APP.controllers.DrawingToolController);
                     break;
-                case 'DrawingToolController-ar':
+                case '-ar':
                     appInstance.settings.drawingType = 'ARROW_TYPE';
-                    toolsDriver.play("DrawingToolController");
+                    toolsDriver.play(APP.controllers.DrawingToolController);
                     break;
 
                 case 'SelectToolController':
-                    toolsDriver.play("SelectToolController");
+                    toolsDriver.play(APP.controllers.SelectToolController);
+                    break;
+
+                case 'DraggingToolController':
+                    toolsDriver.play(APP.controllers.DraggingToolController);
+                    break;
+
+                case 'EraserToolController':
+                    toolsDriver.play(APP.controllers.EraserToolController);
                     break;
 
                 default :
@@ -72,4 +80,4 @@
         wrapper.appendChild(radioBox);
     }
 
-}(CanvasEditor, window);
+}(APP.CanvasEditor, window);

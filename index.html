@@ -42,37 +42,37 @@
 <div class="side-bar"></div>
 </body>
 
-<script type="text/javascript" src="src/CanvasEditor.js"></script>
+<!-- APP dep -->
+<script type="text/javascript" src="src/namespace.js"></script>
+<script type="text/javascript" src="src/state.js"></script>
 
+<!-- CanvasEditor dep -->
 <script type="text/javascript" src="src/MathFn.js"></script>
-<script type="text/javascript" src="src/objects/RegionObject.js"></script>
-<script type="text/javascript" src="src/objects/VectorRegion.js"></script>
-<script type="text/javascript" src="src/objects/RasterRegion.js"></script>
-<script type="text/javascript" src="src/objects/vectors/ArrowVector.js"></script>
-<script type="text/javascript" src="src/objects/rasters/BackgroundRaster.js"></script>
 <script type="text/javascript" src="src/Curve&Point.js"></script>
+<script type="text/javascript" src="src/ToolsDriver.js"></script>
+<script type="text/javascript" src="src/PixelsMap.js"></script>
+<script type="text/javascript" src="src/ObjectsOrder.js"></script>
+<script type="text/javascript" src="src/objects/RegionObject.js"></script>
+<script type="text/javascript" src="src/objects/RasterRegion.js"></script>
+<script type="text/javascript" src="src/objects/rasters/BackgroundRaster.js"></script>
+<script type="text/javascript" src="src/RegionManager.js"></script>
+<script type="text/javascript" src="src/Mediator.js"></script>
+<script type="text/javascript" src="src/tools/DraggingTool.js"></script>
+<script type="text/javascript" src="src/objects/VectorRegion.js"></script>
+<script type="text/javascript" src="src/objects/vectors/ArrowVector.js"></script>
 <script type="text/javascript" src="src/objects/vectors/CurveVector.js"></script>
 <script type="text/javascript" src="src/objects/vectors/EllipseVector.js"></script>
 <script type="text/javascript" src="src/objects/vectors/LineVector.js"></script>
 <script type="text/javascript" src="src/objects/vectors/RectangleVector.js"></script>
-
-
-<script type="text/javascript" src="src/Mediator.js"></script>
-<script type="text/javascript" src="src/PixelsMap.js"></script>
-<script type="text/javascript" src="src/ObjectsOrder.js"></script>
-<script type="text/javascript" src="src/RegionManager.js"></script>
-<script type="text/javascript" src="src/ToolsDriver.js"></script>
-<script type="text/javascript" src="src/tools-controllers/ToolController.js"></script>
-
-<script type="text/javascript" src="src/tools/DraggingTool.js"></script>
 <script type="text/javascript" src="src/tools/DrawingTool.js"></script>
 <script type="text/javascript" src="src/tools/EraserTool.js"></script>
 <script type="text/javascript" src="src/tools/SelectTool.js"></script>
-
+<script type="text/javascript" src="src/tools-controllers/ToolController.js"></script>
 <script type="text/javascript" src="src/tools-controllers/DraggingToolController.js"></script>
 <script type="text/javascript" src="src/tools-controllers/DrawingToolController.js"></script>
 <script type="text/javascript" src="src/tools-controllers/EraserToolController.js"></script>
 <script type="text/javascript" src="src/tools-controllers/SelectToolController.js"></script>
+<script type="text/javascript" src="src/CanvasEditor.js"></script>
 
 <script type="text/javascript" src="src/utils-controllers/SaveLocalUtilController.js"></script>
 <script type="text/javascript" src="src/utils-controllers/SaveServerUtilController.js"></script>
@@ -101,7 +101,7 @@
 
 //        ctx.drawImage(img, 0, 0);
 
-        var appInstance = new CanvasEditor(document.getElementById('canvas'), {
+        var appInstance = new APP.CanvasEditor(document.getElementById('canvas'), {
             settings: {
                 drawingColor: "8080ff",
                 drawingSize: 10
@@ -109,7 +109,7 @@
         });
 
 //        var options = appInstance.getTotalState();
-//        var appInstanceDouble = new CanvasEditor(document.getElementById('canvasDouble'), options);
+//        var appInstanceDouble = new APP.CanvasEditor(document.getElementById('canvasDouble'), options);
 
         window.appInstance = appInstance;
 

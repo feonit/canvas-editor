@@ -1,23 +1,19 @@
-!function(CanvasEditor){
+!function(APP){
+    APP.namespace('APP');
+    var Curve = APP.Curve;
+    var MathFn = APP.MathFn;
+    var VectorRegion = APP.VectorRegion;
 
-    CanvasEditor.namespace('CanvasEditor').CurveVector = CurveVector;
-
-    var Curve = CanvasEditor.Curve;
-    var MathFn = CanvasEditor.MathFn;
-    var VectorRegion = CanvasEditor.VectorRegion;
-
-    function CurveVector(options){
+    APP.CurveVector = function (options){
         options = options || {};
         VectorRegion.apply(this, arguments);
         this.points = options.points;
         this.size = options.size;
         this.color = options.color;
-    }
-
-    CurveVector.prototype = Object.create(CanvasEditor.VectorRegion.prototype);
-    CurveVector.prototype.constructor = CurveVector;
-
-    CurveVector.prototype.getCoordinatesLine = function(){
+    };
+    APP.CurveVector.prototype = Object.create(VectorRegion.prototype);
+    APP.CurveVector.prototype.constructor = APP.CurveVector;
+    APP.CurveVector.prototype.getCoordinatesLine = function(){
         if (!this.coordinatesLine){
             var coordinates = [];
             var points = this.points;
@@ -30,6 +26,5 @@
             this.coordinatesLine = coordinates;
         }
         return this.coordinatesLine;
-    }
-
-}(CanvasEditor);
+    };
+}(APP);

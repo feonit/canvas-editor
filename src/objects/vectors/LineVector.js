@@ -1,10 +1,8 @@
-!function(CanvasEditor){
+!function(APP){
+    APP.namespace('APP');
+    var VectorRegion = APP.VectorRegion;
 
-    CanvasEditor.namespace('CanvasEditor').LineVector = LineVector;
-
-    var VectorRegion = CanvasEditor.VectorRegion;
-
-    function LineVector(options){
+    APP.LineVector = function (options){
         options = options || {};
         VectorRegion.apply(this, arguments);
         this.x0 = options.x0;
@@ -13,12 +11,10 @@
         this.y1 = options.y1;
         this.size = options.size;
         this.color = options.color;
-    }
-
-    LineVector.prototype = Object.create(VectorRegion.prototype);
-    LineVector.prototype.constructor = LineVector;
-
-    LineVector.prototype.getCoordinatesLine = function(){
+    };
+    APP.LineVector.prototype = Object.create(VectorRegion.prototype);
+    APP.LineVector.prototype.constructor = APP.LineVector;
+    APP.LineVector.prototype.getCoordinatesLine = function(){
         if (!this.coordinatesLine){
             function bline(x0, y0, x1, y1) {
                 var px = [];
@@ -47,6 +43,5 @@
             this.coordinatesLine = bline(this.x0, this.y0, this.x1, this.y1);
         }
         return this.coordinatesLine;
-    }
-
-}(CanvasEditor);
+    };
+}(APP);

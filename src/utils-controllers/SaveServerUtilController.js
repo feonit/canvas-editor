@@ -1,8 +1,8 @@
-!function(CanvasEditor){
+!function(APP){
+    APP.namespace('APP.controllers');
+    var ToolController = APP.ToolController;
 
-    CanvasEditor.namespace('CanvasEditor.ToolController').SaveServerUtilController = SaveServerUtilController;
-
-    function SaveServerUtilController(appInstance, canvas){
+    APP.controllers.SaveServerUtilController = function (appInstance, canvas){
 
         function dataURItoBlob(dataURI) {
             // convert base64/URLEncoded data component to raw binary data held in a string
@@ -59,8 +59,6 @@
             appInstance.mediator.unsubscribe(appInstance.UPDATE_CANVAS, this._saveToServer);
         };
     }
-
-    SaveServerUtilController.prototype = Object.create(CanvasEditor.ToolController);
-    SaveServerUtilController.prototype.constructor = SaveServerUtilController;
-
-}(CanvasEditor);
+    APP.controllers.SaveServerUtilController.prototype = Object.create(ToolController);
+    APP.controllers.SaveServerUtilController.prototype.constructor = APP.controllers.SaveServerUtilController;
+}(APP);

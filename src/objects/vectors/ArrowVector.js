@@ -1,9 +1,8 @@
-!function(CanvasEditor){
+!function(APP){
+    APP.namespace('APP');
+    var VectorRegion = APP.VectorRegion;
 
-    CanvasEditor.namespace('CanvasEditor').ArrowVector = ArrowVector;
-    var VectorRegion = CanvasEditor.VectorRegion;
-
-    function ArrowVector(options){
+    APP.ArrowVector = function (options){
         options = options || {};
         VectorRegion.apply(this, arguments);
         this.x0 = options.x0;
@@ -12,12 +11,11 @@
         this.y1 = options.y1;
         this.size = options.size;
         this.color = options.color;
-    }
+    };
 
-    ArrowVector.prototype = Object.create(VectorRegion.prototype);
-    ArrowVector.prototype.constructor = ArrowVector;
-
-    ArrowVector.prototype.getCoordinatesLine = function(){
+    APP.ArrowVector.prototype = Object.create(VectorRegion.prototype);
+    APP.ArrowVector.prototype.constructor = APP.ArrowVector;
+    APP.ArrowVector.prototype.getCoordinatesLine = function(){
         if (!this.coordinatesLine){
             // Повернуть точку относительно другой на заданный радиан
             function turn(x0, y0, relx, rely, rad){
@@ -75,6 +73,5 @@
             this.coordinatesLine = coordinates;
         }
         return this.coordinatesLine;
-    }
-
-}(CanvasEditor);
+    };
+}(APP);

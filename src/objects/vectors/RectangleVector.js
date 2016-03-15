@@ -1,10 +1,7 @@
-!function(CanvasEditor){
-
-    CanvasEditor.namespace('CanvasEditor').RectangleVector = RectangleVector;
-
-    var VectorRegion = CanvasEditor.VectorRegion;
-
-    function RectangleVector(options){
+!function(APP){
+    APP.namespace('APP');
+    var VectorRegion = APP.VectorRegion;
+    APP.RectangleVector = function (options){
         options = options || {};
         VectorRegion.apply(this, arguments);
         this.x0 = options.x0;
@@ -13,12 +10,11 @@
         this.y1 = options.y1;
         this.size = options.size;
         this.color = options.color;
-    }
+    };
 
-    RectangleVector.prototype = Object.create(VectorRegion.prototype);
-    RectangleVector.prototype.constructor = RectangleVector;
-
-    RectangleVector.prototype.getCoordinatesLine = function(){
+    APP.RectangleVector.prototype = Object.create(VectorRegion.prototype);
+    APP.RectangleVector.prototype.constructor = APP.RectangleVector;
+    APP.RectangleVector.prototype.getCoordinatesLine = function(){
         if (!this.coordinatesLine){
             function rectangle(x0, y0, x1, y1){
                 var px = [[x0, y0], [x0, y1], [x1, y0], [x1, y1]];
@@ -44,6 +40,5 @@
             this.coordinatesLine = rectangle(this.x0, this.y0, this.x1, this.y1);
         }
         return this.coordinatesLine;
-    }
-
-}(CanvasEditor);
+    };
+}(APP);

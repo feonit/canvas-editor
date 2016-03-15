@@ -1,6 +1,16 @@
-!function(global, HTMLCanvasElement){
-
-    global.CanvasEditor = CanvasEditor;
+!function(APP, HTMLCanvasElement){
+    APP.namespace('APP');
+    var ToolsDriver = APP.ToolsDriver;
+    var RegionManager = APP.RegionManager;
+    var Mediator = APP.Mediator;
+    var DrawingToolController = APP.controllers.DrawingToolController;
+    var EraserToolController = APP.controllers.EraserToolController;
+    var DraggingToolController = APP.controllers.DraggingToolController;
+    var SelectToolController = APP.controllers.SelectToolController;
+    var DrawingTool = APP.tools.DrawingTool;
+    var DraggingTool = APP.tools.DraggingTool;
+    var EraserTool = APP.tools.EraserTool;
+    var SelectTool = APP.tools.SelectTool;
 
     /**
      * Канвас редактор
@@ -13,7 +23,7 @@
      * @param {number} options.lineWidth
      * @param {string} options.figureType
      * */
-    function CanvasEditor(canvas, options){
+    APP.CanvasEditor = function (canvas, options){
 
         var defaultOptions = {
             drawingColor: '000000',
@@ -41,21 +51,21 @@
         this.settings.drawingType = options.settings.figureType || defaultOptions.figureType;
         this.settings.drawingColor = options.settings.drawingColor || defaultOptions.drawingColor;
 
-        this.toolsDriver = new CanvasEditor.ToolsDriver(this, canvas);
-        this.regionManager = new CanvasEditor.RegionManager(this, canvas, options['RegionManager']);
-        this.mediator = new CanvasEditor.Mediator();
+        this.toolsDriver = new ToolsDriver(this, canvas);
+        this.regionManager = new RegionManager(this, canvas, options['RegionManager']);
+        this.mediator = new Mediator();
 
-        this.toolsDriver.plug(CanvasEditor.ToolController.DrawingToolController);
-        this.toolsDriver.plug(CanvasEditor.ToolController.EraserToolController);
-        this.toolsDriver.plug(CanvasEditor.ToolController.DraggingToolController);
-        this.toolsDriver.plug(CanvasEditor.ToolController.SelectToolController);
+        this.toolsDriver.plug(DrawingToolController);
+        this.toolsDriver.plug(EraserToolController);
+        this.toolsDriver.plug(DraggingToolController);
+        this.toolsDriver.plug(SelectToolController);
 
         var appInstance = this;
 
         !function(){
-            var original = CanvasEditor.Tool.DrawingTool.prototype.drawingEnd;
+            var original = DrawingTool.prototype.drawingEnd;
 
-            CanvasEditor.Tool.DrawingTool.prototype.drawingEnd = function _fn(){
+            DrawingTool.prototype.drawingEnd = function _fn(){
                 original.apply(this, arguments);
                 appInstance.mediator.publish(appInstance.UPDATE_CANVAS);
             };
@@ -63,9 +73,9 @@
 
 
         !function(){
-            var original = CanvasEditor.Tool.DraggingTool.prototype.draggingEnd;
+            var original = DraggingTool.prototype.draggingEnd;
 
-            CanvasEditor.Tool.DraggingTool.prototype.draggingEnd = function _fn(){
+            DraggingTool.prototype.draggingEnd = function _fn(){
                 original.apply(this, arguments);
                 appInstance.mediator.publish(appInstance.UPDATE_CANVAS);
             };
@@ -74,142 +84,33 @@
 
         var that = this;
         !function(){
-            var original = CanvasEditor.Tool.EraserTool.prototype.eraserEnd;
+            var original = EraserTool.prototype.eraserEnd;
 
-            CanvasEditor.Tool.EraserTool.prototype.eraserEnd = function _fn(){
+            EraserTool.prototype.eraserEnd = function _fn(){
                 original.apply(this, arguments);
                 appInstance.mediator.publish(appInstance.UPDATE_CANVAS);
-
-                // todo подумать над тем как это лучше организовать
                 that.regionManager.reset();
             };
         }();
 
 
         !function(){
-            var original = CanvasEditor.Tool.SelectTool.prototype.deleteSelectedObjects;
+            var original = SelectTool.prototype.deleteSelectedObjects;
 
-            CanvasEditor.Tool.SelectTool.prototype.deleteSelectedObjects = function _fn(){
+            SelectTool.prototype.deleteSelectedObjects = function _fn(){
                 original.apply(this, arguments);
                 appInstance.mediator.publish(appInstance.UPDATE_CANVAS);
             };
         }();
-    }
+    };
 
-    CanvasEditor.prototype.CREATED_REGION = 'CREATED_REGION';
-    CanvasEditor.prototype.UPDATE_CANVAS = 'UPDATE_CANVAS';
+    APP.CanvasEditor.prototype.CREATED_REGION = 'CREATED_REGION';
+    APP.CanvasEditor.prototype.UPDATE_CANVAS = 'UPDATE_CANVAS';
 
-    CanvasEditor.prototype.newEvent = function(eventName, data){
+    APP.CanvasEditor.prototype.newEvent = function(eventName, data){
         if (eventName === this.CREATED_REGION){
             var object = data[0];
             this.regionManager.addRegion(object);
         }
     };
-
-    // todo save and restore param-canvas after destroy
-
-    CanvasEditor.namespace = function (nsString) {
-        var parts = nsString.split('.'),
-            parent = window.CanvasEditor = window.CanvasEditor || {},
-            i;
-        // отбросить начальный префикс – имя глобального объекта
-        if (parts[0] === 'CanvasEditor') {
-            parts = parts.slice(1);
-        }
-        for (i = 0; i < parts.length; i += 1) {
-            // создать свойство, если оно отсутствует
-            if (typeof parent[parts[i]] === 'undefined') {
-                parent[parts[i]] = {};
-            }
-            parent = parent[parts[i]];
-        }
-        return parent;
-    };
-
-    CanvasEditor.prototype.getTotalState = function(){
-
-        var data = {};
-        var exclusion = {
-            "ToolsDriver": true,
-            "Mediator": true,
-            "PixelsMap": true,
-        };
-
-        function searchObjectOptions(obj, link){
-            var currentProperty;
-            var constructorName;
-
-            for (var propName in obj){
-                if (obj.hasOwnProperty(propName)) {
-                    currentProperty = obj[propName];
-
-                    if (typeof currentProperty === "undefined")
-                        continue;
-
-                    if (currentProperty === null)
-                        continue;
-
-                    constructorName = currentProperty.constructor.name;
-
-                    function processArray(arr, selfArrLink, itemOfArrName){
-                        selfArrLink[itemOfArrName] = [];
-
-                        // если пустой выходим
-                        if (!arr.length)
-                            return;
-
-                        // если не объекты, присваиваем
-                        if (typeof (arr[0]) !== "object"){
-                            selfArrLink[itemOfArrName] = arr;
-                            return;
-                        }
-
-                        // если опять массив
-                        if (Array.isArray(arr[0])){
-                            arr.forEach(function(itemOfArr, index){
-                                //var newarr = [];
-                                //selfArrLink[itemOfArrName].push(newarr);
-                                processArray(itemOfArr, selfArrLink[itemOfArrName], index);
-                            });
-                            return;
-                        }
-
-                        // если все объекты
-                        arr.forEach(function(itemOfArr){
-                            var optionsOfObject = {};
-                            searchObjectOptions(itemOfArr, optionsOfObject);
-                            var item = {};
-                            item[itemOfArr.constructor.name] = optionsOfObject;
-                            selfArrLink[propName].push(item);
-                        });
-                    }
-
-                    // свойство массив
-                    if ( Array.isArray(currentProperty)){
-                        processArray(currentProperty, link, propName);
-                    } else
-                    // свойство объект не массив
-                    if (typeof currentProperty === "object" ){
-
-                        if (exclusion[constructorName])
-                            continue;
-
-                        if (constructorName !== "Object"){
-                            var newLink = link[currentProperty.constructor.name] = {};
-                            searchObjectOptions(currentProperty, newLink);
-                        } else {
-                            link[propName] = currentProperty;
-                        }
-                    } else {
-                        link[propName] = currentProperty;
-                    }
-                }
-            }
-        }
-
-        searchObjectOptions(this, data);
-
-        return data;
-    }
-
-}(window, HTMLCanvasElement);
+}(APP, HTMLCanvasElement);

@@ -1,42 +1,41 @@
-!function(CanvasEditor){
-
-    CanvasEditor.namespace('CanvasEditor').RegionManager = RegionManager;
-
+!function(APP){
+    APP.namespace('APP');
+    var PixelsMap = APP.PixelsMap;
+    var ObjectsOrder = APP.ObjectsOrder;
+    var BackgroundRaster = APP.BackgroundRaster;
+    var RasterRegion = APP.RasterRegion;
     /**
      * @class RegionManager
-     * @memberof CanvasEditor
      * @param appInstance
      * @param {HTMLCanvasElement} canvas
      * */
-    function RegionManager(appInstance, canvas, options){
+    APP.RegionManager = function (appInstance, canvas, options){
         options = options || {};
 
         Object.defineProperty(this, 'canvas', {value: canvas});
 
-        this.pixelsMap = new CanvasEditor.PixelsMap(options['PixelsMap']);
-        this.objectsOrder = new CanvasEditor.ObjectsOrder(options['ObjectsOrder']);
+        this.pixelsMap = new PixelsMap(options['PixelsMap']);
+        this.objectsOrder = new ObjectsOrder(options['ObjectsOrder']);
 
         /** @lends RegionManager */
         this.reset();
-    }
-
-    RegionManager.prototype = {
-        constructor: RegionManager,
-
+    };
+    /** @lends RegionManager.prototype */
+    APP.RegionManager.prototype = {
+        constructor: APP.RegionManager,
         /**
          * Индекс первого слоя
          * */
         BACKGROUND_INDEX : 0,
-
         /**
          * Сбросить состояние
          * */
         reset: function(){
-            this.pixelsMap = new CanvasEditor.PixelsMap();
-            this.objectsOrder = new CanvasEditor.ObjectsOrder();
+            this.pixelsMap = new PixelsMap();
+            this.objectsOrder = new ObjectsOrder();
 
             function createBackgroundRaster(canvas){
-                return new CanvasEditor.BackgroundRaster({
+                return new BackgroundRaster({
                     dataUrl: canvas.toDataURL(),
                     height: canvas.height,
                     width: canvas.width,
@@ -45,7 +44,6 @@
 
             this.addRegion(createBackgroundRaster(this.canvas));
         },
-
         /**
          * Метод для записи региона в карту пикселей
          * так как это новый регион, то индекс его становится выше всех, и его соответственно видно поверх всех
@@ -55,7 +53,6 @@
             addRecordsAboutRegion(this.pixelsMap, regionObject);
             this.objectsOrder.addObject(regionObject);
         },
-
         /**
          * Удаляет регион с холста
          * @param {RegionObject} regionObject
@@ -65,7 +62,6 @@
             this.objectsOrder.removeObject(regionObject);
             this.redrawLayers();
         },
-
         /**
          * Запускается после изменения смещения, происходит перерегистрация координат на карте
          * @param {RegionObject} regionObject
@@ -79,7 +75,6 @@
             removeRecordsAboutRegion(this.pixelsMap, regionObject, record[0], record[1]);
             addRecordsAboutRegion(this.pixelsMap, regionObject);
         },
-
         /**
          * Метод заполняет пикселы холста определенным цветом
          * @param {HTMLCanvasElement} canvas
@@ -101,7 +96,6 @@
                 canvasCtx.putImageData(imageData, coordinate[0], coordinate[1]);
             }
         },
-
         /**
          * Этот способ просто перерисосывает все слои
          * */
@@ -119,7 +113,6 @@
                 region.drawAtCanvas(canvas);
             }
         },
-
         /**
          * Активизирует объект на холсте
          * @param {RegionObject} regionObject
@@ -128,7 +121,6 @@
             regionObject.activate();
             this.redrawLayers();
         },
-
         /**
          * Деактивизирует объект на холсте
          * @param {RegionObject} regionObject
@@ -137,7 +129,6 @@
             regionObject.deactivate();
             this.redrawLayers();
         },
-
         /**
          * Перебрасывает объект в самый верх
          * @param {RegionObject} regionObject
@@ -151,7 +142,6 @@
             }
             this.redrawLayers();
         },
-
         /**
          * Поиск объекта по заданной координате
          * @param {number} x — координата X
@@ -177,7 +167,7 @@
 
             // пробуем найти регион волшебной палочкой (поиск по цвету)
             if (!region || isRawRegion){
-                region = CanvasEditor.RasterRegion.createObject(this.canvas, [x, y]);
+                region = RasterRegion.createObject(this.canvas, [x, y]);
 
                 // после того как выдрали с сырого слоя специальные координаты,
                 // нужно стереть их из него!
@@ -198,7 +188,6 @@
 
             return region;
         },
-
         /**
          * Проверяет, пустой ли пиксел по заданной координате
          * @param {number} x — координата X
@@ -214,15 +203,13 @@
                 && data[2] == BGR_COLOR[2]
                 && data[3] == BGR_COLOR[3];
         },
-
         /**
          * Очистить холст полностью
          * */
         _cleanCanvas : function(){
             this.canvas.getContext('2d').clearRect(0, 0, this.canvas.width, this.canvas.height);
         }
-    }
-
+    };
     function removeRecordsAboutRegion(pixelsMap, regionObject, offset){
         // не забыть про смещение
 
@@ -243,7 +230,6 @@
             }
         }
     }
-
     function addRecordsAboutRegion(pixelsMap, regionObject){
         // не забыть про смещение
         var coordinates = regionObject.getRelationCoordinate();
@@ -260,7 +246,4 @@
             }
         }
     }
-
-    return RegionManager;
-
-}(CanvasEditor);
+}(APP);

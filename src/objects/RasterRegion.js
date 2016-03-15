@@ -1,21 +1,19 @@
-!function(){
+!function(APP){
+    APP.namespace('APP');
+    var RegionObject = APP.RegionObject;
 
-    CanvasEditor.namespace('CanvasEditor').RasterRegion = RasterRegion;
-    var RegionObject = CanvasEditor.RegionObject;
-
-    function RasterRegion(options){
+    APP.RasterRegion = function (options){
         RegionObject.apply(this, arguments);
         options = options || {};
-
         this.imageBase64 = options.imageBase64 || null;
-    }
+    };
 
     /**
      * @param {HTMLCanvasElement} canvas — холст
      * @param {number[]} coordinate — координата точки на холсте, откуда начнется поиск объекта
      * @return {RegionObject} объект фигуры
      * */
-    RasterRegion.createObject = function(canvas, coordinate){
+    APP.RasterRegion.createObject = function(canvas, coordinate){
         var beginWithX = coordinate[0];
         var beginWithY = coordinate[1];
         var color = canvas.getContext('2d').getImageData(beginWithX, beginWithY, 1, 1).data;
@@ -31,7 +29,6 @@
             borderCoordinates: borderCoordinates
         });
     };
-
-    RasterRegion.prototype = Object.create(RegionObject.prototype);
-    RasterRegion.prototype.constructor = RasterRegion;
-}();
+    APP.RasterRegion.prototype = Object.create(RegionObject.prototype);
+    APP.RasterRegion.prototype.constructor = APP.RasterRegion;
+}(APP);

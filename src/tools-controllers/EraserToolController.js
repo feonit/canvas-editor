@@ -1,10 +1,10 @@
-!function(CanvasEditor){
+!function(APP){
+    APP.namespace('APP.controllers');
+    var ToolController = APP.ToolController;
+    var EraserTool = APP.tools.EraserTool;
+    APP.controllers.EraserToolController = function (appInstance, canvas){
 
-    CanvasEditor.namespace('CanvasEditor.ToolController').EraserToolController = EraserToolController;
-
-    function EraserToolController(appInstance, canvas){
-
-        var tool = new CanvasEditor.Tool.EraserTool(appInstance, canvas);
+        var tool = new EraserTool(appInstance, canvas);
 
         function mousedown(event){
             tool.setOptions({ size:  appInstance.settings.eraserSize });
@@ -29,9 +29,7 @@
             canvas.removeEventListener('mousemove', mousemove);
             canvas.removeEventListener('mouseup', mouseup);
         };
-    }
-
-    EraserToolController.prototype = Object.create(CanvasEditor.ToolController);
-    EraserToolController.prototype.constructor = EraserToolController;
-
-}(CanvasEditor);
+    };
+    APP.controllers.EraserToolController.prototype = Object.create(ToolController);
+    APP.controllers.EraserToolController.prototype.constructor = APP.controllers.EraserToolController;
+}(APP);
