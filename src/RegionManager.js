@@ -21,6 +21,10 @@
         if (!options.objectsOrder){// если нет автогенерации
             /** @lends RegionManager.prototype */
             this.makeBackgoundRegion();
+        } else {
+            this.objectsOrder.getObjects().forEach((function(regionObject){
+                addRecordsAboutRegion(this.pixelsMap, regionObject);
+            }).bind(this));
         }
     };
     /** @lends RegionManager.prototype */

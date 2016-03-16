@@ -63,8 +63,6 @@
 
             wrapper.appendChild(checkBox);
 
-            checkBox.classList.add('todo');
-
             checkBox.addEventListener('onChange', function(data){
                 data.detail.checked ? util.start() : util.stop();
             });

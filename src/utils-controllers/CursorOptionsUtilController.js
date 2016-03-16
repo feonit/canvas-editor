@@ -7,7 +7,7 @@
         var cursor = "";
         var strokeStyle;
         var strokeStyleOriginal;
-        var prevent = false;
+        var prevent;
 
         function mousemove(event){
             appInstance.regionManager.redrawLayers();
@@ -28,42 +28,72 @@
             appInstance.regionManager.redrawLayers();
         }
 
-        var phase;
+        function mousedown(){
+            disable();
+        }
 
-        this.start = function(){
+        function mouseup(){
+            enable();
+        }
+
+        function disable(){
+            canvas.removeEventListener('mousemove', mousemove);
+            canvas.removeEventListener('mouseout', mouseout);
+            canvas.style.cursor = cursor;
+            var ctx=canvas.getContext("2d");
+            ctx.strokeStyle = strokeStyleOriginal;
+
+            //todo
+            if (appInstance.toolsDriver._instanceTool.tool && appInstance.toolsDriver._instanceTool.tool._lastPhase){
+                Object.defineProperty(appInstance.toolsDriver._instanceTool.tool, '_lastPhase',
+                    {value: phase, writable: true, enumerable: true, configurable: true});
+            }
+        }
+
+        function enable(){
+            prevent = false;
+
+            canvas.addEventListener('mousemove', mousemove, false);
+            canvas.addEventListener('mouseout', mouseout, false);
             cursor = canvas.style.cursor;
             var ctx=canvas.getContext("2d");
             strokeStyleOriginal = ctx.strokeStyle;
             canvas.style.cursor = "none";
-            canvas.addEventListener('mousemove', mousemove, false);
-            canvas.addEventListener('mouseout', mouseout, false);
 
-            phase = appInstance.toolsDriver._instanceTool._lastPhase;
+            phase = appInstance.toolsDriver._instanceTool.tool._lastPhase;
 
-            Object.defineProperty(appInstance.toolsDriver._instanceTool, '_lastPhase', {
-                set(value){
-                    if (value !== "END_PHASE"){
-                        prevent = true;
-                    } else {
-                        prevent = false;
+            //todo
+            if (appInstance.toolsDriver._instanceTool.tool && appInstance.toolsDriver._instanceTool.tool._lastPhase){
+                Object.defineProperty(appInstance.toolsDriver._instanceTool.tool, '_lastPhase', {
+                    set(value){
+                        if (value !== "END_PHASE"){
+                            prevent = true;
+                        } else {
+                            prevent = false;
+                        }
+                        phase = value;
+                    },
+                    get(){
+                        return phase;
                     }
-                    phase = value;
-                },
-                get(){
-                    return phase;
-                }
-            });
+                });
+            }
+        }
 
+        var phase;
+
+        this.start = function(){
+            enable();
+
+            canvas.addEventListener('mousedown', mousedown, false);
+            canvas.addEventListener('mouseup', mouseup, false);
         };
-        this.stop = function(){
-            canvas.style.cursor = cursor;
-            canvas.removeEventListener('mousemove', mousemove);
-            canvas.removeEventListener('mouseout', mouseout);
-            var ctx=canvas.getContext("2d");
-            ctx.strokeStyle = strokeStyleOriginal;
 
-            Object.defineProperty(appInstance.toolsDriver._register.DrawingToolController.tool, '_lastPhase',
-                {value: phase, writable: true, enumerable: true, configurable: true});
+        this.stop = function(){
+            disable();
+
+            canvas.removeEventListener('mousedown', mousedown);
+            canvas.removeEventListener('mouseup', mouseup);
 
         };
     };

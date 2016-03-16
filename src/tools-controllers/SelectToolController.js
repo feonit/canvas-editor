@@ -14,6 +14,7 @@
         function keydown(event){
             if (event.code == "Delete"){
                 tool.deleteSelectedObjects();
+                appInstance.mediator.publish(appInstance.UPDATE_CANVAS);
             }
         }
 
