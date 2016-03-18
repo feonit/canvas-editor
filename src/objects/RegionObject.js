@@ -37,33 +37,34 @@
          * */
         this.color = options.color;
 
-        /**
-         * Координаты обводки контура
-         * @type {number[][]}
-         * */
-        Object.defineProperty(this, 'borderCoordinates', {
-            value: options.borderCoordinates || null,
-            enumerable: false,
-            writable: true
-        });
-
-        /**
-         * Координаты точек контура
-         * @type {number[][]}
-         * */
-        Object.defineProperty(this, 'coordinates', {
-            value: options.coordinates || null,
-            enumerable: false,
-            writable: true
-        });
-
-        /**
-         * Лейоут
-         * */
-        Object.defineProperty(this, '_layout', {
-            value: null,
-            enumerable: false,
-            writable: true
+        Object.defineProperties(this, {
+            /**
+             * Координаты обводки контура
+             * @type {number[][]|null}
+             * */
+            'borderCoordinates': {
+                value: options.borderCoordinates || null,
+                enumerable: false,
+                writable: true
+            },
+            /**
+             * Координаты точек контура
+             * @type {number[][]|null}
+             * */
+            'coordinates': {
+                value: options.coordinates || null,
+                enumerable: false,
+                writable: true
+            },
+            /**
+             * Лейоут
+             * @type {HTMLCanvasElement|null}
+             * */
+            '_layout':{
+                value: null,
+                enumerable: false,
+                writable: true
+            }
         });
 
         /**
@@ -80,6 +81,9 @@
     APP.RegionObject.prototype = {
         constructor: APP.RegionObject,
 
+        /**
+         * Получить все координаты пикселей региона
+         * */
         getCoordinates : function(){
 
             if (!this.coordinates){
