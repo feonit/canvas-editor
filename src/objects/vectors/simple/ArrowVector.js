@@ -1,19 +1,11 @@
 !function(APP){
     APP.namespace('APP.objects');
-    var VectorRegion = APP.VectorRegion;
 
-    APP.objects.ArrowVector = function (options){
-        options = options || {};
-        VectorRegion.apply(this, arguments);
-        this.x0 = options.x0;
-        this.y0 = options.y0;
-        this.x1 = options.x1;
-        this.y1 = options.y1;
-        this.size = options.size;
-        this.color = options.color;
+    APP.objects.ArrowVector = function (attributes){
+        APP.objects.SimpleVector.apply(this, arguments);
     };
 
-    APP.objects.ArrowVector.prototype = Object.create(VectorRegion.prototype);
+    APP.objects.ArrowVector.prototype = Object.create(APP.objects.SimpleVector.prototype);
     APP.objects.ArrowVector.prototype.constructor = APP.objects.ArrowVector;
     APP.objects.ArrowVector.prototype.getCoordinatesLine = function(){
         if (!this.coordinatesLine){

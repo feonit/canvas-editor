@@ -77,7 +77,7 @@
         }
         if (options.rasters){
             options.rasters.forEach(function(options){
-                obj = new APP.objects.RasterRegion(options);
+                obj = new APP.RasterRegion(options);
                 that.rasters.push(obj);
                 that._objects[obj.id] = obj;
             });
@@ -112,7 +112,7 @@
                 case APP.objects.RectangleVector:
                     this.rects.push(obj); break;
 
-                case APP.objects.RasterRegion:
+                case APP.RasterRegion:
                     this.rasters.push(obj); break;
 
                 default:
@@ -156,7 +156,7 @@
                     subIndex = this.rects.indexOf(obj);
                     subIndex > 0 && this.rects.splice(subIndex, 1); break;
 
-                case APP.objects.RasterRegion:
+                case APP.RasterRegion:
                     subIndex = this.rasters.indexOf(obj);
                     subIndex > 0 && this.rasters.splice(subIndex, 1); break;
 

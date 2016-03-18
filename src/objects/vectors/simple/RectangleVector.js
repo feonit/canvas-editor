@@ -1,18 +1,11 @@
 !function(APP){
     APP.namespace('APP.objects');
-    var VectorRegion = APP.VectorRegion;
-    APP.objects.RectangleVector = function (options){
-        options = options || {};
-        VectorRegion.apply(this, arguments);
-        this.x0 = options.x0;
-        this.y0 = options.y0;
-        this.x1 = options.x1;
-        this.y1 = options.y1;
-        this.size = options.size;
-        this.color = options.color;
+
+    APP.objects.RectangleVector = function (attributes){
+        APP.objects.SimpleVector.apply(this, arguments);
     };
 
-    APP.objects.RectangleVector.prototype = Object.create(VectorRegion.prototype);
+    APP.objects.RectangleVector.prototype = Object.create(APP.objects.SimpleVector.prototype);
     APP.objects.RectangleVector.prototype.constructor = APP.objects.RectangleVector;
     APP.objects.RectangleVector.prototype.getCoordinatesLine = function(){
         if (!this.coordinatesLine){

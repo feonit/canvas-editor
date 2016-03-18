@@ -2,16 +2,17 @@
     APP.namespace('APP.objects');
     var Curve = APP.Curve;
     var MathFn = APP.MathFn;
-    var VectorRegion = APP.VectorRegion;
+    var ComplexVector = APP.objects.ComplexVector;
 
-    APP.objects.CurveVector = function (options){
-        options = options || {};
-        VectorRegion.apply(this, arguments);
-        this.points = options.points;
-        this.size = options.size;
-        this.color = options.color;
+    /**
+     * Класс определяет по массиву контрольных точек
+     * координаты кривых безье
+     * */
+    APP.objects.CurveVector = function (attributes){
+        ComplexVector.apply(this, arguments);
     };
-    APP.objects.CurveVector.prototype = Object.create(VectorRegion.prototype);
+
+    APP.objects.CurveVector.prototype = Object.create(ComplexVector.prototype);
     APP.objects.CurveVector.prototype.constructor = APP.objects.CurveVector;
     APP.objects.CurveVector.prototype.getCoordinatesLine = function(){
         if (!this.coordinatesLine){

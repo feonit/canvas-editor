@@ -3,9 +3,9 @@
     var RegionObject = APP.RegionObject;
     var MathFn = APP.MathFn;
 
-    APP.VectorRegion = function (options){
+    APP.VectorRegion = function (attributes){
         RegionObject.apply(this, arguments);
-        options = options || {};
+        this.size = attributes.size;
 
         Object.defineProperty(this, 'coordinatesLine', {
             value: null,
