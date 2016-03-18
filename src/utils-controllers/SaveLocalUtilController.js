@@ -6,8 +6,7 @@
 
         this._saveToLocalSorage = function (){
             var state = APP.getTotalState(appInstance);
-            var stringData = JSON.stringify(state);
-            window.storageManager.setItem('SAVED_STATE', stringData);
+            appInstance.storageManager.setItem('SAVED_STATE', state);
         };
 
         this.start = function(){

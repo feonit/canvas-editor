@@ -21,6 +21,10 @@
 
         options = options || {};
 
+        if (options.id){
+            incId = incId > options.id ? incId : (options.id + 1);
+        }
+
         /**
          * Уникальный идентификатор объекта
          * @type {number}
@@ -146,26 +150,21 @@
 
             offset = offset || this.offset;
 
-            this._addOffsetToCoordinate(relation, offset);
+            _addOffsetToCoordinate(relation, offset);
+
+            function _addOffsetToCoordinate(coordinates, offset){
+                for (var i = 0, len = coordinates.length; i < len; i+=1 ){
+                    coordinates[i][0] += offset[0];
+                    coordinates[i][1] += offset[1];
+                }
+                return coordinates;
+            }
 
             return relation;
         },
 
         getPrevRecord : function(){
             return this.recordsOffset[this.recordsOffset.length - 2];
-        },
-
-        /**
-         * Добавить отступ набору координат
-         * @param {number[][]} coordinates
-         * @param {number[]} offset
-         * */
-        _addOffsetToCoordinate : function(coordinates, offset){
-            for (var i = 0, len = coordinates.length; i < len; i+=1 ){
-                coordinates[i][0] += offset[0];
-                coordinates[i][1] += offset[1];
-            }
-            return coordinates;
         },
 
         /**

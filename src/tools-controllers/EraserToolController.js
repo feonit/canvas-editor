@@ -18,6 +18,7 @@
         function mouseup(event){
             tool.eraserEnd(event.layerX, event.layerY);
             appInstance.mediator.publish(appInstance.UPDATE_CANVAS);
+            appInstance.regionManager.reset();
         }
 
         this.start = function(){

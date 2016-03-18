@@ -38,60 +38,21 @@
             },
 
             /**
-             * @param {Object} object — hash data
-             * @return false || object
-             * */
-            setProperties: function(object){
-                var key;
-
-                if (typeof object !== 'object' || object === null) return false;
-
-                for (key in object ){
-                    if (!object.hasOwnProperty(key)) continue;
-
-                    if (typeof object[key] === "object"){
-                        this.setProperties(object[key]);
-                    } else {
-                        this.setItem(key, object[key]);
-                    }
-                }
-                return object;
-            },
-
-            getProperties: function(){
-                var archive = this.allStorage(),
-                    data = {}, key, split;
-
-                for (key in archive) {
-                    split = key.split(this.SEPARATOR);
-
-                    if (split[0] === this.GLOBAL_NAMESPACE && split[1] === this.localNamespace) {
-                        data[split[2]] = archive[key];
-                    }
-                }
-
-                return data;
-            },
-
-            /**
              * @param {String} key — property name
              * @return null || object
              * */
             getProperty: function(key){
                 var propertyName = this.namespace + this.SEPARATOR + key;
-                return localStorage.getItem(propertyName)
-            },
+                var prop = localStorage.getItem(propertyName);
 
-            allStorage: function(){
-                var archive = {}, // Notice change here
-                    keys = Object.keys(localStorage),
-                    i = keys.length;
-
-                while ( i-- ) {
-                    archive[ keys[i] ] = localStorage.getItem( keys[i] );
+                var data;
+                try {
+                    data = JSON.parse(prop);
+                } catch(e){
+                    console.log('данные побились')
                 }
 
-                return archive;
+                return data;
             },
 
             setItem: function(key, value){
@@ -100,7 +61,12 @@
 
                 propertyName = this.namespace + this.SEPARATOR + key;
                 propertyValue = value;
-                localStorage.setItem(propertyName, propertyValue);
+                var item = JSON.stringify(value);
+                localStorage.setItem(propertyName, item);
+            },
+
+            clear: function(){
+                localStorage.clear();
             }
         };
 

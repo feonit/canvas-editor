@@ -109,10 +109,26 @@
             return;
             this._lastPhase = this._END_PHASE;
 
+
             if (this.type == this.CURVE_TYPE){
                 this._bufferPoints.push(new Point(x, y));
             }
+
             this.draw();
+
+            // часть 2 оптимизация отрисовки кривой линии без создания объектов
+            if (this.type == this.CURVE_TYPE){
+                var object = new CurveVector({
+                    points: this._bufferPoints,
+                    size: Math.round(this.size),
+                    color: this.color,
+                    width: this.canvas.width,
+                    height: this.canvas.height
+                });
+                object.renderCircles(this.canvas);
+                this.object = object;
+            }
+
             this._publicNewLayout();
 
             this.startPoint = null;
@@ -143,20 +159,23 @@
             var x1 = this.currentPoint[0];
             var y1 = this.currentPoint[1];
 
-            var object;
             switch (this.type){
                 case this.CURVE_TYPE:
-                    object = new CurveVector({
-                        points: this._bufferPoints,
-                        size: Math.round(this.size),
-                        color: this.color,
-                        width: this.canvas.width,
-                        height: this.canvas.height
-                    });
+                    // часть 1 оптимизация отрисовки кривой линии без создания объектов
+                    // это хак, для ускорения отрисовки
+                    this.object = null;
+                    var coordinates = APP.MathFn.drawBezierCurve(new APP.Curve(this._bufferPoints));
+                    APP.VectorRegion.prototype.renderCircles.call({
+                        getCoordinatesLine: function(){
+                            return coordinates;
+                        },
+                        size: this.size,
+                        color: this.color
+                    }, this._bufferCanvas);
                     break;
 
                 case this.RECTANGLE_TYPE:
-                    object = new RectangleVector({
+                    this.object = new RectangleVector({
                         x0:x0,
                         y0:y0,
                         x1:x1,
@@ -169,7 +188,7 @@
                     break;
 
                 case this.ELLIPSE_TYPE:
-                    object = new EllipseVector({
+                    this.object = new EllipseVector({
                         x0:x0,
                         y0:y0,
                         x1:x1,
@@ -182,7 +201,7 @@
                     break;
 
                 case this.LINE_TYPE:
-                    object = new LineVector({
+                    this.object = new LineVector({
                         x0:x0,
                         y0:y0,
                         x1:x1,
@@ -198,7 +217,7 @@
                     if ( Math.abs(x1-x0) < 2 && Math.abs(x1-x0) < 2 )
                         return;
 
-                    object = new ArrowVector({
+                    this.object = new ArrowVector({
                         x0:x0,
                         y0:y0,
                         x1:x1,
@@ -211,10 +230,10 @@
                     break;
             }
 
-            this.object = object;
-
-            object.renderCircles(this.canvas);
-            object.renderCircles(this._bufferCanvas);
+            if (this.object){
+                this.object.renderCircles(this.canvas);
+                this.object.renderCircles(this._bufferCanvas);
+            }
 
             //this.drawPixelsAtCanvas(this.canvas, object.getCoordinates());
             //this.drawPixelsAtCanvas(this._bufferCanvas, object.getCoordinates());

@@ -11,6 +11,18 @@
     var DraggingTool = APP.tools.DraggingTool;
     var EraserTool = APP.tools.EraserTool;
     var SelectTool = APP.tools.SelectTool;
+    var StorageManager = APP.StorageManager;
+
+    function extend(src, obj){
+        for (var prop in src){
+            if (src.hasOwnProperty(prop)){
+                if (!obj.hasOwnProperty(prop)){
+                    obj[prop] = src[prop];
+                }
+            }
+        }
+        return obj;
+    }
 
     /**
      * Канвас редактор
@@ -24,18 +36,48 @@
      * @param {string} options.figureType
      * */
     APP.CanvasEditor = function (canvas, options){
-
-        var defaultOptions = {
-            drawingColor: '000000',
-            drawingSize: 10,
-            eraserSize: 10,
-            drawingType: 'CURVE_TYPE'
-        };
-
         if ( !canvas instanceof HTMLCanvasElement )
             throw 'Lost canvas element';
 
         Object.defineProperty(this, 'canvas', {value: canvas});
+
+        options = options || {};
+
+        var defaultSettings = {
+            drawingColor: '000000',
+            drawingSize: 10,
+            eraserSize: 10,
+            drawingType: 'CURVE_TYPE',
+            storageEnabled: false,
+            drawingCursorEnabled: false
+        };
+
+        this.toolsDriver = new ToolsDriver(this, canvas);
+        this.mediator = new Mediator();
+
+        if (options.settings && options.settings.storageEnabled){
+            this.storageManager = new StorageManager('unic_namespace');
+
+            // сохраненное состояние
+            var stateOptions = this.storageManager.getProperty('SAVED_STATE');
+
+            if (stateOptions){
+                // запоминаем предыдушие настройки
+                var oldSettings = options.settings;
+                // заменяем опции на сохраненное
+                options = stateOptions;
+
+                options.settings = options.settings || {};
+
+                // восстанавливаем настройки, если каких то нет в сохраненном состоянии
+                extend(oldSettings, options.settings);
+            }
+
+            var saveLocalUtilController = new APP.controllers.SaveLocalUtilController(this);
+            saveLocalUtilController.start();
+        }
+
+        this.regionManager = new RegionManager(this, canvas, options.regionManager);
 
         canvas.setAttribute('oncontextmenu', 'return false;');
         var ctx = canvas.getContext('2d');
@@ -44,64 +86,16 @@
         ctx.msImageSmoothingEnabled = false;
         ctx.imageSmoothingEnabled = false;
 
-        this.settings = options.settings || {};
+        options.settings = options.settings || {};
 
-        this.settings.drawingSize = options.settings.drawingSize || defaultOptions.drawingSize;
-        this.settings.eraserSize = options.settings.eraserSize || defaultOptions.eraserSize;
-        this.settings.drawingType = options.settings.figureType || defaultOptions.figureType;
-        this.settings.drawingColor = options.settings.drawingColor || defaultOptions.drawingColor;
+        extend(defaultSettings, options.settings);
 
-        this.toolsDriver = new ToolsDriver(this, canvas);
-        this.regionManager = new RegionManager(this, canvas, options.regionManager);
-        this.mediator = new Mediator();
+        this.settings = options.settings;
 
         this.toolsDriver.plug(DrawingToolController);
         this.toolsDriver.plug(EraserToolController);
         this.toolsDriver.plug(DraggingToolController);
         this.toolsDriver.plug(SelectToolController);
-
-        var appInstance = this;
-
-        !function(){
-            var original = DrawingTool.prototype.drawingEnd;
-
-            DrawingTool.prototype.drawingEnd = function _fn(){
-                original.apply(this, arguments);
-                appInstance.mediator.publish(appInstance.UPDATE_CANVAS);
-            };
-        }();
-
-
-        !function(){
-            var original = DraggingTool.prototype.draggingEnd;
-
-            DraggingTool.prototype.draggingEnd = function _fn(){
-                original.apply(this, arguments);
-                appInstance.mediator.publish(appInstance.UPDATE_CANVAS);
-            };
-        }();
-
-
-        var that = this;
-        !function(){
-            var original = EraserTool.prototype.eraserEnd;
-
-            EraserTool.prototype.eraserEnd = function _fn(){
-                original.apply(this, arguments);
-                appInstance.mediator.publish(appInstance.UPDATE_CANVAS);
-                that.regionManager.reset();
-            };
-        }();
-
-
-        !function(){
-            var original = SelectTool.prototype.deleteSelectedObjects;
-
-            SelectTool.prototype.deleteSelectedObjects = function _fn(){
-                original.apply(this, arguments);
-                appInstance.mediator.publish(appInstance.UPDATE_CANVAS);
-            };
-        }();
     };
 
     APP.CanvasEditor.prototype.CREATED_REGION = 'CREATED_REGION';

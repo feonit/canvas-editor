@@ -79,7 +79,6 @@
 <script type="text/javascript" src="src/utils-controllers/SaveServerUtilController.js"></script>
 <script type="text/javascript" src="src/utils-controllers/TransparentUtilController.js"></script>
 <script type="text/javascript" src="src/utils-controllers/RandomOptionsController.js"></script>
-<script type="text/javascript" src="src/utils-controllers/CursorOptionsUtilController.js"></script>
 
 <script type="text/javascript" src="example/ui-components/RadioBoxComponent.js"></script>
 <script type="text/javascript" src="example/ui-components/CheckBoxComponent.js"></script>
@@ -98,32 +97,18 @@
 
         var canvas = document.getElementById('canvas');
         var img = document.getElementById('img');
-        var ctx = canvas.getContext('2d');
 
-//        ctx.drawImage(img, 0, 0);
-
-        window.storageManager = new APP.StorageManager('layers_state');
-        var stateOptions;
-        try {
-            stateOptions = JSON.parse(window.storageManager.getProperty('SAVED_STATE'));
-        } catch (e){
-            console.log('данные побились')
-        }
-        var defaults = {
+        var options = {
             settings: {
-                drawingColor: "8080ff",
-                drawingSize: 10
+                drawingColor: "ff0000",
+                drawingSize: 10,
+                storageEnabled: true,
+                drawingCursorEnabled: true
             }
         };
-        var options = stateOptions || defaults;
         var appInstance = new APP.CanvasEditor(document.getElementById('canvas'), options);
-        if(stateOptions){
-            appInstance.regionManager.redrawLayers();
-        }
-        //window.storageManager.setItem('SAVED_STATE', '');
-//        var options = APP.getTotalState(appInstance);
-//        var appInstanceDouble = new APP.CanvasEditor(document.getElementById('canvasDouble'), options);
-//        appInstanceDouble.regionManager.redrawLayers();
+
+//        window.storageManager.setItem('SAVED_STATE', '');
 
         window.appInstance = appInstance;
 

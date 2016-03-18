@@ -22,6 +22,7 @@
 
         function mouseup(event){
             tool.draggingEnd(event.layerX, event.layerY);
+            appInstance.mediator.publish(appInstance.UPDATE_CANVAS);
         }
 
         this.start = function(){

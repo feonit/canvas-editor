@@ -25,6 +25,7 @@
             this.objectsOrder.getObjects().forEach((function(regionObject){
                 addRecordsAboutRegion(this.pixelsMap, regionObject);
             }).bind(this));
+            this.redrawLayers();
         }
     };
     /** @lends RegionManager.prototype */

@@ -50,6 +50,7 @@
 
             this._render();
             this.points = null;
+            appInstance.mediator.publish(appInstance.UPDATE_CANVAS);
         },
 
         _render : function(){
