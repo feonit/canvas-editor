@@ -46,7 +46,6 @@
             if (this._instanceTool){
                 this._instanceTool.stop();
             }
-            this.plug(Tool);
             this._instanceTool = new Tool(this.appInstance, this._canvas);
             this._activedTool = Tool;
             this._instanceTool.start();
