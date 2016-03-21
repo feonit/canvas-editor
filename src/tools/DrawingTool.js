@@ -37,6 +37,7 @@
         this.ELLIPSE_TYPE = 'ELLIPSE_TYPE';
         this.ARROW_TYPE = 'ARROW_TYPE';
         this.LINE_TYPE = 'LINE_TYPE';
+        this.BROKEN_TYPE = 'BROKEN_TYPE';
 
         this.type = this.CURVE_TYPE;
         this.size = 10;
@@ -81,7 +82,28 @@
                 this._bufferPoints = [new Point(x, y)];
             }
 
-            this._bufferCanvas = this._createCopyOfCanvas(canvas);
+            /**
+             * Создает копию канваса по размеру и параметрам контекста
+             * @param {HTMLCanvasElement} canvas
+             * */
+            var _createCopyOfCanvas = function (canvas){
+                var context = canvas.getContext('2d');
+                var copy = document.createElement('canvas');
+                copy.height = canvas.height;
+                copy.width = canvas.width;
+                var copyCtx =  copy.getContext('2d');
+                var propsToCopy = Object.getOwnPropertyNames(CanvasRenderingContext2D.prototype).filter(function(prop){
+                    return typeof context[prop] === 'string'
+                });
+
+                propsToCopy.forEach(function(name){
+                    copyCtx[name] = context[name];
+                });
+
+                return copy;
+            };
+
+            this._bufferCanvas = _createCopyOfCanvas(this.canvas);
 
             this.draw();
         },
@@ -234,76 +256,16 @@
                 this.object.renderCircles(this.canvas);
                 this.object.renderCircles(this._bufferCanvas);
             }
-
-            //this.drawPixelsAtCanvas(this.canvas, object.getCoordinates());
-            //this.drawPixelsAtCanvas(this._bufferCanvas, object.getCoordinates());
         },
 
         /**
          * Создает новое изображение нарисованной линии и сохраняет
          * */
         _publicNewLayout : function(){
-
-            //todo
             if (this.object){
                 this.appInstance.newEvent('CREATED_REGION', [
                     this.object
                 ]);
-            }
-        },
-
-        /**
-         * Создает копию канваса по размеру и параметрам контекста
-         * @param {HTMLCanvasElement} canvas
-         * */
-        _createCopyOfCanvas : function (canvas){
-            var context = canvas.getContext('2d');
-            var copy = document.createElement('canvas');
-            copy.height = canvas.height;
-            copy.width = canvas.width;
-            var copyCtx =  copy.getContext('2d');
-            var propsToCopy = Object.getOwnPropertyNames(CanvasRenderingContext2D.prototype).filter(function(prop){
-                return typeof context[prop] === 'string'
-            });
-
-            propsToCopy.forEach(function(name){
-                copyCtx[name] = context[name];
-            });
-
-            return copy;
-        },
-
-        /**
-         * Для определенного холста установить по всем координатам свой цвет
-         * @param {HTMLCanvasElement} canvas
-         * @param {number[][]} [coordinates] — список координат
-         * @param {Uint8ClampedArray} [color] — цвет
-         * todo вызывает блокировку потока, поэтому нужно оптимизировать
-         * */
-        drawPixelsAtCanvas : function(canvas, coordinates, color){
-            // проверено drawImage в этом случае работает раза в 4 быстрее чем putImageData, создаю картинку размером в 1 пиксел
-            // нужен оптимизирующий алгаритм для работы drawImage, чтобы избежать попиксельную обработку, основанный на том факте, что цвета соседних пикселей одинаковы
-            var ctx = canvas.getContext('2d');
-            this.__canvas1px = this.__canvas1px || document.createElement('canvas');
-            this.__imageData = this.__imageData || ctx.createImageData(1,1);
-            var data = this.__imageData.data;
-            var etalon = color || this.color;
-            data[0] = etalon[0];
-            data[1] = etalon[1];
-            data[2] = etalon[2];
-            data[3] = etalon[3];
-
-            this.__canvas1px.height = 1;
-            this.__canvas1px.width = 1;
-
-            var canvas1pxCtx = this.__canvas1px.getContext('2d');
-            canvas1pxCtx.putImageData(this.__imageData, 0, 0);
-
-            var coordinate;
-
-            for (var i = 0, len = coordinates.length; i < len; i++){
-                coordinate = coordinates[i];
-                ctx.drawImage(this.__canvas1px, coordinate[0], coordinate[1]);
             }
         }
     };

@@ -20,7 +20,7 @@
 
         if (!options.objectsOrder){// если нет автогенерации
             /** @lends RegionManager.prototype */
-            this.makeBackgoundRegion();
+            this.addRegion(BackgroundRaster.createBackgroundRaster(this.canvas));
         } else {
             this.objectsOrder.getObjects().forEach((function(regionObject){
                 addRecordsAboutRegion(this.pixelsMap, regionObject);
@@ -41,18 +41,7 @@
         reset: function(){
             this.pixelsMap = new PixelsMap();
             this.objectsOrder = new ObjectsOrder();
-            this.makeBackgoundRegion();
-        },
-        makeBackgoundRegion : function(){
-            function createBackgroundRaster(canvas){
-                return new BackgroundRaster({
-                    dataUrl: canvas.toDataURL(),
-                    height: canvas.height,
-                    width: canvas.width
-                });
-            }
-
-            this.addRegion(createBackgroundRaster(this.canvas));
+            this.addRegion(BackgroundRaster.createBackgroundRaster(this.canvas));
         },
         /**
          * Метод для записи региона в карту пикселей
@@ -86,27 +75,6 @@
             addRecordsAboutRegion(this.pixelsMap, regionObject);
         },
         /**
-         * Метод заполняет пикселы холста определенным цветом
-         * @param {HTMLCanvasElement} canvas
-         * @param {number[][]} coordinates
-         * @param {number[]} color
-         * */
-        putPixelsAtCanvas : function(canvas, coordinates, color){
-            var canvasCtx = canvas.getContext('2d');
-            var imageData = canvasCtx.createImageData(1,1);
-            var data = imageData.data;
-            data[0] = color[0];
-            data[1] = color[1];
-            data[2] = color[2];
-            data[3] = color[3];
-
-            var coordinate, i, len;
-            for (i = 0, len = coordinates.length; i < len; i++){
-                coordinate = coordinates[i];
-                canvasCtx.putImageData(imageData, coordinate[0], coordinate[1]);
-            }
-        },
-        /**
          * Этот способ просто перерисосывает все слои
          * */
         redrawLayers : function(){
@@ -114,7 +82,8 @@
             var region;
             var canvas = this.canvas;
 
-            this._cleanCanvas();
+            /* Очистить холст полностью */
+            this.canvas.getContext('2d').clearRect(0, 0, this.canvas.width, this.canvas.height);
 
             var objects = this.objectsOrder.getObjects();
             for (i = 0, len = objects.length; i < len; i++){
@@ -160,7 +129,25 @@
          * */
         searchRegionByCoordinate : function(x, y){
             // возьмем за правило, что если выделяемый пиксель имеет цвет фона холста ( прозрачный по дефолту ) то сбрасываем событие
-            if (this._pixelIsBackground(x, y))
+
+            /**
+             * Проверяет, пустой ли пиксел по заданной координате
+             * @param {HTMLCanvasElement} canvas — холст
+             * @param {number} x — координата X
+             * @param {number} y — координата Y
+             * @return {boolean} true если пустой
+             * */
+            var pixelIsBackground = function(canvas, x, y){
+                var ctx = canvas.getContext('2d'),
+                    data = ctx.getImageData(x, y, 1, 1).data,
+                    BGR_COLOR = [0,0,0,0];
+                return data[0] == BGR_COLOR[0]
+                    && data[1] == BGR_COLOR[1]
+                    && data[2] == BGR_COLOR[2]
+                    && data[3] == BGR_COLOR[3];
+            };
+
+            if (pixelIsBackground(this.canvas, x, y))
                 return false;
 
             // пробуем найти регион по индексовой карте (поиск по слою)
@@ -186,7 +173,30 @@
 
                 // заполнить дефолтовым цветом
                 var raw = this.objectsOrder.getObjectByIndex(this.BACKGROUND_INDEX);
-                this.putPixelsAtCanvas(raw.getLayout(), region.getRelationCoordinate(), CLEAN_COLOR);
+
+                /**
+                 * Метод заполняет пикселы холста определенным цветом
+                 * @param {HTMLCanvasElement} canvas
+                 * @param {number[][]} coordinates
+                 * @param {number[]} color
+                 * */
+                var putPixelsAtCanvas = function (canvas, coordinates, color){
+                    var canvasCtx = canvas.getContext('2d');
+                    var imageData = canvasCtx.createImageData(1,1);
+                    var data = imageData.data;
+                    data[0] = color[0];
+                    data[1] = color[1];
+                    data[2] = color[2];
+                    data[3] = color[3];
+
+                    var coordinate, i, len;
+                    for (i = 0, len = coordinates.length; i < len; i++){
+                        coordinate = coordinates[i];
+                        canvasCtx.putImageData(imageData, coordinate[0], coordinate[1]);
+                    }
+                };
+
+                putPixelsAtCanvas(raw.getLayout(), region.getRelationCoordinate(), CLEAN_COLOR);
 
                 this.addRegion(region);
             }
@@ -197,27 +207,6 @@
             }
 
             return region;
-        },
-        /**
-         * Проверяет, пустой ли пиксел по заданной координате
-         * @param {number} x — координата X
-         * @param {number} y — координата Y
-         * @return {boolean} true если пустой
-         * */
-        _pixelIsBackground : function(x, y){
-            var ctx = this.canvas.getContext('2d'),
-                data = ctx.getImageData(x, y, 1, 1).data,
-                BGR_COLOR = [0,0,0,0];
-            return data[0] == BGR_COLOR[0]
-                && data[1] == BGR_COLOR[1]
-                && data[2] == BGR_COLOR[2]
-                && data[3] == BGR_COLOR[3];
-        },
-        /**
-         * Очистить холст полностью
-         * */
-        _cleanCanvas : function(){
-            this.canvas.getContext('2d').clearRect(0, 0, this.canvas.width, this.canvas.height);
         }
     };
     function removeRecordsAboutRegion(pixelsMap, regionObject, offset){

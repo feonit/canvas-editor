@@ -42,4 +42,17 @@
         }
         return this.coordinates;
     };
+
+    /**
+     * @function createBackgroundRaster
+     * @memberof APP.objects.BackgroundRaster
+     * @static
+     */
+    APP.objects.BackgroundRaster.createBackgroundRaster = function (canvas){
+        return new APP.objects.BackgroundRaster({
+            dataUrl: canvas.toDataURL(),
+            height: canvas.height,
+            width: canvas.width
+        });
+    }
 }(APP);
