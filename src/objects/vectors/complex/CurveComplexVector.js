@@ -7,6 +7,8 @@
     /**
      * Класс определяет по массиву контрольных точек
      * координаты кривых безье
+     * @class CurveComplexVector
+     * @memberof APP.objects
      * */
     APP.objects.CurveComplexVector = function (attributes){
         ComplexVector.apply(this, arguments);

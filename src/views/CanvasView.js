@@ -1,8 +1,11 @@
 !function(APP){
+    /** @namespace APP.views */
     APP.namespace('APP.views');
 
-    var MathFn = APP.MathFn;
-
+    /**
+     * @class CanvasView
+     * @memberof APP.views
+     * */
     APP.views.CanvasView = function(){
         //todo
         //this.canvas;
@@ -12,6 +15,8 @@
      * @param {HTMLCanvasElement} canvas
      * @param {HTMLCanvasElement} layer
      * @param {number[]} offset
+     * @memberof APP.views.CanvasView
+     * @static
      * */
     APP.views.CanvasView.drawLayer = function(canvas, layer, offset){
         // кладем буфер региона на холст добавляя смещение

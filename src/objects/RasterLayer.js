@@ -1,6 +1,11 @@
 !function(APP){
     APP.namespace('APP');
 
+    /**
+     * Растровый слой
+     * @class RasterLayer
+     * @memberof APP
+     * */
     APP.RasterLayer = function (options){
         APP.DraggingAbstract.apply(this, arguments);
         options = options || {};

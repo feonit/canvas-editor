@@ -1,6 +1,11 @@
 !function(APP){
     APP.namespace('APP.objects');
 
+    /**
+     * Задний главный слой
+     * @class LayerBackground
+     * @memberof APP.objects
+     * */
     APP.objects.LayerBackground = function (options){
         APP.LayerAbstract.apply(this, arguments);
 

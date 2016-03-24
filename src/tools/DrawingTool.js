@@ -7,6 +7,10 @@
     var LineSimpleVector = APP.objects.LineSimpleVector;
     var ArrowSimpleVector = APP.objects.ArrowSimpleVector;
 
+    /**
+     * @class DrawingTool
+     * @memberof APP.tools
+     * */
     APP.tools.DrawingTool = function (appInstance, canvas){
 
         this.appInstance = appInstance;

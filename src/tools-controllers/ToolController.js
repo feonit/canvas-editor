@@ -1,7 +1,12 @@
 !function(APP){
     APP.namespace('APP');
+
+    /** @namespace APP.controllers */
+    APP.namespace('APP.controllers');
+
     /**
      * @class ToolController
+     * @memberof APP
      * */
     APP.ToolController = function (){};
     /**

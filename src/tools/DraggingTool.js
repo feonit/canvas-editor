@@ -1,5 +1,4 @@
 !function(APP){
-    /** @namespace APP.tools */
     APP.namespace('APP.tools');
     /**
      * @class DraggingTool

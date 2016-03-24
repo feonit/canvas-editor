@@ -28,7 +28,7 @@
      * Канвас редактор
      *
      * @class CanvasEditor
-     *
+     * @memberof APP
      * @param {HTMLCanvasElement} canvas
      * @param {Object} options
      * @param {string} options.lineColor

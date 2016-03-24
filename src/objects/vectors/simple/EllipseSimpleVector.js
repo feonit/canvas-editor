@@ -1,6 +1,11 @@
 !function(APP){
     APP.namespace('APP.objects');
 
+    /**
+     * Овал
+     * @class EllipseSimpleVector
+     * @memberof APP.objects
+     * */
     APP.objects.EllipseSimpleVector = function (attributes){
         APP.objects.SimpleVector.apply(this, arguments);
 

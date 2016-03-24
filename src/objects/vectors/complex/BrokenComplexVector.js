@@ -5,7 +5,9 @@
 
     /**
      * Класс определяет по массиву контрольных точек
-     * координаты кривых безье
+     * координаты ломанной линии
+     * @class BrokenComplexVector
+     * @memberof APP.objects
      * */
     APP.objects.BrokenComplexVector = function (attributes){
         ComplexVector.apply(this, arguments);

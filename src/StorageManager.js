@@ -1,7 +1,6 @@
 !function(APP){
     APP.namespace('APP');
 
-
     /**
      * @constructor
      * @throw

@@ -6,6 +6,7 @@
     var RasterLayer = APP.RasterLayer;
     /**
      * @class RegionManager
+     * @memberof APP
      * @param appInstance
      * @param {HTMLCanvasElement} canvas
      * */

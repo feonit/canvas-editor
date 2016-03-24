@@ -8,7 +8,8 @@
     var incId = 0;
 
     /**
-     * @class LayerObject
+     * Базовый класс слоев
+     * @class LayerAbstract
      * @memberof APP
      * @param {Object} options
      * @param {number[][]} options.coordinates

@@ -2,9 +2,13 @@
     APP.namespace('APP');
     var MathFn = APP.MathFn;
 
+    /** @namespace APP.objects */
+    APP.namespace('APP.objects');
+
     /**
+     * Объект слоя
      * @class LayerObject
-     * @memberof APP
+     * @memberof APP.objects
      * @param {Object} options
      * @param {number[][]} options.coordinates
      * @param {number[]} options.color
@@ -21,10 +25,10 @@
         this.color = options.color;
 
         Object.defineProperties(this, {
-            /**
-             * Координаты точек контура
-             * @type {number[][]|null}
-             * */
+            ///**
+            // * Координаты точек контура
+            // * @type {number[][]|null}
+            // * */
             'coordinates': {
                 value: options.coordinates || null,
                 enumerable: false,

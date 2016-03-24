@@ -3,6 +3,8 @@
 
     /**
      * Класс определяет массив контрольных точек
+     * @class ComplexVector
+     * @memberof APP.objects
      * */
     APP.objects.ComplexVector = function(attributes){
         APP.VectorLayer.apply(this, arguments);

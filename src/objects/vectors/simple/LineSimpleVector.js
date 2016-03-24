@@ -2,6 +2,11 @@
     APP.namespace('APP.objects');
     var MathFn = APP.MathFn;
 
+    /**
+     * Прямая
+     * @class LineSimpleVector
+     * @memberof APP.objects
+     * */
     APP.objects.LineSimpleVector = function (attributes){
         APP.objects.SimpleVector.apply(this, arguments);
         this.coordinatesLine = MathFn.bline(this.x0, this.y0, this.x1, this.y1);

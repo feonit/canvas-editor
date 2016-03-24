@@ -3,6 +3,8 @@
 
     /**
      * Отвечает за отображение информации
+     * @class RasterLayerView
+     * @memberof APP.views
      * */
     APP.views.RasterLayerView = function(options){
         APP.views.LayerView.apply(this, arguments);

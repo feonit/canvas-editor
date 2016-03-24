@@ -1,6 +1,11 @@
 !function(APP){
     APP.namespace('APP');
 
+    /**
+     * Векторный слой
+     * @class VectorLayer
+     * @memberof APP
+     * */
     APP.VectorLayer = function (attributes){
         APP.DraggingAbstract.apply(this, arguments);
         this.size = attributes.size;
@@ -39,7 +44,7 @@
             coordinatesLine: this.coordinatesLine,
             color: this.color
         });
-        var searchedData = APP.algorithms.SearchPixelsAlgorithm(beginWithX, beginWithY, fakeLayer.layer);
+        var searchedData = APP.algorithms.searchPixelsAlgorithm(beginWithX, beginWithY, fakeLayer.layer);
         this.coordinates = searchedData[0];
         this.borderCoordinates = searchedData[1];
     };

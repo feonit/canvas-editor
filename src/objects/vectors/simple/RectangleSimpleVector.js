@@ -1,6 +1,11 @@
 !function(APP){
     APP.namespace('APP.objects');
 
+    /**
+     * Прямоугольник
+     * @class RectangleSimpleVector
+     * @memberof APP.objects
+     * */
     APP.objects.RectangleSimpleVector = function (attributes){
         APP.objects.SimpleVector.apply(this, arguments);
 

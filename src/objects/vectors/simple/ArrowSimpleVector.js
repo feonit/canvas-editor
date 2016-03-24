@@ -1,6 +1,11 @@
 !function(APP){
     APP.namespace('APP.objects');
 
+    /**
+     * Стрелка
+     * @class ArrowSimpleVector
+     * @memberof APP.objects
+     * */
     APP.objects.ArrowSimpleVector = function (attributes){
         APP.objects.SimpleVector.apply(this, arguments);
 

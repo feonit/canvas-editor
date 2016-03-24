@@ -7,7 +7,7 @@
     /**
      * Ластик, позволяет стирать область холста, относительно переданной координаты
      * @class EraserTool Ластик
-     *
+     * @memberof APP.tools
      * @arg {String} shape — форма ластика: круг/квадрат (Circle, Squire)
      * @arg {Number} shapeLength — параметры формы ластика: длинна стороны/диагонали
      * @arg {HTMLCanvasElement} canvas — холст, над которым происходит затирание

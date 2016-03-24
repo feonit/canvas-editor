@@ -1,5 +1,6 @@
 !function(global){
 
+    /** @namespace APP */
     var APP = global.APP = {};
 
     APP.namespace = function (nsString) {

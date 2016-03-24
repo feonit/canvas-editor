@@ -3,7 +3,8 @@
     var MathFn = APP.MathFn;
 
     /**
-     * @class LayerObject
+     * Содержит историю перемещений
+     * @class DraggingAbstract
      * @memberof APP
      * @param {Object} options
      * @param {number[][]} options.coordinates

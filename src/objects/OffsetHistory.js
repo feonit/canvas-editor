@@ -1,6 +1,11 @@
 !function(APP){
     APP.namespace('APP');
 
+    /**
+     * История перемещений
+     * @class OffsetHistory
+     * @memberof APP
+     * */
     APP.OffsetHistory = function(options){
         options = options || {};
         this.currentOffset = options.currentOffset || [0,0];

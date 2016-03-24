@@ -1,15 +1,19 @@
 !function(APP) {
+    /** @namespace APP.algorithms */
     APP.namespace('APP.algorithms');
 
     /**
      * Алгоритм поиска области фигуры по координате в режиме поиска по цвету
      * Последовательный поиск всех похожих прилегающих точек, как непосредственно,
      * так и посредством аналогичных по цвету точек
+     * @function searchPixelsAlgorithm
      * @param {number} startX — координата X с которой начинается поиск
      * @param {number} startY — координата Y с которой начинается поиск
      * @param {HTMLCanvasElement} canvas — анализируемый холст
+     * @static
+     * @memberof APP.algorithms
      * */
-    APP.algorithms.SearchPixelsAlgorithm = function (startX, startY, canvas){
+    APP.algorithms.searchPixelsAlgorithm = function (startX, startY, canvas){
         var canvasWidth = canvas.width;
         var canvasHeight = canvas.height;
         var imageData = canvas.getContext('2d').getImageData(0, 0, canvasWidth, canvasHeight);

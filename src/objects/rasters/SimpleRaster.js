@@ -3,6 +3,8 @@
 
     /**
      * Класс определяет две контрольные точки
+     * @class SimpleRaster
+     * @memberof APP.objects
      * */
     APP.objects.SimpleRaster = function(attributes){
         APP.RasterLayer.apply(this, arguments);
@@ -28,7 +30,7 @@
         var beginWithX = coordinate[0];
         var beginWithY = coordinate[1];
         var color = canvas.getContext('2d').getImageData(beginWithX, beginWithY, 1, 1).data;
-        var searchedData = APP.algorithms.SearchPixelsAlgorithm(beginWithX, beginWithY, canvas);
+        var searchedData = APP.algorithms.searchPixelsAlgorithm(beginWithX, beginWithY, canvas);
 
         this.dataUrl = APP.objects.SimpleRaster._generateDataUrlFromCanvas;
 

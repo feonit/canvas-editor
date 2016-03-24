@@ -3,6 +3,8 @@
 
     /**
      * Класс определяет две контрольные точки
+     * @class SimpleVector
+     * @memberof APP.objects
      * */
     APP.objects.SimpleVector = function(attributes){
         APP.VectorLayer.apply(this, arguments);

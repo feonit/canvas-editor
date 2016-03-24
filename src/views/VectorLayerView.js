@@ -4,6 +4,8 @@
 
     /**
      * Отвечает за отображение информации
+     * @class VectorLayerView
+     * @memberof APP.views
      * */
     APP.views.VectorLayerView = function(options){
         options = options || {};
