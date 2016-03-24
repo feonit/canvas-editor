@@ -13,7 +13,7 @@
         this.appInstance = appInstance;
         /** @type {HTMLCanvasElement} */
         this.canvas = canvas;
-        /** @type {RegionObject[]} Коллекция избранных объектов */
+        /** @type {LayerObject[]} Коллекция избранных объектов */
         this.selectedObjects = [];
     };
     APP.tools.SelectTool.prototype = {
@@ -22,33 +22,33 @@
          * Добавить объект в коллекцию избранных по координате
          * @param {number} x — координата X
          * @param {number} y — координата Y
-         * @return {boolean|RegionObject} — результат операции, найденный объект или false если объект не найден
+         * @return {boolean|LayerObject} — результат операции, найденный объект или false если объект не найден
          * */
         selectObjectByCoordinate : function(x, y){
-            var regionObject = this.appInstance.regionManager.searchRegionByCoordinate(x, y);
+            var layerObject = this.appInstance.regionManager.searchRegionByCoordinate(x, y);
 
-            if (!regionObject)
+            if (!layerObject)
                 return false;
 
-            var index = this.selectedObjects.indexOf(regionObject);
+            var index = this.selectedObjects.indexOf(layerObject);
 
             if (index === -1){
-                this.selectedObjects.push(regionObject);
-                regionObject.activate();
+                this.selectedObjects.push(layerObject);
+                layerObject.activate();
                 this.appInstance.regionManager.redrawLayers();
             } else {
                 this.selectedObjects.splice(index, 1);
-                regionObject.deactivate();
+                layerObject.deactivate();
                 this.appInstance.regionManager.redrawLayers();
             }
-            return regionObject;
+            return layerObject;
         },
         /**
          * Удалить все объекты в коллекции избранных с холста
          * */
         deleteSelectedObjects : function(){
-            this.selectedObjects.forEach((function(regionObject){
-                this.appInstance.regionManager.removeRegion(regionObject);
+            this.selectedObjects.forEach((function(layerObject){
+                this.appInstance.regionManager.removeRegion(layerObject);
             }).bind(this));
             this.appInstance.regionManager.redrawLayers();
             this.selectedObjects = [];
@@ -57,8 +57,8 @@
          * Сбрасывает в исходное состояние
          * */
         reset : function(){
-            this.selectedObjects.forEach((function(regionObject){
-                regionObject.deactivate();
+            this.selectedObjects.forEach((function(layerObject){
+                layerObject.deactivate();
             }).bind(this));
 
             this.appInstance.regionManager.redrawLayers();

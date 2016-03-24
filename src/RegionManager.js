@@ -2,8 +2,8 @@
     APP.namespace('APP');
     var PixelsMap = APP.PixelsMap;
     var ObjectsOrder = APP.ObjectsOrder;
-    var BackgroundRaster = APP.objects.BackgroundRaster;
-    var RasterRegion = APP.RasterRegion;
+    var LayerBackground = APP.objects.LayerBackground;
+    var RasterLayer = APP.RasterLayer;
     /**
      * @class RegionManager
      * @param appInstance
@@ -20,10 +20,11 @@
 
         if (!options.objectsOrder){// если нет автогенерации
             /** @lends RegionManager.prototype */
-            this.addRegion(BackgroundRaster.createBackgroundRaster(this.canvas));
+            this.addRegion(LayerBackground.createLayerBackground(this.canvas));
         } else {
-            this.objectsOrder.getObjects().forEach((function(regionObject){
-                addRecordsAboutRegion(this.pixelsMap, regionObject);
+            this.objectsOrder.getObjects().forEach((function(layerObject){
+                this.addLayerView(layerObject);
+                addRecordsAboutRegion(this.pixelsMap, layerObject);
             }).bind(this));
             this.redrawLayers();
         }
@@ -41,45 +42,91 @@
         reset: function(){
             this.pixelsMap = new PixelsMap();
             this.objectsOrder = new ObjectsOrder();
-            this.addRegion(BackgroundRaster.createBackgroundRaster(this.canvas));
+            this.addRegion(LayerBackground.createLayerBackground(this.canvas));
         },
         /**
          * Метод для записи региона в карту пикселей
          * так как это новый регион, то индекс его становится выше всех, и его соответственно видно поверх всех
-         * @param {RegionObject} regionObject
+         * @param {LayerObject} layerObject
          * */
-        addRegion: function (regionObject){
-            addRecordsAboutRegion(this.pixelsMap, regionObject);
-            this.objectsOrder.addObject(regionObject);
+        addRegion: function (layerObject){
+            this.objectsOrder.addObject(layerObject);
+
+            this.addLayerView(layerObject);
+
+            addRecordsAboutRegion(this.pixelsMap, layerObject);
+            this.redrawLayers();
         },
+
+        addLayerView: function(layerObject){
+            Object.defineProperties(layerObject, {
+                'layerView':{
+                    value: null,
+                    enumerable: false,
+                    writable: true
+                }
+            });
+
+            if (layerObject instanceof APP.VectorLayer){
+                layerObject.layerView = new APP.views.VectorLayerView({
+                    height: layerObject.height,
+                    width: layerObject.width,
+                    coordinatesLine: layerObject.coordinatesLine,
+                    borderCoordinates: layerObject.borderCoordinates,
+                    color: layerObject.color,
+                    size: layerObject.size
+                });
+            }
+
+            if (layerObject instanceof APP.RasterLayer){
+                layerObject.layerView = APP.views.RasterLayerView.createByCoordinates({
+                    height: layerObject.height,
+                    width: layerObject.width,
+                    coordinates: layerObject.coordinates,
+                    borderCoordinates: layerObject.borderCoordinates,
+                    color: layerObject.color,
+                    dataUrl: layerObject.dataUrl
+                });
+            }
+
+            if (layerObject instanceof APP.objects.LayerBackground){
+                layerObject.layerView = APP.views.RasterLayerView.createByDataUrl({
+                    height: layerObject.height,
+                    width: layerObject.width,
+                    dataUrl: layerObject.dataUrl
+                });
+            }
+        },
+
         /**
          * Удаляет регион с холста
-         * @param {RegionObject} regionObject
+         * @param {LayerObject} layerObject
          * */
-        removeRegion : function(regionObject){
-            removeRecordsAboutRegion(this.pixelsMap, regionObject);
-            this.objectsOrder.removeObject(regionObject);
+        removeRegion : function(layerObject){
+            removeRecordsAboutRegion(this.pixelsMap, layerObject);
+            this.objectsOrder.removeObject(layerObject);
             this.redrawLayers();
         },
         /**
          * Запускается после изменения смещения, происходит перерегистрация координат на карте
-         * @param {RegionObject} regionObject
+         * @param {LayerObject} layerObject
          * */
-        applyOtherOffset : function(regionObject){
-            regionObject.saveRecordOffset();
+        applyOtherOffset : function(layerObject){
+            layerObject.offsetHistory.saveRecordOffset();
 
             // удалить в по координатам из предыдущей позиции
             // todo можно оптимизировать, переписав не всю карту а только часть
-            var record = regionObject.getPrevRecord();
-            removeRecordsAboutRegion(this.pixelsMap, regionObject, record[0], record[1]);
-            addRecordsAboutRegion(this.pixelsMap, regionObject);
+            var record = layerObject.offsetHistory.getPrevRecord();
+            removeRecordsAboutRegion(this.pixelsMap, layerObject, record[0], record[1]);
+            addRecordsAboutRegion(this.pixelsMap, layerObject);
         },
         /**
          * Этот способ просто перерисосывает все слои
          * */
         redrawLayers : function(){
             var i, len;
-            var region;
+            var layerObject;
+            var offset;
             var canvas = this.canvas;
 
             /* Очистить холст полностью */
@@ -87,37 +134,41 @@
 
             var objects = this.objectsOrder.getObjects();
             for (i = 0, len = objects.length; i < len; i++){
-                region = objects[i];
+                layerObject = objects[i];
 
-                region.drawAtCanvas(canvas);
+                offset = layerObject instanceof APP.objects.LayerBackground
+                    ? [0, 0]
+                    : layerObject.offsetHistory.currentOffset;
+
+                APP.views.CanvasView.drawLayer(canvas, layerObject.layerView.layer, offset);
             }
         },
         /**
          * Активизирует объект на холсте
-         * @param {RegionObject} regionObject
+         * @param {LayerObject} layerObject
          * */
-        drawActivateRegion : function(regionObject){
-            regionObject.activate();
+        drawActivateRegion : function(layerObject){
+            layerObject.activate();
             this.redrawLayers();
         },
         /**
          * Деактивизирует объект на холсте
-         * @param {RegionObject} regionObject
+         * @param {LayerObject} layerObject
          * */
-        drawDeactivateRegion : function(regionObject){
-            regionObject.deactivate();
+        drawDeactivateRegion : function(layerObject){
+            layerObject.deactivate();
             this.redrawLayers();
         },
         /**
          * Перебрасывает объект в самый верх
-         * @param {RegionObject} regionObject
+         * @param {LayerObject} layerObject
          * */
-        drawToTopRegion : function(regionObject){
-            var orderIsChanged = this.objectsOrder.moveToTop(regionObject);
+        drawToTopRegion : function(layerObject){
+            var orderIsChanged = this.objectsOrder.moveToTop(layerObject);
 
             if (orderIsChanged){
-                removeRecordsAboutRegion(this.pixelsMap, regionObject);
-                addRecordsAboutRegion(this.pixelsMap, regionObject);
+                removeRecordsAboutRegion(this.pixelsMap, layerObject);
+                addRecordsAboutRegion(this.pixelsMap, layerObject);
             }
             this.redrawLayers();
         },
@@ -125,7 +176,7 @@
          * Поиск объекта по заданной координате
          * @param {number} x — координата X
          * @param {number} y — координата Y
-         * @return {boolean|RegionObject} false - если объект не найден
+         * @return {boolean|LayerObject} false - если объект не найден
          * */
         searchRegionByCoordinate : function(x, y){
             // возьмем за правило, что если выделяемый пиксель имеет цвет фона холста ( прозрачный по дефолту ) то сбрасываем событие
@@ -164,7 +215,7 @@
 
             // пробуем найти регион волшебной палочкой (поиск по цвету)
             if (!region || isRawRegion){
-                region = RasterRegion.createObject(this.canvas, [x, y]);
+                region = APP.objects.SimpleRaster.createObject(this.canvas, [x, y]);
 
                 // после того как выдрали с сырого слоя специальные координаты,
                 // нужно стереть их из него!
@@ -196,7 +247,7 @@
                     }
                 };
 
-                putPixelsAtCanvas(raw.getLayout(), region.getRelationCoordinate(), CLEAN_COLOR);
+                putPixelsAtCanvas(raw.layerView.layer, region.getRelationCoordinate(), CLEAN_COLOR);
 
                 this.addRegion(region);
             }
@@ -209,12 +260,12 @@
             return region;
         }
     };
-    function removeRecordsAboutRegion(pixelsMap, regionObject, offset){
+    function removeRecordsAboutRegion(pixelsMap, layerObject, offset){
         // не забыть про смещение
 
-        offset = offset || regionObject.offset;
+        offset = offset || layerObject.offsetHistory.currentOffset;
 
-        var coordinates = regionObject.getRelationCoordinate(null, offset);
+        var coordinates = layerObject.getRelationCoordinate(null, offset);
         var coordinate;
         var coordinateX;
         var coordinateY;
@@ -225,13 +276,13 @@
                 coordinateX = coordinates[i][0];
                 coordinateY = coordinates[i][1];
 
-                pixelsMap.deleteRecord(coordinateX, coordinateY, regionObject);
+                pixelsMap.deleteRecord(coordinateX, coordinateY, layerObject);
             }
         }
     }
-    function addRecordsAboutRegion(pixelsMap, regionObject){
+    function addRecordsAboutRegion(pixelsMap, layerObject){
         // не забыть про смещение
-        var coordinates = regionObject.getRelationCoordinate();
+        var coordinates = (layerObject.getRelationCoordinate && layerObject.getRelationCoordinate()) || layerObject.coordinates;
         var coordinate;
         var coordinateX;
         var coordinateY;
@@ -241,7 +292,7 @@
                 coordinateX = coordinates[i][0];
                 coordinateY = coordinates[i][1];
 
-                pixelsMap.addRecord(coordinateX, coordinateY, regionObject);
+                pixelsMap.addRecord(coordinateX, coordinateY, layerObject);
             }
         }
     }

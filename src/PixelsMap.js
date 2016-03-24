@@ -20,15 +20,15 @@
          * Метод пополнения карты новыми записями
          * @param {number} x — Координата X
          * @param {number} y — Координата Y
-         * @param {RegionObject} regionObject
+         * @param {LayerObject} layerObject
          * */
-        addRecord : function(x, y, regionObject){
+        addRecord : function(x, y, layerObject){
             if (!this.map[x])
                 this.map[x] = {};
             if (!this.map[x][y]){
                 this.map[x][y] = []; // <- история индексов для пиксела
             }
-            this.map[x][y].push(regionObject);
+            this.map[x][y].push(layerObject);
         },
         /**
          * Метод поиска записи по карте пикселей с определенной координатой
@@ -48,11 +48,11 @@
          * Метод удаления записей из карты
          * @param {number} x — Координата X
          * @param {number} y — Координата Y
-         * @param {RegionObject} regionObject
+         * @param {LayerObject} layerObject
          * */
-        deleteRecord : function(x, y, regionObject){
+        deleteRecord : function(x, y, layerObject){
             if ( this.map[x] && this.map[x][y] ){
-                var index = this.map[x][y].indexOf(regionObject);
+                var index = this.map[x][y].indexOf(layerObject);
                 if (index !== -1){
                     var removedRecord = this.map[x][y].splice(index, 1)[0];
                 }

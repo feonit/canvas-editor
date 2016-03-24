@@ -38,36 +38,40 @@
 </head>
 <body>
 <canvas id="canvas" width="800" height="400"></canvas>
-<canvas id="canvasDouble" width="800" height="400"></canvas>
+<!--<canvas id="canvasDouble" width="800" height="400"></canvas>-->
 <div class="side-bar"></div>
 </body>
 
 <!-- APP dep -->
-<script type="text/javascript" src="src/defineSubclass.js"></script>
 <script type="text/javascript" src="src/namespace.js"></script>
 <script type="text/javascript" src="src/state.js"></script>
 
 <!-- CanvasEditor dep -->
+<script type="text/javascript" src="src/algorithms/SearchPixelsAlgorithm.js"></script>
 <script type="text/javascript" src="src/StorageManager.js"></script>
 <script type="text/javascript" src="src/MathFn.js"></script>
 <script type="text/javascript" src="src/Curve&Point.js"></script>
 <script type="text/javascript" src="src/ToolsDriver.js"></script>
 <script type="text/javascript" src="src/PixelsMap.js"></script>
 <script type="text/javascript" src="src/ObjectsOrder.js"></script>
-<script type="text/javascript" src="src/objects/RegionObject.js"></script>
-<script type="text/javascript" src="src/objects/RasterRegion.js"></script>
-<script type="text/javascript" src="src/objects/rasters/BackgroundRaster.js"></script>
+<script type="text/javascript" src="src/objects/LayerAbstract.js"></script>
+<script type="text/javascript" src="src/objects/LayerObject.js"></script>
+<script type="text/javascript" src="src/objects/OffsetHistory.js"></script>
+<script type="text/javascript" src="src/objects/DraggingAbstract.js"></script>
+<script type="text/javascript" src="src/objects/RasterLayer.js"></script>
+<script type="text/javascript" src="src/objects/rasters/SimpleRaster.js"></script>
+<script type="text/javascript" src="src/objects/LayerBackground.js"></script>
 <script type="text/javascript" src="src/RegionManager.js"></script>
 <script type="text/javascript" src="src/Mediator.js"></script>
 <script type="text/javascript" src="src/tools/DraggingTool.js"></script>
-<script type="text/javascript" src="src/objects/VectorRegion.js"></script>
+<script type="text/javascript" src="src/objects/VectorLayer.js"></script>
 <script type="text/javascript" src="src/objects/vectors/SimpleVector.js"></script>
 <script type="text/javascript" src="src/objects/vectors/ComplexVector.js"></script>
-<script type="text/javascript" src="src/objects/vectors/simple/ArrowVector.js"></script>
-<script type="text/javascript" src="src/objects/vectors/complex/CurveVector.js"></script>
-<script type="text/javascript" src="src/objects/vectors/simple/EllipseVector.js"></script>
-<script type="text/javascript" src="src/objects/vectors/simple/LineVector.js"></script>
-<script type="text/javascript" src="src/objects/vectors/simple/RectangleVector.js"></script>
+<script type="text/javascript" src="src/objects/vectors/simple/ArrowComplexVector.js"></script>
+<script type="text/javascript" src="src/objects/vectors/complex/CurveComplexVector.js"></script>
+<script type="text/javascript" src="src/objects/vectors/simple/EllipseComplexVector.js"></script>
+<script type="text/javascript" src="src/objects/vectors/simple/LineComplexVector.js"></script>
+<script type="text/javascript" src="src/objects/vectors/simple/RectangleComplexVector.js"></script>
 <script type="text/javascript" src="src/tools/DrawingTool.js"></script>
 <script type="text/javascript" src="src/tools/EraserTool.js"></script>
 <script type="text/javascript" src="src/tools/SelectTool.js"></script>
@@ -76,6 +80,12 @@
 <script type="text/javascript" src="src/tools-controllers/DrawingToolController.js"></script>
 <script type="text/javascript" src="src/tools-controllers/EraserToolController.js"></script>
 <script type="text/javascript" src="src/tools-controllers/SelectToolController.js"></script>
+
+<script type="text/javascript" src="src/views/CanvasView.js"></script>
+<script type="text/javascript" src="src/views/LayerView.js"></script>
+<script type="text/javascript" src="src/views/VectorLayerView.js"></script>
+<script type="text/javascript" src="src/views/RasterLayerView.js"></script>
+
 <script type="text/javascript" src="src/CanvasEditor.js"></script>
 
 <script type="text/javascript" src="src/utils-controllers/SaveLocalUtilController.js"></script>

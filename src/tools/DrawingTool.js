@@ -1,11 +1,11 @@
 !function(APP, Math, document, Object){
     APP.namespace('APP.tools');
     var Point = APP.Point;
-    var CurveVector = APP.objects.CurveVector;
-    var RectangleVector = APP.objects.RectangleVector;
-    var EllipseVector = APP.objects.EllipseVector;
-    var LineVector = APP.objects.LineVector;
-    var ArrowVector = APP.objects.ArrowVector;
+    var CurveComplexVector = APP.objects.CurveComplexVector;
+    var RectangleComplexVector = APP.objects.RectangleComplexVector;
+    var EllipseComplexVector = APP.objects.EllipseComplexVector;
+    var LineComplexVector = APP.objects.LineComplexVector;
+    var ArrowComplexVector = APP.objects.ArrowComplexVector;
 
     APP.tools.DrawingTool = function (appInstance, canvas){
 
@@ -140,14 +140,15 @@
 
             // часть 2 оптимизация отрисовки кривой линии без создания объектов
             if (this.type == this.CURVE_TYPE){
-                var object = new CurveVector({
+                var object = new CurveComplexVector({
                     points: this._bufferPoints,
                     size: Math.round(this.size),
                     color: this.color,
                     width: this.canvas.width,
                     height: this.canvas.height
                 });
-                object.renderCircles(this.canvas);
+                APP.views.VectorLayerView.renderCircles(this.canvas, object.coordinatesLine, object.color, Math.floor(object.size/2));
+
                 this.object = object;
             }
 
@@ -187,17 +188,11 @@
                     // это хак, для ускорения отрисовки
                     this.object = null;
                     var coordinates = APP.MathFn.drawBezierCurve(new APP.Curve(this._bufferPoints));
-                    APP.VectorRegion.prototype.renderCircles.call({
-                        getCoordinatesLine: function(){
-                            return coordinates;
-                        },
-                        size: this.size,
-                        color: this.color
-                    }, this._bufferCanvas);
+                    APP.views.VectorLayerView.renderCircles(this._bufferCanvas, coordinates, this.color, Math.floor(this.size/2));
                     break;
 
                 case this.RECTANGLE_TYPE:
-                    this.object = new RectangleVector({
+                    this.object = new RectangleComplexVector({
                         x0:x0,
                         y0:y0,
                         x1:x1,
@@ -210,7 +205,7 @@
                     break;
 
                 case this.ELLIPSE_TYPE:
-                    this.object = new EllipseVector({
+                    this.object = new EllipseComplexVector({
                         x0:x0,
                         y0:y0,
                         x1:x1,
@@ -223,7 +218,7 @@
                     break;
 
                 case this.LINE_TYPE:
-                    this.object = new LineVector({
+                    this.object = new LineComplexVector({
                         x0:x0,
                         y0:y0,
                         x1:x1,
@@ -239,7 +234,7 @@
                     if ( Math.abs(x1-x0) < 2 && Math.abs(x1-x0) < 2 )
                         return;
 
-                    this.object = new ArrowVector({
+                    this.object = new ArrowComplexVector({
                         x0:x0,
                         y0:y0,
                         x1:x1,
@@ -253,8 +248,8 @@
             }
 
             if (this.object){
-                this.object.renderCircles(this.canvas);
-                this.object.renderCircles(this._bufferCanvas);
+                APP.views.VectorLayerView.renderCircles(this.canvas, this.object.coordinatesLine, this.object.color, Math.floor(this.object.size/2));
+                APP.views.VectorLayerView.renderCircles(this._bufferCanvas, this.object.coordinatesLine, this.object.color, Math.floor(this.object.size/2));
             }
         },
 

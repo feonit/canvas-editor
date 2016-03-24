@@ -1,69 +1,39 @@
 !function(APP){
-    APP.namespace('APP');
-    var RegionObject = APP.RegionObject;
+    APP.namespace('APP.views');
     var MathFn = APP.MathFn;
 
-    APP.VectorRegion = function (attributes){
-        RegionObject.apply(this, arguments);
-        this.size = attributes.size;
+    /**
+     * Отвечает за отображение информации
+     * */
+    APP.views.VectorLayerView = function(options){
+        options = options || {};
+        APP.views.LayerView.apply(this, arguments);
 
-        Object.defineProperty(this, 'coordinatesLine', {
-            value: null,
-            enumerable: false,
-            writable: true
-        });
+        this.coordinatesLine = options.coordinatesLine;
+        this.borderCoordinates = options.borderCoordinates;
+        this.size = options.size;
+
+        APP.views.VectorLayerView.renderCircles(this.layer, this.coordinatesLine, this.color, Math.floor(this.size/2));
     };
 
-    APP.VectorRegion.prototype = Object.create(RegionObject.prototype);
-    APP.VectorRegion.prototype.constructor = APP.VectorRegion;
+    APP.views.VectorLayerView.prototype = Object.create(APP.views.LayerView.prototype);
+    APP.views.VectorLayerView.prototype.constructor = APP.VectorLayerView;
 
-    APP.VectorRegion.prototype.getCoordinatesLine = function(){
-        alert('must be implemented')
-    };
-
-    APP.VectorRegion.prototype.getCoordinates = function(){
-        var coordinatesLine = this.getCoordinatesLine();
-        if (!coordinatesLine.length){
-            throw 'нет сырых точек';
-        }
-
-        if (!this.coordinates){
-            var beginWithX = this.coordinatesLine[0][0];
-            var beginWithY = this.coordinatesLine[0][1];
-            var searchedData = RegionObject._searchPixels(beginWithX, beginWithY, this.getLayout());
-            this.coordinates = searchedData[0];
-            this.borderCoordinates = searchedData[1];
-        }
-
-        return this.coordinates;
-    };
-
-    APP.VectorRegion.prototype.getLayout = function(){
-        if (!this._layout){
-            var layoutCanvas = document.createElement('canvas');
-            layoutCanvas.height = this.height;
-            layoutCanvas.width = this.width;
-
-            this.renderCircles(layoutCanvas, this.getCoordinatesLine(), this.color);
-            this._layout = layoutCanvas;
-        }
-
-        return this._layout;
-    };
     /**
      * Функция отрисовывает окружности по заданным координатам с заданным цветом
+     * @param {HTMLCanvasElement} canvas
+     * @param {number[][]} coordinates
+     * @param {number[]} color
+     * @param {number} radius
      * @public
      * */
-    APP.VectorRegion.prototype.renderCircles = function(canvas){
-         var coordinates = this.getCoordinatesLine();
-         var color = this.color;
+    APP.views.VectorLayerView.renderCircles = function(canvas, coordinates, color, radius){
         var ctx = canvas.getContext('2d');
         ctx.mozImageSmoothingEnabled = false;
         ctx.webkitImageSmoothingEnabled = false;
         ctx.msImageSmoothingEnabled = false;
         ctx.imageSmoothingEnabled = false;
 
-        var radius = Math.floor(this.size/2);
         coordinates.forEach((function(coor){
             renderCircle(ctx, coor[0], coor[1], radius, color);
         }).bind(this));

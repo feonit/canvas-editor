@@ -1,4 +1,4 @@
-//regionObject = new RegionObject({
+//layerObject = new LayerObject({
 //    coordinates: [
 //        [50,50], [50,51], [50,52], [50,53],[50,54],[50,55],
 //        [51,50], [51,51], [51,52], [51,53],[51,54],[51,55],
@@ -10,12 +10,12 @@
 //    etalonPointImageData: [255, 0, 0, 0]
 //});
 //
-//regionObject.makeLayoutFromCanvas(canvas);
+//layerObject.makeLayoutFromCanvas(canvas);
 //
 //ctx.fillStyle = 'red';
 //ctx.fillRect(50,50,6,6);
 //
-//pxRegion.addRegion(regionObject);
+//pxRegion.addRegion(layerObject);
 //
 //ctx.getImageData(50,50,1,1).data[0] = 255;
 

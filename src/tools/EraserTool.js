@@ -3,7 +3,7 @@
     var MathFn = APP.MathFn;
     var Point = APP.Point;
     var Curve = APP.Curve;
-    var RegionObject = APP.RegionObject;
+    var LayerObject = APP.LayerObject;
     /**
      * Ластик, позволяет стирать область холста, относительно переданной координаты
      * @class EraserTool Ластик
@@ -107,7 +107,7 @@
             var coordinates = MathFn.getCircleCoordinates(radius);
 
             //todo
-            coordinates = RegionObject.prototype.getRelationCoordinate(coordinates, x0, y0);
+            coordinates = LayerObject.prototype.getRelationCoordinate(coordinates, x0, y0);
             return coordinates;
         }
     };

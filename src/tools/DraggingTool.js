@@ -26,9 +26,9 @@
 
         /**
          * Текущий переносимый регион
-         * @type {RegionObject}
+         * @type {LayerObject}
          * */
-        this.selectedRegionObject = null;
+        this.selectedLayerObject = null;
 
         /**
          * Определяет начало и конец переноса
@@ -47,23 +47,23 @@
         constructor: APP.tools.DraggingTool,
         draggingStart : function(x, y){
             // если не выделен, выделяем
-            if (!this.selectedRegionObject){
+            if (!this.selectedLayerObject){
 
                 // пробуем найти объект
-                var regionObject = this.appInstance.regionManager.searchRegionByCoordinate(x, y);
+                var layerObject = this.appInstance.regionManager.searchRegionByCoordinate(x, y);
 
                 // все таки там пусто
-                if (!regionObject)
+                if (!layerObject)
                     return;
 
-                this.selectedRegionObject = regionObject;
+                this.selectedLayerObject = layerObject;
             }
 
             // 1 активизируем
-            this.appInstance.regionManager.drawActivateRegion(this.selectedRegionObject);
+            this.appInstance.regionManager.drawActivateRegion(this.selectedLayerObject);
 
             // 2 поднять объект
-            this.appInstance.regionManager.drawToTopRegion(this.selectedRegionObject);
+            this.appInstance.regionManager.drawToTopRegion(this.selectedLayerObject);
 
             // начало процесса перемещения
             this.processing = true;
@@ -73,14 +73,14 @@
             this.coordinateStart = [x, y];
 
             // запоминаем исходное смещение объекта
-            this.firstOffset[0] = this.selectedRegionObject.offset[0];
-            this.firstOffset[1] = this.selectedRegionObject.offset[1];
+            this.firstOffset[0] = this.selectedLayerObject.offsetHistory.currentOffset[0];
+            this.firstOffset[1] = this.selectedLayerObject.offsetHistory.currentOffset[1];
         },
 
         draggingContinue : function(x, y){
             if (this.processing){
-                this.selectedRegionObject.offset[0] = this.firstOffset[0] + x - this.coordinateStart[0];
-                this.selectedRegionObject.offset[1] = this.firstOffset[1] + y - this.coordinateStart[1];
+                this.selectedLayerObject.offsetHistory.currentOffset[0] = this.firstOffset[0] + x - this.coordinateStart[0];
+                this.selectedLayerObject.offsetHistory.currentOffset[1] = this.firstOffset[1] + y - this.coordinateStart[1];
                 this.appInstance.regionManager.redrawLayers();
                 this.moved = true;
             }
@@ -90,31 +90,31 @@
             if (this.processing){
 
                 // 1 деактивизируем
-                this.appInstance.regionManager.drawDeactivateRegion(this.selectedRegionObject);
+                this.appInstance.regionManager.drawDeactivateRegion(this.selectedLayerObject);
 
                 // 2
                 this.appInstance.regionManager.redrawLayers();
 
                 // 3 save final offset
                 if (this.moved){
-                    this.appInstance.regionManager.applyOtherOffset(this.selectedRegionObject);
+                    this.appInstance.regionManager.applyOtherOffset(this.selectedLayerObject);
                 }
 
                 // заканчиваем процесс
                 this.processing = false;
 
                 // сброс данных
-                this.selectedRegionObject = null;
+                this.selectedLayerObject = null;
             }
         },
 
         removeSelection : function(){
             var ctx = this.canvas.getContext('2d');
             // если не пусто, значит какой то объект выделен
-            if (this.selectedRegionObject){
+            if (this.selectedLayerObject){
                 // убираем выделение путем восстанавления первоначального состояния
                 ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-                this.selectedRegionObject = null;
+                this.selectedLayerObject = null;
             }
         }
     }

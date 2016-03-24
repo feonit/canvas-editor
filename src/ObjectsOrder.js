@@ -1,6 +1,6 @@
 !function(APP) {
     APP.namespace('APP');
-    var RegionObject = APP.RegionObject;
+    var LayerObject = APP.LayerObject;
     /**
      * Класс представляет собой коллекцию объектов в определенной последовательности и 
      * предоставляет методы по работе с ней
@@ -33,51 +33,52 @@
         });
 
         var obj;
-        if (options.arrows){
-            options.arrows.forEach(function(options){
-                obj = new APP.objects.ArrowVector(options);
-                that.arrows.push(obj);
+        //todo background первый! так как индекс 0
+        if (options.background){
+            options.background.forEach(function(options){
+                obj = new APP.objects.LayerBackground(options);
+                that.background.push(obj);
                 that._objects[obj.id] = obj;
             });
         }
-        if (options.background){
-            options.background.forEach(function(options){
-                obj = new APP.objects.BackgroundRaster(options);
-                that.background.push(obj);
+        if (options.arrows){
+            options.arrows.forEach(function(options){
+                obj = new APP.objects.ArrowComplexVector(options);
+                that.arrows.push(obj);
                 that._objects[obj.id] = obj;
             });
         }
         if (options.curves){
             options.curves.forEach(function(options){
-                obj = new APP.objects.CurveVector(options);
+                obj = new APP.objects.CurveComplexVector(options);
                 that.curves.push(obj);
                 that._objects[obj.id] = obj;
             });
         }
         if (options.ellipses){
             options.ellipses.forEach(function(options){
-                obj = new APP.objects.EllipseVector(options);
+                obj = new APP.objects.EllipseComplexVector(options);
                 that.ellipses.push(obj);
                 that._objects[obj.id] = obj;
             });
         }
         if (options.lines){
             options.lines.forEach(function(options){
-                obj = new APP.objects.LineVector(options);
+                obj = new APP.objects.LineComplexVector(options);
                 that.lines.push(obj);
                 that._objects[obj.id] = obj;
             });
         }
         if (options.rects){
             options.rects.forEach(function(options){
-                obj = new APP.objects.RectangleVector(options);
+                obj = new APP.objects.RectangleComplexVector(options);
                 that.rects.push(obj);
                 that._objects[obj.id] = obj;
             });
         }
         if (options.rasters){
             options.rasters.forEach(function(options){
-                obj = new APP.RasterRegion(options);
+                obj = new APP.RasterLayer(options);
                 that.rasters.push(obj);
                 that._objects[obj.id] = obj;
             });
@@ -89,30 +90,30 @@
         constructor: APP.ObjectsOrder,
         /**
          * Добавить объект в конец
-         * @param {RegionObject} obj — объект
+         * @param {LayerObject} obj — объект
          * */
         addObject : function(obj){
 
             switch (obj.constructor){
-                case APP.objects.ArrowVector:
+                case APP.objects.ArrowComplexVector:
                     this.arrows.push(obj); break;
 
-                case APP.objects.BackgroundRaster:
+                case APP.objects.LayerBackground:
                     this.background.push(obj); break;
 
-                case APP.objects.CurveVector:
+                case APP.objects.CurveComplexVector:
                     this.curves.push(obj); break;
 
-                case APP.objects.EllipseVector:
+                case APP.objects.EllipseComplexVector:
                     this.ellipses.push(obj); break;
 
-                case APP.objects.LineVector:
+                case APP.objects.LineComplexVector:
                     this.lines.push(obj); break;
 
-                case APP.objects.RectangleVector:
+                case APP.objects.RectangleComplexVector:
                     this.rects.push(obj); break;
 
-                case APP.RasterRegion:
+                case APP.RasterLayer:
                     this.rasters.push(obj); break;
 
                 default:
@@ -125,38 +126,38 @@
         },
         /**
          * Найти и удалить объект из списка
-         * @param {RegionObject} obj — объект
+         * @param {LayerObject} obj — объект
          * @return {boolean} false, если объект не найден
          * */
         removeObject : function(obj){
             var index = this.order.indexOf(obj.id);
             var subIndex;
             switch (obj.constructor){
-                case APP.objects.ArrowVector:
+                case APP.objects.ArrowComplexVector:
                     subIndex = this.arrows.indexOf(obj);
                     subIndex > 0 && this.arrows.splice(subIndex, 1); break;
 
-                case APP.objects.BackgroundRaster:
+                case APP.objects.LayerBackground:
                     subIndex = this.background.indexOf(obj);
                     subIndex > 0 && this.background.splice(subIndex, 1); break;
 
-                case APP.objects.CurveVector:
+                case APP.objects.CurveComplexVector:
                     subIndex = this.curves.indexOf(obj);
                     subIndex > 0 && this.curves.splice(subIndex, 1); break;
 
-                case APP.objects.EllipseVector:
+                case APP.objects.EllipseComplexVector:
                     subIndex = this.ellipses.indexOf(obj);
                     subIndex > 0 && this.ellipses.splice(subIndex, 1); break;
 
-                case APP.objects.LineVector:
+                case APP.objects.LineComplexVector:
                     subIndex = this.lines.indexOf(obj);
                     subIndex > 0 && this.lines.splice(subIndex, 1); break;
 
-                case APP.objects.RectangleVector:
+                case APP.objects.RectangleComplexVector:
                     subIndex = this.rects.indexOf(obj);
                     subIndex > 0 && this.rects.splice(subIndex, 1); break;
 
-                case APP.RasterRegion:
+                case APP.RasterLayer:
                     subIndex = this.rasters.indexOf(obj);
                     subIndex > 0 && this.rasters.splice(subIndex, 1); break;
 
@@ -171,14 +172,14 @@
         /**
          * Получить по индексу
          * @param {number} index — индекс обекта
-         * @return {RegionObject}
+         * @return {LayerObject}
          * */
         getObjectByIndex : function(index){
             return this._objects[this.order[index]];
         },
         /**
          * Получить индекс определенного объекта
-         * @param {RegionObject} obj — объект
+         * @param {LayerObject} obj — объект
          * @return {number} индекс объекта
          * */
         getIndex : function(obj){
@@ -187,7 +188,7 @@
         },
         /**
          * Переместить объект в конец списка
-         * @param {RegionObject} obj — объект
+         * @param {LayerObject} obj — объект
          * @return {boolean} true, если объект успешно перемещен
          * */
         moveToTop : function(obj){
@@ -211,7 +212,7 @@
         },
         /**
          * Получить коллекцию обхектов
-         * @return {RegionObject[]}
+         * @return {LayerObject[]}
          **/
         getObjects : function(){
             var that = this;
