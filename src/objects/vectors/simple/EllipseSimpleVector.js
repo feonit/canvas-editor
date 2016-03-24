@@ -1,7 +1,7 @@
 !function(APP){
     APP.namespace('APP.objects');
 
-    APP.objects.EllipseComplexVector = function (attributes){
+    APP.objects.EllipseSimpleVector = function (attributes){
         APP.objects.SimpleVector.apply(this, arguments);
 
         function plotEllipseRect(x0, y0, x1, y1){
@@ -44,7 +44,7 @@
 
     };
 
-    APP.objects.EllipseComplexVector.prototype = Object.create(APP.objects.SimpleVector.prototype);
-    APP.objects.EllipseComplexVector.prototype.constructor = APP.objects.EllipseComplexVector;
+    APP.objects.EllipseSimpleVector.prototype = Object.create(APP.objects.SimpleVector.prototype);
+    APP.objects.EllipseSimpleVector.prototype.constructor = APP.objects.EllipseSimpleVector;
 
 }(APP);

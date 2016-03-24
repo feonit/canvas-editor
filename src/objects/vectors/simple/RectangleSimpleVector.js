@@ -1,7 +1,7 @@
 !function(APP){
     APP.namespace('APP.objects');
 
-    APP.objects.RectangleComplexVector = function (attributes){
+    APP.objects.RectangleSimpleVector = function (attributes){
         APP.objects.SimpleVector.apply(this, arguments);
 
         function rectangle(x0, y0, x1, y1){
@@ -30,7 +30,7 @@
 
     };
 
-    APP.objects.RectangleComplexVector.prototype = Object.create(APP.objects.SimpleVector.prototype);
-    APP.objects.RectangleComplexVector.prototype.constructor = APP.objects.RectangleComplexVector;
+    APP.objects.RectangleSimpleVector.prototype = Object.create(APP.objects.SimpleVector.prototype);
+    APP.objects.RectangleSimpleVector.prototype.constructor = APP.objects.RectangleSimpleVector;
 
 }(APP);

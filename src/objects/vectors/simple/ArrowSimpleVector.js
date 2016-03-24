@@ -1,7 +1,7 @@
 !function(APP){
     APP.namespace('APP.objects');
 
-    APP.objects.ArrowComplexVector = function (attributes){
+    APP.objects.ArrowSimpleVector = function (attributes){
         APP.objects.SimpleVector.apply(this, arguments);
 
         // Повернуть точку относительно другой на заданный радиан
@@ -62,6 +62,6 @@
 
     };
 
-    APP.objects.ArrowComplexVector.prototype = Object.create(APP.objects.SimpleVector.prototype);
-    APP.objects.ArrowComplexVector.prototype.constructor = APP.objects.ArrowComplexVector;
+    APP.objects.ArrowSimpleVector.prototype = Object.create(APP.objects.SimpleVector.prototype);
+    APP.objects.ArrowSimpleVector.prototype.constructor = APP.objects.ArrowSimpleVector;
 }(APP);

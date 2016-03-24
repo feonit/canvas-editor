@@ -2,10 +2,10 @@
     APP.namespace('APP.tools');
     var Point = APP.Point;
     var CurveComplexVector = APP.objects.CurveComplexVector;
-    var RectangleComplexVector = APP.objects.RectangleComplexVector;
-    var EllipseComplexVector = APP.objects.EllipseComplexVector;
-    var LineComplexVector = APP.objects.LineComplexVector;
-    var ArrowComplexVector = APP.objects.ArrowComplexVector;
+    var RectangleSimpleVector = APP.objects.RectangleSimpleVector;
+    var EllipseSimpleVector = APP.objects.EllipseSimpleVector;
+    var LineSimpleVector = APP.objects.LineSimpleVector;
+    var ArrowSimpleVector = APP.objects.ArrowSimpleVector;
 
     APP.tools.DrawingTool = function (appInstance, canvas){
 
@@ -192,7 +192,7 @@
                     break;
 
                 case this.RECTANGLE_TYPE:
-                    this.object = new RectangleComplexVector({
+                    this.object = new RectangleSimpleVector({
                         x0:x0,
                         y0:y0,
                         x1:x1,
@@ -205,7 +205,7 @@
                     break;
 
                 case this.ELLIPSE_TYPE:
-                    this.object = new EllipseComplexVector({
+                    this.object = new EllipseSimpleVector({
                         x0:x0,
                         y0:y0,
                         x1:x1,
@@ -218,7 +218,7 @@
                     break;
 
                 case this.LINE_TYPE:
-                    this.object = new LineComplexVector({
+                    this.object = new LineSimpleVector({
                         x0:x0,
                         y0:y0,
                         x1:x1,
@@ -234,7 +234,7 @@
                     if ( Math.abs(x1-x0) < 2 && Math.abs(x1-x0) < 2 )
                         return;
 
-                    this.object = new ArrowComplexVector({
+                    this.object = new ArrowSimpleVector({
                         x0:x0,
                         y0:y0,
                         x1:x1,

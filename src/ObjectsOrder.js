@@ -43,7 +43,7 @@
         }
         if (options.arrows){
             options.arrows.forEach(function(options){
-                obj = new APP.objects.ArrowComplexVector(options);
+                obj = new APP.objects.ArrowSimpleVector(options);
                 that.arrows.push(obj);
                 that._objects[obj.id] = obj;
             });
@@ -57,21 +57,21 @@
         }
         if (options.ellipses){
             options.ellipses.forEach(function(options){
-                obj = new APP.objects.EllipseComplexVector(options);
+                obj = new APP.objects.EllipseSimpleVector(options);
                 that.ellipses.push(obj);
                 that._objects[obj.id] = obj;
             });
         }
         if (options.lines){
             options.lines.forEach(function(options){
-                obj = new APP.objects.LineComplexVector(options);
+                obj = new APP.objects.LineSimpleVector(options);
                 that.lines.push(obj);
                 that._objects[obj.id] = obj;
             });
         }
         if (options.rects){
             options.rects.forEach(function(options){
-                obj = new APP.objects.RectangleComplexVector(options);
+                obj = new APP.objects.RectangleSimpleVector(options);
                 that.rects.push(obj);
                 that._objects[obj.id] = obj;
             });
@@ -95,7 +95,7 @@
         addObject : function(obj){
 
             switch (obj.constructor){
-                case APP.objects.ArrowComplexVector:
+                case APP.objects.ArrowSimpleVector:
                     this.arrows.push(obj); break;
 
                 case APP.objects.LayerBackground:
@@ -104,13 +104,13 @@
                 case APP.objects.CurveComplexVector:
                     this.curves.push(obj); break;
 
-                case APP.objects.EllipseComplexVector:
+                case APP.objects.EllipseSimpleVector:
                     this.ellipses.push(obj); break;
 
-                case APP.objects.LineComplexVector:
+                case APP.objects.LineSimpleVector:
                     this.lines.push(obj); break;
 
-                case APP.objects.RectangleComplexVector:
+                case APP.objects.RectangleSimpleVector:
                     this.rects.push(obj); break;
 
                 case APP.RasterLayer:
@@ -133,7 +133,7 @@
             var index = this.order.indexOf(obj.id);
             var subIndex;
             switch (obj.constructor){
-                case APP.objects.ArrowComplexVector:
+                case APP.objects.ArrowSimpleVector:
                     subIndex = this.arrows.indexOf(obj);
                     subIndex > 0 && this.arrows.splice(subIndex, 1); break;
 
@@ -145,15 +145,15 @@
                     subIndex = this.curves.indexOf(obj);
                     subIndex > 0 && this.curves.splice(subIndex, 1); break;
 
-                case APP.objects.EllipseComplexVector:
+                case APP.objects.EllipseSimpleVector:
                     subIndex = this.ellipses.indexOf(obj);
                     subIndex > 0 && this.ellipses.splice(subIndex, 1); break;
 
-                case APP.objects.LineComplexVector:
+                case APP.objects.LineSimpleVector:
                     subIndex = this.lines.indexOf(obj);
                     subIndex > 0 && this.lines.splice(subIndex, 1); break;
 
-                case APP.objects.RectangleComplexVector:
+                case APP.objects.RectangleSimpleVector:
                     subIndex = this.rects.indexOf(obj);
                     subIndex > 0 && this.rects.splice(subIndex, 1); break;
 
