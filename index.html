@@ -37,16 +37,16 @@
     </style>
 </head>
 <body>
-<canvas id="canvas" width="800" height="400"></canvas>
-<!--<canvas id="canvasDouble" width="800" height="400"></canvas>-->
+
+<canvas id="canvas" width="800" height="400">
+    Fallback content.Telling the user to use a different browser that supports canvas.
+</canvas>
 <div class="side-bar"></div>
 </body>
 
-<!-- APP dep -->
+<!-- CanvasEditor library -->
 <script type="text/javascript" src="src/namespace.js"></script>
 <script type="text/javascript" src="src/state.js"></script>
-
-<!-- CanvasEditor dep -->
 <script type="text/javascript" src="src/algorithms/SearchPixelsAlgorithm.js"></script>
 <script type="text/javascript" src="src/StorageManager.js"></script>
 <script type="text/javascript" src="src/MathFn.js"></script>
@@ -87,22 +87,19 @@
 <script type="text/javascript" src="src/views/RasterLayerView.js"></script>
 
 <script type="text/javascript" src="src/CanvasEditor.js"></script>
-
 <script type="text/javascript" src="src/utils-controllers/SaveLocalUtilController.js"></script>
 <script type="text/javascript" src="src/utils-controllers/SaveServerUtilController.js"></script>
 <script type="text/javascript" src="src/utils-controllers/TransparentUtilController.js"></script>
 <script type="text/javascript" src="src/utils-controllers/RandomOptionsController.js"></script>
 
+<!-- example views -->
 <script type="text/javascript" src="example/ui-components/RadioBoxComponent.js"></script>
 <script type="text/javascript" src="example/ui-components/CheckBoxComponent.js"></script>
 <script type="text/javascript" src="example/ui-components/InputColorComponent.js"></script>
 <script type="text/javascript" src="example/ui-components/InputSliderComponent.js"></script>
-
 <script type="text/javascript" src="example/views/OptionsView.js"></script>
 <script type="text/javascript" src="example/views/ToolBarView.js"></script>
 <script type="text/javascript" src="example/views/UtilsBarView.js"></script>
-
-<img id="img" src="public/background-image.jpg" hidden>
 
 <script>
 

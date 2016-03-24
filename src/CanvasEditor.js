@@ -36,7 +36,11 @@
      * @param {string} options.figureType
      * */
     APP.CanvasEditor = function (canvas, options){
-        if ( !canvas instanceof HTMLCanvasElement )
+        if (!canvas)
+            throw 'Lost first parameter';
+        if (!(HTMLCanvasElement && canvas.getContext))
+            throw 'Not supported canvas element';
+        if (!canvas instanceof HTMLCanvasElement )
             throw 'Lost canvas element';
 
         Object.defineProperty(this, 'canvas', {value: canvas});
