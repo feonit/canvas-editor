@@ -4,22 +4,22 @@
 
     /**
      * Отвечает за отображение информации
-     * @class VectorLayerView
+     * @class VectorLayerAbstractView
      * @memberof APP.views
      * */
-    APP.views.VectorLayerView = function(options){
-        options = options || {};
+    APP.views.VectorLayerAbstractView = function(options){
         APP.views.LayerView.apply(this, arguments);
+        options = options || {};
 
         this.coordinatesLine = options.coordinatesLine;
         this.borderCoordinates = options.borderCoordinates;
         this.size = options.size;
 
-        APP.views.VectorLayerView.renderCircles(this.layer, this.coordinatesLine, this.color, Math.floor(this.size/2));
+        APP.views.VectorLayerAbstractView.renderCircles(this.layer, this.coordinatesLine, this.color, Math.floor(this.size/2));
     };
 
-    APP.views.VectorLayerView.prototype = Object.create(APP.views.LayerView.prototype);
-    APP.views.VectorLayerView.prototype.constructor = APP.VectorLayerView;
+    APP.views.VectorLayerAbstractView.prototype = Object.create(APP.views.LayerView.prototype);
+    APP.views.VectorLayerAbstractView.prototype.constructor = APP.VectorLayerAbstractView;
 
     /**
      * Функция отрисовывает окружности по заданным координатам с заданным цветом
@@ -29,7 +29,7 @@
      * @param {number} radius
      * @public
      * */
-    APP.views.VectorLayerView.renderCircles = function(canvas, coordinates, color, radius){
+    APP.views.VectorLayerAbstractView.renderCircles = function(canvas, coordinates, color, radius){
         var ctx = canvas.getContext('2d');
         ctx.mozImageSmoothingEnabled = false;
         ctx.webkitImageSmoothingEnabled = false;

@@ -4,17 +4,16 @@
 
     /**
      * Прямая
-     * @class LineSimpleVector
+     * @class LineSimpleVectorAbstract
      * @memberof APP.objects
      * */
-    APP.objects.LineSimpleVector = function (attributes){
-        APP.objects.SimpleVector.apply(this, arguments);
+    APP.objects.LineSimpleVectorAbstract = function (attributes){
+        APP.objects.SimpleVectorAbstract.apply(this, arguments);
         this.coordinatesLine = MathFn.bline(this.x0, this.y0, this.x1, this.y1);
         this.calcCoordinates();
-
     };
 
-    APP.objects.LineSimpleVector.prototype = Object.create(APP.objects.SimpleVector.prototype);
-    APP.objects.LineSimpleVector.prototype.constructor = APP.objects.LineSimpleVector;
+    APP.objects.LineSimpleVectorAbstract.prototype = Object.create(APP.objects.SimpleVectorAbstract.prototype);
+    APP.objects.LineSimpleVectorAbstract.prototype.constructor = APP.objects.LineSimpleVectorAbstract;
 
 }(APP);

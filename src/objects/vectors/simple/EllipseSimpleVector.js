@@ -3,11 +3,11 @@
 
     /**
      * Овал
-     * @class EllipseSimpleVector
+     * @class EllipseSimpleVectorAbstract
      * @memberof APP.objects
      * */
-    APP.objects.EllipseSimpleVector = function (attributes){
-        APP.objects.SimpleVector.apply(this, arguments);
+    APP.objects.EllipseSimpleVectorAbstract = function (attributes){
+        APP.objects.SimpleVectorAbstract.apply(this, arguments);
 
         function plotEllipseRect(x0, y0, x1, y1){
             var px = [];
@@ -49,7 +49,7 @@
 
     };
 
-    APP.objects.EllipseSimpleVector.prototype = Object.create(APP.objects.SimpleVector.prototype);
-    APP.objects.EllipseSimpleVector.prototype.constructor = APP.objects.EllipseSimpleVector;
+    APP.objects.EllipseSimpleVectorAbstract.prototype = Object.create(APP.objects.SimpleVectorAbstract.prototype);
+    APP.objects.EllipseSimpleVectorAbstract.prototype.constructor = APP.objects.EllipseSimpleVectorAbstract;
 
 }(APP);

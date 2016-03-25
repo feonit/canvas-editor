@@ -3,11 +3,11 @@
 
     /**
      * Класс определяет две контрольные точки
-     * @class SimpleVector
+     * @class SimpleVectorAbstract
      * @memberof APP.objects
      * */
-    APP.objects.SimpleVector = function(attributes){
-        APP.VectorLayer.apply(this, arguments);
+    APP.objects.SimpleVectorAbstract = function(attributes){
+        APP.VectorLayerAbstract.apply(this, arguments);
         /** type {number} */
         this.x0 = attributes.x0;
         /** type {number} */
@@ -18,7 +18,7 @@
         this.y1 = attributes.y1;
     };
 
-    APP.objects.SimpleVector.prototype = Object.create(APP.VectorLayer.prototype);
-    APP.objects.SimpleVector.prototype.constructor = APP.objects.SimpleVector;
+    APP.objects.SimpleVectorAbstract.prototype = Object.create(APP.VectorLayerAbstract.prototype);
+    APP.objects.SimpleVectorAbstract.prototype.constructor = APP.objects.SimpleVectorAbstract;
 
 }(APP);

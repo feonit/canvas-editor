@@ -3,14 +3,6 @@
     var ToolsDriver = APP.ToolsDriver;
     var RegionManager = APP.RegionManager;
     var Mediator = APP.Mediator;
-    var DrawingToolController = APP.controllers.DrawingToolController;
-    var EraserToolController = APP.controllers.EraserToolController;
-    var DraggingToolController = APP.controllers.DraggingToolController;
-    var SelectToolController = APP.controllers.SelectToolController;
-    var DrawingTool = APP.tools.DrawingTool;
-    var DraggingTool = APP.tools.DraggingTool;
-    var EraserTool = APP.tools.EraserTool;
-    var SelectTool = APP.tools.SelectTool;
     var StorageManager = APP.StorageManager;
 
     function extend(src, obj){
@@ -95,11 +87,6 @@
         extend(defaultSettings, options.settings);
 
         this.settings = options.settings;
-
-        this.toolsDriver.plug(DrawingToolController);
-        this.toolsDriver.plug(EraserToolController);
-        this.toolsDriver.plug(DraggingToolController);
-        this.toolsDriver.plug(SelectToolController);
     };
 
     APP.CanvasEditor.prototype.CREATED_REGION = 'CREATED_REGION';

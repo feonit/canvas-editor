@@ -20,12 +20,10 @@
      * @class Curve
      * @memberof APP
      * @param points
-     * @param {HTMLCanvasElement} radius
      * */
-    APP.Curve = function (points, radius){
+    APP.Curve = function (points){
         this.x = [];
         this.y = [];
-        this.radius = radius || 10;
 
         var i = points.length, n;
 
@@ -41,7 +39,6 @@
                 this.x.push(points[i - n - 1].x);
                 this.y.push(points[i - n - 1].y);
             }
-
         }
     }
 }(APP);

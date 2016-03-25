@@ -64,27 +64,31 @@
 <script type="text/javascript" src="src/RegionManager.js"></script>
 <script type="text/javascript" src="src/Mediator.js"></script>
 <script type="text/javascript" src="src/tools/DraggingTool.js"></script>
-<script type="text/javascript" src="src/objects/VectorLayer.js"></script>
-<script type="text/javascript" src="src/objects/vectors/SimpleVector.js"></script>
-<script type="text/javascript" src="src/objects/vectors/ComplexVector.js"></script>
+<script type="text/javascript" src="src/objects/VectorLayerAbstract.js"></script>
+<script type="text/javascript" src="src/objects/vectors/SimpleVectorAbstract.js"></script>
+<script type="text/javascript" src="src/objects/vectors/ComplexVectorAbstract.js"></script>
 <script type="text/javascript" src="src/objects/vectors/simple/ArrowSimpleVector.js"></script>
 <script type="text/javascript" src="src/objects/vectors/complex/CurveComplexVector.js"></script>
+<script type="text/javascript" src="src/objects/vectors/complex/BrokenComplexVector.js"></script>
 <script type="text/javascript" src="src/objects/vectors/simple/EllipseSimpleVector.js"></script>
 <script type="text/javascript" src="src/objects/vectors/simple/LineSimpleVector.js"></script>
 <script type="text/javascript" src="src/objects/vectors/simple/RectangleSimpleVector.js"></script>
-<script type="text/javascript" src="src/tools/DrawingTool.js"></script>
 <script type="text/javascript" src="src/tools/EraserTool.js"></script>
 <script type="text/javascript" src="src/tools/SelectTool.js"></script>
 <script type="text/javascript" src="src/tools-controllers/ToolController.js"></script>
+<script type="text/javascript" src="src/tools-controllers/draw-controllers/DrawToolController.js"></script>
+<script type="text/javascript" src="src/tools-controllers/draw-controllers/draw-controllers/DrawCurveController.js"></script>
+<script type="text/javascript" src="src/tools-controllers/draw-controllers/draw-controllers/DrawSimpleVectorController.js"></script>
+<script type="text/javascript" src="src/tools-controllers/draw-controllers/draw-controllers/DrawBrokenVectorController.js"></script>
 <script type="text/javascript" src="src/tools-controllers/DraggingToolController.js"></script>
-<script type="text/javascript" src="src/tools-controllers/DrawingToolController.js"></script>
 <script type="text/javascript" src="src/tools-controllers/EraserToolController.js"></script>
 <script type="text/javascript" src="src/tools-controllers/SelectToolController.js"></script>
 
-<script type="text/javascript" src="src/views/CanvasView.js"></script>
+<script type="text/javascript" src="src/views/CanvasSnapShotView.js"></script>
 <script type="text/javascript" src="src/views/LayerView.js"></script>
 <script type="text/javascript" src="src/views/VectorLayerView.js"></script>
 <script type="text/javascript" src="src/views/RasterLayerView.js"></script>
+<script type="text/javascript" src="src/views/CursorCircleView.js"></script>
 
 <script type="text/javascript" src="src/CanvasEditor.js"></script>
 <script type="text/javascript" src="src/utils-controllers/SaveLocalUtilController.js"></script>
@@ -112,7 +116,7 @@
             settings: {
                 drawingColor: "ff0000",
                 drawingSize: 10,
-                storageEnabled: true,
+                storageEnabled: false,
                 drawingCursorEnabled: true
             }
         };

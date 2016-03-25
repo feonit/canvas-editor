@@ -3,11 +3,11 @@
 
     /**
      * Прямоугольник
-     * @class RectangleSimpleVector
+     * @class RectangleSimpleVectorAbstract
      * @memberof APP.objects
      * */
-    APP.objects.RectangleSimpleVector = function (attributes){
-        APP.objects.SimpleVector.apply(this, arguments);
+    APP.objects.RectangleSimpleVectorAbstract = function (attributes){
+        APP.objects.SimpleVectorAbstract.apply(this, arguments);
 
         function rectangle(x0, y0, x1, y1){
             var px = [[x0, y0], [x0, y1], [x1, y0], [x1, y1]];
@@ -35,7 +35,7 @@
 
     };
 
-    APP.objects.RectangleSimpleVector.prototype = Object.create(APP.objects.SimpleVector.prototype);
-    APP.objects.RectangleSimpleVector.prototype.constructor = APP.objects.RectangleSimpleVector;
+    APP.objects.RectangleSimpleVectorAbstract.prototype = Object.create(APP.objects.SimpleVectorAbstract.prototype);
+    APP.objects.RectangleSimpleVectorAbstract.prototype.constructor = APP.objects.RectangleSimpleVectorAbstract;
 
 }(APP);

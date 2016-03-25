@@ -68,8 +68,8 @@
                 }
             });
 
-            if (layerObject instanceof APP.VectorLayer){
-                layerObject.layerView = new APP.views.VectorLayerView({
+            if (layerObject instanceof APP.VectorLayerAbstract){
+                layerObject.layerView = new APP.views.VectorLayerAbstractView({
                     height: layerObject.height,
                     width: layerObject.width,
                     coordinatesLine: layerObject.coordinatesLine,
@@ -141,7 +141,7 @@
                     ? [0, 0]
                     : layerObject.offsetHistory.currentOffset;
 
-                APP.views.CanvasView.drawLayer(canvas, layerObject.layerView.layer, offset);
+                APP.views.CanvasSnapShotView.drawLayer(canvas, layerObject.layerView.layer, offset);
             }
         },
         /**

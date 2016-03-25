@@ -3,11 +3,11 @@
 
     /**
      * Стрелка
-     * @class ArrowSimpleVector
+     * @class ArrowSimpleVectorAbstract
      * @memberof APP.objects
      * */
-    APP.objects.ArrowSimpleVector = function (attributes){
-        APP.objects.SimpleVector.apply(this, arguments);
+    APP.objects.ArrowSimpleVectorAbstract = function (attributes){
+        APP.objects.SimpleVectorAbstract.apply(this, arguments);
 
         // Повернуть точку относительно другой на заданный радиан
         function turn(x0, y0, relx, rely, rad){
@@ -67,6 +67,6 @@
 
     };
 
-    APP.objects.ArrowSimpleVector.prototype = Object.create(APP.objects.SimpleVector.prototype);
-    APP.objects.ArrowSimpleVector.prototype.constructor = APP.objects.ArrowSimpleVector;
+    APP.objects.ArrowSimpleVectorAbstract.prototype = Object.create(APP.objects.SimpleVectorAbstract.prototype);
+    APP.objects.ArrowSimpleVectorAbstract.prototype.constructor = APP.objects.ArrowSimpleVectorAbstract;
 }(APP);

@@ -13,49 +13,53 @@
          * */
 
         var toolsDriver = appInstance.toolsDriver;
-        var enabledTool = APP.controllers.DrawingToolController;
+        var enabledTool = APP.controllers.DrawCurveController;
 
         toolsDriver.play(enabledTool);
 
         var map = {
             "Стерка": "EraserToolController",
             "Перенести": "DraggingToolController",
-            "Рисовать Линию": "-cu",
+            "Рисовать Линию": "DrawCurveController",
             "Рисовать Эллипс": "-el",
             "Рисовать Прямоугольник": "-sq",
             "Рисовать Прямую": "-li",
             "Рисовать Стрелку": "-ar",
+            "Рисовать Ломанную линию": "DrawBrokenVectorController",
             "Выделить/Удалить выделенное (Del)": "SelectToolController"
         };
 
-        var modeName = "-cu";
+        var modeName = "DrawCurveController";
         var radioBox = new RadioBoxComponent(map, modeName);
 
         radioBox.addEventListener("userSelectTool", function(data){
 
             switch (data.detail.name){
+                case "DrawBrokenVectorController":
+                    toolsDriver.play(APP.controllers.DrawBrokenVectorController);
+                    break;
+
                 case "-cu":
-                    toolsDriver.play(APP.controllers.DrawingToolController);
-                    appInstance.settings.drawingType = 'CURVE_TYPE';
+                    toolsDriver.play(APP.controllers.DrawCurveController);
                     break;
 
                 case '-el':
                     appInstance.settings.drawingType = 'ELLIPSE_TYPE';
-                    toolsDriver.play(APP.controllers.DrawingToolController);
+                    toolsDriver.play(APP.controllers.DrawSimpleVectorController);
                     break;
 
                 case '-sq':
                     appInstance.settings.drawingType = 'RECTANGLE_TYPE';
-                    toolsDriver.play(APP.controllers.DrawingToolController);
+                    toolsDriver.play(APP.controllers.DrawSimpleVectorController);
 
                     break;
                 case '-li':
                     appInstance.settings.drawingType = 'LINE_TYPE';
-                    toolsDriver.play(APP.controllers.DrawingToolController);
+                    toolsDriver.play(APP.controllers.DrawSimpleVectorController);
                     break;
                 case '-ar':
                     appInstance.settings.drawingType = 'ARROW_TYPE';
-                    toolsDriver.play(APP.controllers.DrawingToolController);
+                    toolsDriver.play(APP.controllers.DrawSimpleVectorController);
                     break;
 
                 case 'SelectToolController':
