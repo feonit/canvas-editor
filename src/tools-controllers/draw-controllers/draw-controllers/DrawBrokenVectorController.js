@@ -2,6 +2,10 @@
     APP.namespace('APP.controllers');
 
     APP.controllers.DrawBrokenVectorController = function (appInstance, canvas){
+        APP.controllers.DrawToolController.apply(this, arguments);
+
+        this.__super = APP.controllers.DrawToolController.prototype;
+
         // снимок
         var snapshotView;
         // рисуемый объект
@@ -61,21 +65,22 @@
 
             snapshotView.redrawWithLayer(view.layer);
         };
-
-        this.start = function(){
-            canvas.addEventListener('mousedown', this.onMouseDown, false);
-            canvas.addEventListener('mousemove', this.onMouseMove, false);
-            canvas.addEventListener('mouseup', this.onMouseUp, false);
-            canvas.addEventListener('dblclick', this.onMouseDoubleClick, false);
-        };
-
-        this.stop = function(){
-            canvas.removeEventListener('mousedown', this.onMouseDown);
-            canvas.removeEventListener('mousemove', this.onMouseMove);
-            canvas.removeEventListener('mouseup', this.onMouseUp);
-            canvas.removeEventListener('dblclick', this.onMouseDoubleClick);
-        }
     };
     APP.controllers.DrawBrokenVectorController.prototype = Object.create(APP.controllers.DrawToolController.prototype);
     APP.controllers.DrawBrokenVectorController.prototype.constructor = APP.controllers.DrawBrokenVectorController;
+
+    APP.controllers.DrawBrokenVectorController.prototype.start = function(){
+        this.__super.start.apply(this, arguments);
+        this.canvas.addEventListener('mousedown', this.onMouseDown, false);
+        this.canvas.addEventListener('mousemove', this.onMouseMove, false);
+        this.canvas.addEventListener('mouseup', this.onMouseUp, false);
+        this.canvas.addEventListener('dblclick', this.onMouseDoubleClick, false);
+    };
+    APP.controllers.DrawBrokenVectorController.prototype.stop = function(){
+        this.__super.stop.apply(this, arguments);
+        this.canvas.removeEventListener('mousedown', this.onMouseDown);
+        this.canvas.removeEventListener('mousemove', this.onMouseMove);
+        this.canvas.removeEventListener('mouseup', this.onMouseUp);
+        this.canvas.removeEventListener('dblclick', this.onMouseDoubleClick);
+    };
 }(APP);

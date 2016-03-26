@@ -13,13 +13,20 @@
 
     APP.views.CanvasSnapShotView.prototype.redrawWithLayer = function(layer){
         var ctx = this.canvas.getContext("2d");
+
+        this.restore();
+
+        ctx.drawImage(layer, 0, 0);
+    };
+
+    APP.views.CanvasSnapShotView.prototype.restore = function(){
+        var ctx = this.canvas.getContext("2d");
+
         // очищение
         ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         // старье
         ctx.putImageData(this.snapshot, 0, 0);
-
-        ctx.drawImage(layer, 0, 0);
     };
 
     /**

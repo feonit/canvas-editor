@@ -8,69 +8,102 @@
         APP.ToolController.apply(this, arguments);
         this.appInstance = appInstance;
         this.canvas = canvas;
-        this.circleView = null;
 
-        //if (appInstance.settings.drawingCursorEnabled){
-        //
-        //}
-
+        // снимок
         var snapshotView;
+
+        // отключен
         var prevent;
+
+        // курсор
+        var savedCursorStyle;
+
         var that = this;
 
-        this.onMouseDownHideCursor = function(event){
-            that.circleView.disable();
-            prevent = true;
+        this.saveCursor = function(){
+            if (savedCursorStyle === undefined){
+                savedCursorStyle = canvas.style.cursor;
+                canvas.style.cursor = 'none';
+            }
         };
 
-        this.onMouseMoveMoveCursor = function(){
-            if (!prevent){
-                snapshotView = new APP.views.CanvasSnapShotView(canvas);
+        this.restoreCursor = function(){
+            if (savedCursorStyle !== undefined){
+                canvas.style.cursor = savedCursorStyle;
+                savedCursorStyle = undefined;
+            }
+        };
 
-                that.circleView = new APP.CursorCircleView({
+        this.onMouseMoveMoveCircle = function(){
+            if (!prevent){
+
+                if (!snapshotView){
+                    snapshotView = new APP.views.CanvasSnapShotView(canvas);
+                }
+
+                var circleView = new APP.CursorCircleView({
                     x: event.layerX,
                     y: event.layerY,
-                    canvas: canvas,
+                    height: canvas.height,
+                    width: canvas.width,
                     size: Math.round(appInstance.settings.drawingSize/2),
                     color: '#' + appInstance.settings.drawingColor
                 });
 
-                that.circleView.enable();
-
-                //snapshotView.redrawWithLayer(circleView.layer);
+                snapshotView.redrawWithLayer(circleView.layer);
             }
         };
 
-        this.onMouseUpShowCursor = function(){
-            that.circleView.enable();
+        this.onMouseDownHideCircle = function(event){
+            that.restoreCursor();
+            if (snapshotView){//dblclick
+                snapshotView.restore();
+            }
+            snapshotView = null;
+            prevent = true;
+        };
+
+        this.onMouseUpShowCircle = function(){
+            that.saveCursor();
             prevent = false;
         };
 
+        this.onMouseOut = function(){
+            if (snapshotView){
+                snapshotView.restore();
+            }
+        }
     };
 
     APP.controllers.DrawToolController.prototype = Object.create(APP.ToolController.prototype);
     APP.controllers.DrawToolController.prototype.constructor = APP.controllers.DrawToolController;
 
     APP.controllers.DrawToolController.prototype.start = function(){
-        //this.circleView.enable();
-        this.canvas.addEventListener('mousedown', this.onMouseDownHideCursor, false);
-        this.canvas.addEventListener('mousemove', this.onMouseMoveMoveCursor, false);
-        this.canvas.addEventListener('mouseup', this.onMouseUpShowCursor, false);
+        if (this.appInstance.settings.drawingCursorEnabled){
+            this.saveCursor();
+            this.canvas.addEventListener('mousedown', this.onMouseDownHideCircle, false);
+            this.canvas.addEventListener('mousemove', this.onMouseMoveMoveCircle, false);
+            this.canvas.addEventListener('mouseup', this.onMouseUpShowCircle, false);
+            this.canvas.addEventListener('mouseout', this.onMouseOut, false);
+        }
     };
     APP.controllers.DrawToolController.prototype.stop = function(){
-        this.circleView.disable();
-        this.canvas.removeEventListener('mousedown', this.onMouseDownHideCursor);
-        this.canvas.removeEventListener('mousemove', this.onMouseMoveMoveCursor);
-        this.canvas.removeEventListener('mouseup', this.onMouseUpShowCursor);
+        if (this.appInstance.settings.drawingCursorEnabled){
+            this.restoreCursor();
+            this.canvas.removeEventListener('mousedown', this.onMouseDownHideCircle);
+            this.canvas.removeEventListener('mousemove', this.onMouseMoveMoveCircle);
+            this.canvas.removeEventListener('mouseup', this.onMouseUpShowCircle);
+            this.canvas.removeEventListener('mouseout', this.onMouseOut);
+        }
     };
 
     /**
      * Создает новое изображение нарисованной линии и сохраняет
      * */
-    APP.controllers.DrawToolController.prototype.publicNewObject = function(){
-        if (this.object){
+    APP.controllers.DrawToolController.prototype.publicNewObject = function(object){
+        if (object){
             this.appInstance.newEvent('CREATED_REGION', [
-                this.object
+                object
             ]);
         }
     };

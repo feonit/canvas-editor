@@ -39,7 +39,7 @@
                     toolsDriver.play(APP.controllers.DrawBrokenVectorController);
                     break;
 
-                case "-cu":
+                case "DrawCurveController":
                     toolsDriver.play(APP.controllers.DrawCurveController);
                     break;
 

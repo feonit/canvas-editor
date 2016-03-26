@@ -3,6 +3,7 @@
 
     APP.controllers.DrawSimpleVectorController = function (appInstance, canvas){
         APP.controllers.DrawToolController.apply(this, arguments);
+        this.__super = APP.controllers.DrawToolController.prototype;
 
         // начальная позиция
         var x0, y0;
@@ -66,14 +67,14 @@
     APP.controllers.DrawSimpleVectorController.prototype = Object.create(APP.controllers.DrawToolController.prototype);
     APP.controllers.DrawSimpleVectorController.prototype.constructor = APP.controllers.DrawSimpleVectorController;
 
-    APP.controllers.DrawToolController.start = function(){
-        APP.controllers.DrawToolController.start.prototype.apply(this, arguments);
+    APP.controllers.DrawSimpleVectorController.prototype.start = function(){
+        this.__super.start.apply(this, arguments);
         this.canvas.addEventListener('mousedown', this.onMouseDown, false);
         this.canvas.addEventListener('mousemove', this.onMouseMove, false);
         this.canvas.addEventListener('mouseup', this.onMouseUp, false);
     };
-    APP.controllers.DrawToolController.stop = function(){
-        APP.controllers.DrawToolController.stop.prototype.apply(this, arguments);
+    APP.controllers.DrawSimpleVectorController.prototype.stop = function(){
+        this.__super.stop.apply(this, arguments);
         this.canvas.removeEventListener('mousedown', this.onMouseDown);
         this.canvas.removeEventListener('mousemove', this.onMouseMove);
         this.canvas.removeEventListener('mouseup', this.onMouseUp);
