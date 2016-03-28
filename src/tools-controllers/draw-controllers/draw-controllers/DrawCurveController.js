@@ -3,7 +3,6 @@
 
     APP.controllers.DrawCurveController = function (appInstance, canvas){
         APP.controllers.DrawToolController.apply(this, arguments);
-
         this.__super = APP.controllers.DrawToolController.prototype;
 
         var snapshotView;
@@ -36,7 +35,7 @@
             object = new APP.objects.CurveComplexVectorAbstract({
                 points: bufferPoints,
                 size: appInstance.settings.drawingSize,
-                color: APP.MathFn.hexToRgb(appInstance.settings.drawingColor),
+                color: APP.core.MathFn.hexToRgb(appInstance.settings.drawingColor),
                 width: canvas.width,
                 height: canvas.height
             });
@@ -51,31 +50,31 @@
 
         var _change = function(){
             // способ ускоряет отрисовку, без создания промежуточных объектов
-            var coordinates = APP.MathFn.drawBezierCurve(new APP.Curve(bufferPoints));
+            var coordinates = APP.core.MathFn.drawBezierCurve(new APP.Curve(bufferPoints));
             APP.views.VectorLayerAbstractView.renderCircles(
                 bufferCanvas,
                 coordinates,
-                APP.MathFn.hexToRgb(appInstance.settings.drawingColor),
+                APP.core.MathFn.hexToRgb(appInstance.settings.drawingColor),
                 Math.floor(appInstance.settings.drawingSize/2)
             );
 
             snapshotView.redrawWithLayer(bufferCanvas);
         };
+
+        this.start = function(){
+            this.__super.start.apply(this, arguments);
+            canvas.addEventListener('mousedown', this.onMouseDown, false);
+            canvas.addEventListener('mousemove', this.onMouseMove, false);
+            canvas.addEventListener('mouseup', this.onMouseUp, false);
+        };
+
+        this.stop = function(){
+            this.__super.stop.apply(this, arguments);
+            canvas.removeEventListener('mousedown', this.onMouseDown);
+            canvas.removeEventListener('mousemove', this.onMouseMove);
+            canvas.removeEventListener('mouseup', this.onMouseUp);
+        }
     };
     APP.controllers.DrawCurveController.prototype = Object.create(APP.controllers.DrawToolController.prototype);
     APP.controllers.DrawCurveController.prototype.constructor = APP.controllers.DrawCurveController;
-
-    APP.controllers.DrawCurveController.prototype.start = function(){
-        this.__super.start.apply(this, arguments);
-        this.canvas.addEventListener('mousedown', this.onMouseDown, false);
-        this.canvas.addEventListener('mousemove', this.onMouseMove, false);
-        this.canvas.addEventListener('mouseup', this.onMouseUp, false);
-    };
-    APP.controllers.DrawCurveController.prototype.stop = function(){
-        this.__super.stop.apply(this, arguments);
-        this.canvas.removeEventListener('mousedown', this.onMouseDown);
-        this.canvas.removeEventListener('mousemove', this.onMouseMove);
-        this.canvas.removeEventListener('mouseup', this.onMouseUp);
-    };
-
 }(APP);

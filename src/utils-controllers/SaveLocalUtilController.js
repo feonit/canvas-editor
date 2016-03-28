@@ -1,6 +1,6 @@
 !function(APP){
     APP.namespace('APP.controllers');
-    var ToolController = APP.ToolController;
+    var ToolController = APP.controllers.ToolController;
 
     APP.controllers.SaveLocalUtilController = function (appInstance){
 

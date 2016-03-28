@@ -1,9 +1,9 @@
 !function(APP, HTMLCanvasElement){
     APP.namespace('APP');
-    var ToolsDriver = APP.ToolsDriver;
-    var RegionManager = APP.RegionManager;
-    var Mediator = APP.Mediator;
-    var StorageManager = APP.StorageManager;
+    var ToolsDriver = APP.core.ToolsDriver;
+    var RegionManager = APP.core.RegionManager;
+    var Mediator = APP.core.Mediator;
+    var StorageManager = APP.core.StorageManager;
 
     function extend(src, obj){
         for (var prop in src){

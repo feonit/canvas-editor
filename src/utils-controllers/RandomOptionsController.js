@@ -1,7 +1,7 @@
 !function(APP){
     APP.namespace('APP.controllers');
-    var ToolController = APP.ToolController;
-    var MathFn = APP.MathFn;
+    var ToolController = APP.controllers.ToolController;
+    var MathFn = APP.core.MathFn;
 
     APP.controllers.RandomOptionsController = function (appInstance, canvas){
         var drawingColor;

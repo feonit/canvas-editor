@@ -34,6 +34,23 @@
             content: '(todo)';
             font-size: .6em;
         }
+        .background-canvas{
+            background: url("public/background-image.jpg")
+        }
+
+        .cursor-grab{
+            cursor: move;
+            cursor: grab;
+            cursor:-moz-grab;
+            cursor:-webkit-grab;
+        }
+
+        .cursor-grabbing{
+            cursor: move;
+            cursor: grabbing;
+            cursor:-moz-grabbing;
+            cursor:-webkit-grabbing;
+        }
     </style>
 </head>
 <body>
@@ -89,6 +106,8 @@
 <script type="text/javascript" src="src/views/VectorLayerView.js"></script>
 <script type="text/javascript" src="src/views/RasterLayerView.js"></script>
 <script type="text/javascript" src="src/views/CursorCircleView.js"></script>
+<script type="text/javascript" src="src/views/CursorSquareView.js"></script>
+<script type="text/javascript" src="src/views/CursorView.js"></script>
 
 <script type="text/javascript" src="src/CanvasEditor.js"></script>
 <script type="text/javascript" src="src/utils-controllers/SaveLocalUtilController.js"></script>

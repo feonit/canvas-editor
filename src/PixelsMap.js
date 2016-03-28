@@ -1,12 +1,12 @@
 !function(APP) {
-    APP.namespace('APP');
+    APP.namespace('APP.core');
     /**
      * Объект Карта отвечает за информацию по соотношению каждого пикселя из карты к группе слоев
      * накладываемых друг на друга в определенном порядке
      * @param {Object} options
      * @param {Object[]} options.map
      * */
-    APP.PixelsMap = function (options){
+    APP.core.PixelsMap = function (options){
         /**
          * Карта отображения координаты пикселя в порядок слоев расположенных на нем
          * @type {Object}
@@ -14,8 +14,8 @@
         this.map = {} || options.map;
     };
     /** @lends PixelsMap.prototype */
-    APP.PixelsMap.prototype = {
-        constructor: APP.PixelsMap,
+    APP.core.PixelsMap.prototype = {
+        constructor: APP.core.PixelsMap,
         /**
          * Метод пополнения карты новыми записями
          * @param {number} x — Координата X

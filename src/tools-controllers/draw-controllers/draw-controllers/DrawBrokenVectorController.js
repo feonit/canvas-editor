@@ -43,8 +43,8 @@
             isDrawStarted = false;
             picked = false;
             points = null;
-            object = null;
             that.publicNewObject(object);
+            object = null;
         };
 
         var _change = function(points){
@@ -53,7 +53,7 @@
                 width: canvas.width,
                 height: canvas.height,
                 size: appInstance.settings.drawingSize,
-                color: APP.MathFn.hexToRgb(appInstance.settings.drawingColor)
+                color: APP.core.MathFn.hexToRgb(appInstance.settings.drawingColor)
             });
             var view = new APP.views.VectorLayerAbstractView({
                 coordinatesLine: object.coordinatesLine,

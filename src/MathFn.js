@@ -1,7 +1,7 @@
 !function(APP){
-    APP.namespace('APP');
+    APP.namespace('APP.core');
 
-    APP.MathFn = {
+    APP.core.MathFn = {
         /**
          * Получить список координат для всех точек принадлежащих к окружности с заданным радиусом
          * Функция кеширует результат по радиусу

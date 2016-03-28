@@ -5,7 +5,7 @@
      * @memberof APP.controllers
      * */
     APP.controllers.DrawToolController = function (appInstance, canvas){
-        APP.ToolController.apply(this, arguments);
+        APP.controllers.ToolController.apply(this, arguments);
         this.appInstance = appInstance;
         this.canvas = canvas;
 
@@ -41,7 +41,7 @@
                     snapshotView = new APP.views.CanvasSnapShotView(canvas);
                 }
 
-                var circleView = new APP.CursorCircleView({
+                var circleView = new APP.views.CursorCircleView({
                     x: event.layerX,
                     y: event.layerY,
                     height: canvas.height,
@@ -75,7 +75,7 @@
         }
     };
 
-    APP.controllers.DrawToolController.prototype = Object.create(APP.ToolController.prototype);
+    APP.controllers.DrawToolController.prototype = Object.create(APP.controllers.ToolController.prototype);
     APP.controllers.DrawToolController.prototype.constructor = APP.controllers.DrawToolController;
 
     APP.controllers.DrawToolController.prototype.start = function(){

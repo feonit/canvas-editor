@@ -1,5 +1,5 @@
 !function(APP){
-    APP.namespace('APP');
+    APP.namespace('APP.core');
     /**
      * Обеспечивает управление инструментами и получение доступа подключаемых инструментов к канвасу
      * @class ToolsDriver
@@ -7,7 +7,7 @@
      * @param {Object} appInstance
      * @param {HTMLCanvasElement} canvas
      * */
-    APP.ToolsDriver = function (appInstance, canvas){
+    APP.core.ToolsDriver = function (appInstance, canvas){
         this.appInstance = appInstance;
         this._canvas = canvas;
         /*@arg Набор инструментов по работе с холстом (Eraser, Cursor, Draw)*/
@@ -18,8 +18,8 @@
         this._activedTool = null;
     };
     /** @lends ToolsDriver.prototype */
-    APP.ToolsDriver.prototype = {
-        constructor: APP.ToolsDriver,
+    APP.core.ToolsDriver.prototype = {
+        constructor: APP.core.ToolsDriver,
         /**
          * Метод регистрации нового инструмента
          * @param {function} Constructor — конструктор нового инструмента
@@ -29,7 +29,7 @@
         },
         /**
          * Метод активизации инструмента
-         * @param {Object} Tool - имя инструмента
+         * @param {function} Tool - имя инструмента
          * */
         play : function(Tool){
             if (!Tool){

@@ -8,17 +8,17 @@
      * @class ToolController
      * @memberof APP
      * */
-    APP.ToolController = function (){};
+    APP.controllers.ToolController = function (){};
     /**
      * Включение инструмента
      * */
-    APP.ToolController.prototype.start = function(){
+    APP.controllers.ToolController.prototype.start = function(){
         throw "method must be implemented";
     };
     /**
      * Отключение инструмента
      * */
-    APP.ToolController.prototype.stop = function(){
+    APP.controllers.ToolController.prototype.stop = function(){
         throw "method must be implemented";
     };
 }(APP);

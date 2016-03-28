@@ -1,15 +1,19 @@
 !function(APP){
     APP.namespace('APP.controllers');
-    var ToolController = APP.ToolController;
+    var ToolController = APP.controllers.ToolController;
     var DraggingTool = APP.tools.DraggingTool;
 
     APP.controllers.DraggingToolController = function (appInstance, canvas){
 
         var tool = new DraggingTool(appInstance, canvas);
+        var cursorView = new APP.views.CursorView({canvas, canvas});
+        var mouseIsPressed = false;
 
         function mousedown(event){
             if (event.which == 1){ // выделяем объект левой
                 tool.draggingStart(event.layerX, event.layerY);
+                mouseIsPressed = true;
+                cursorView.setGrabbing();
 
             } else if (event.which == 2 || event.which == 3){ // снимаем выделение средней и правой кнопкой
                 tool.removeSelection();
@@ -18,10 +22,24 @@
 
         function mousemove(event){
             tool.draggingContinue(event.layerX, event.layerY);
+            if (!mouseIsPressed){
+                checkIfGrab(event.layerX, event.layerY);
+            }
+        }
+
+        function checkIfGrab(x, y){
+            var search = appInstance.regionManager.searchRegionByCoordinate(x, y);
+            if (search){
+                cursorView.setGrab();
+            } else {
+                cursorView.deleteGrab();
+            }
         }
 
         function mouseup(event){
+            mouseIsPressed = false;
             tool.draggingEnd(event.layerX, event.layerY);
+            cursorView.deleteGrabbing();
             appInstance.mediator.publish(appInstance.UPDATE_CANVAS);
         }
 

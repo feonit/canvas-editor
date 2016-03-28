@@ -1,7 +1,7 @@
 !function(APP){
     APP.namespace('APP.objects');
     var Curve = APP.Curve;
-    var MathFn = APP.MathFn;
+    var MathFn = APP.core.MathFn;
     var ComplexVectorAbstract = APP.objects.ComplexVectorAbstract;
 
     /**

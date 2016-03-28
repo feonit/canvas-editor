@@ -1,6 +1,6 @@
 !function(APP){
     APP.namespace('APP.controllers');
-    var ToolController = APP.ToolController;
+    var ToolController = APP.controllers.ToolController;
     var SelectTool = APP.tools.SelectTool;
     APP.controllers.SelectToolController = function (appInstance, canvas){
 

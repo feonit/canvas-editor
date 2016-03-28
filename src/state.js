@@ -2,9 +2,9 @@ APP.namespace('APP').getTotalState = function (instanse) {
 
     var data = {};
     var exclusion =[
-        APP.ToolsDriver,
-        APP.Mediator,
-        APP.PixelsMap
+        APP.core.ToolsDriver,
+        APP.core.Mediator,
+        APP.core.PixelsMap
     ];
 
     function searchObjectOptions(obj, link) {

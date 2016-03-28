@@ -15,7 +15,7 @@
     };
 
     APP.views.RasterLayerView.prototype = Object.create(APP.views.LayerView.prototype);
-    APP.views.RasterLayerView.prototype.constructor = APP.RasterLayerView;
+    APP.views.RasterLayerView.prototype.constructor = APP.objects.RasterLayerView;
 
     // два способа отрисовки растрового слоя,
     APP.views.RasterLayerView.createByDataUrl = function(options){

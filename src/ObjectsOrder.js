@@ -1,6 +1,5 @@
 !function(APP) {
-    APP.namespace('APP');
-    var LayerObject = APP.LayerObject;
+    APP.namespace('APP.core');
     /**
      * Класс представляет собой коллекцию объектов в определенной последовательности и 
      * предоставляет методы по работе с ней
@@ -8,7 +7,7 @@
      * @param {Object} [options] — опции
      * @param {Object[]} options.order — список идентификаторов объектов
      * */
-    APP.ObjectsOrder = function(options){
+    APP.core.ObjectsOrder = function(options){
         options = options || {};
 
         /**
@@ -78,7 +77,7 @@
         }
         if (options.rasters){
             options.rasters.forEach(function(options){
-                obj = new APP.RasterLayer(options);
+                obj = new APP.objects.RasterLayer(options);
                 that.rasters.push(obj);
                 that._objects[obj.id] = obj;
             });
@@ -86,8 +85,8 @@
     };
 
     /** @lends ObjectsOrder.prototype */
-    APP.ObjectsOrder.prototype = {
-        constructor: APP.ObjectsOrder,
+    APP.core.ObjectsOrder.prototype = {
+        constructor: APP.core.ObjectsOrder,
         /**
          * Добавить объект в конец
          * @param {LayerObject} obj — объект
@@ -113,7 +112,7 @@
                 case APP.objects.RectangleSimpleVectorAbstract:
                     this.rects.push(obj); break;
 
-                case APP.RasterLayer:
+                case APP.objects.RasterLayer:
                     this.rasters.push(obj); break;
 
                 default:
@@ -157,7 +156,7 @@
                     subIndex = this.rects.indexOf(obj);
                     subIndex > 0 && this.rects.splice(subIndex, 1); break;
 
-                case APP.RasterLayer:
+                case APP.objects.RasterLayer:
                     subIndex = this.rasters.indexOf(obj);
                     subIndex > 0 && this.rasters.splice(subIndex, 1); break;
 

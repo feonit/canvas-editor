@@ -1,16 +1,16 @@
 !function(APP){
-    APP.namespace('APP');
-    var PixelsMap = APP.PixelsMap;
-    var ObjectsOrder = APP.ObjectsOrder;
+    APP.namespace('APP.core');
+    var PixelsMap = APP.core.PixelsMap;
+    var ObjectsOrder = APP.core.ObjectsOrder;
     var LayerBackground = APP.objects.LayerBackground;
-    var RasterLayer = APP.RasterLayer;
+    var RasterLayer = APP.objects.RasterLayer;
     /**
      * @class RegionManager
      * @memberof APP
      * @param appInstance
      * @param {HTMLCanvasElement} canvas
      * */
-    APP.RegionManager = function (appInstance, canvas, options){
+    APP.core.RegionManager = function (appInstance, canvas, options){
         options = options || {};
 
         Object.defineProperty(this, 'canvas', {value: canvas});
@@ -31,8 +31,8 @@
         }
     };
     /** @lends RegionManager.prototype */
-    APP.RegionManager.prototype = {
-        constructor: APP.RegionManager,
+    APP.core.RegionManager.prototype = {
+        constructor: APP.core.RegionManager,
         /**
          * Индекс первого слоя
          * */
@@ -68,7 +68,7 @@
                 }
             });
 
-            if (layerObject instanceof APP.VectorLayerAbstract){
+            if (layerObject instanceof APP.objects.VectorLayerAbstract){
                 layerObject.layerView = new APP.views.VectorLayerAbstractView({
                     height: layerObject.height,
                     width: layerObject.width,
@@ -79,7 +79,7 @@
                 });
             }
 
-            if (layerObject instanceof APP.RasterLayer){
+            if (layerObject instanceof APP.objects.RasterLayer){
                 layerObject.layerView = APP.views.RasterLayerView.createByCoordinates({
                     height: layerObject.height,
                     width: layerObject.width,

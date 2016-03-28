@@ -1,17 +1,17 @@
 !function(APP){
-    APP.namespace('APP');
+    APP.namespace('APP.core');
     /**
      * Для связи между модулями
      * @memberof APP
      * @class Mediator
      * */
-    APP.Mediator = function (){
+    APP.core.Mediator = function (){
         // events
         this._topics = {};
     };
     /** @lends ToolsDriver.prototype */
-    APP.Mediator.prototype = {
-        constructor: APP.Mediator,
+    APP.core.Mediator.prototype = {
+        constructor: APP.core.Mediator,
         /**
          * Подписка на событие
          * @param {string} topic — имя события

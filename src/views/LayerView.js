@@ -1,6 +1,6 @@
 !function(APP){
     APP.namespace('APP.views');
-    var MathFn = APP.MathFn;
+    var MathFn = APP.core.MathFn;
     /**
      * Класс Слой Вид. Отвечает за отображение информации о слое.
      * @memberof APP.views

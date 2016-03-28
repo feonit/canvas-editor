@@ -7,7 +7,7 @@
      * @memberof APP.objects
      * */
     APP.objects.LayerBackground = function (options){
-        APP.LayerAbstract.apply(this, arguments);
+        APP.objects.LayerAbstract.apply(this, arguments);
 
         options = options || {};
         this.dataUrl = options.dataUrl || null;
@@ -26,7 +26,7 @@
         this.coordinates = generateCoordinatesMatrix();
     };
 
-    APP.objects.LayerBackground.prototype = Object.create(APP.LayerAbstract.prototype);
+    APP.objects.LayerBackground.prototype = Object.create(APP.objects.LayerAbstract.prototype);
     APP.objects.LayerBackground.prototype.constructor = APP.objects.LayerBackground;
 
     /**

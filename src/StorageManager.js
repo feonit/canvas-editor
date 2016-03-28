@@ -1,12 +1,12 @@
 !function(APP){
-    APP.namespace('APP');
+    APP.namespace('APP.core');
 
     /**
      * @constructor
      * @throw
      * @return {StorageManager}
      * */
-     APP.StorageManager = function StorageManager(localNamespace){
+     APP.core.StorageManager = function StorageManager(localNamespace){
             if (!this.supportsLocalStorage()) return false;
             if (!localNamespace) throw 'You need specific name';
 
@@ -22,8 +22,8 @@
             });
         };
 
-    APP.StorageManager.prototype = {
-            constructor: APP.StorageManager,
+    APP.core.StorageManager.prototype = {
+            constructor: APP.core.StorageManager,
 
             SEPARATOR: '.',
             GLOBAL_NAMESPACE: 'CANVAS_EDITOR',

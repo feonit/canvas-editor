@@ -7,14 +7,14 @@
      * @memberof APP.objects
      * */
     APP.objects.SimpleRaster = function(attributes){
-        APP.RasterLayer.apply(this, arguments);
+        APP.objects.RasterLayer.apply(this, arguments);
         attributes = attributes || {};
         this.ownedPoint = attributes.ownedPoint;
         this.borderCoordinates = attributes.borderCoordinates;
         this.coordinates = attributes.coordinates;
     };
 
-    APP.objects.SimpleRaster.prototype = Object.create(APP.RasterLayer.prototype);
+    APP.objects.SimpleRaster.prototype = Object.create(APP.objects.RasterLayer.prototype);
     APP.objects.SimpleRaster.prototype.constructor = APP.objects.SimpleRaster;
 
     APP.objects.SimpleRaster._generateDataUrlFromCanvas = function(canvas){

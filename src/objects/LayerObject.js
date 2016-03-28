@@ -1,6 +1,6 @@
 !function(APP){
     APP.namespace('APP');
-    var MathFn = APP.MathFn;
+    var MathFn = APP.core.MathFn;
 
     /** @namespace APP.objects */
     APP.namespace('APP.objects');
@@ -14,8 +14,8 @@
      * @param {number[]} options.color
      * @param {number[][]} options.coordinatesLine — исходные координаты 1-но пиксельной фигуры
      * */
-    APP.LayerObject = function (options){
-        APP.LayerAbstract.apply(this, arguments);
+    APP.objects.LayerObject = function (options){
+        APP.objects.LayerAbstract.apply(this, arguments);
         options = options || {};
 
         /**
@@ -50,14 +50,14 @@
         });
     };
 
-    APP.LayerObject.prototype = Object.create(APP.LayerAbstract.prototype);
-    APP.LayerObject.prototype.constructor = APP.DraggingAbstract;
+    APP.objects.LayerObject.prototype = Object.create(APP.objects.LayerAbstract.prototype);
+    APP.objects.LayerObject.prototype.constructor = APP.DraggingAbstract;
 
 
     /**
      * Метод создания подцветки
      * */
-    APP.LayerObject.prototype.activate = function(){
+    APP.objects.LayerObject.prototype.activate = function(){
         if (this.isActived) return;
         this.isActived = true;
         this.layerView.drawBorder();
@@ -66,7 +66,7 @@
     /**
      * Метод удаления подцветки, путем восстановление ранее сохраненной копии оригинального лейаута
      * */
-    APP.LayerObject.prototype.deactivate = function(){
+    APP.objects.LayerObject.prototype.deactivate = function(){
         if (!this.isActived) return;
         this.isActived = false;
         this.layerView.eraserBorder();

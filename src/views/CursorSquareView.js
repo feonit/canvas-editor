@@ -1,9 +1,8 @@
 !function(APP){
-    APP.views.CursorCircleView = function(options){
+    APP.views.CursorSquareView = function(options){
         this.x = options.x;
         this.y = options.y;
         this.size = options.size;
-        this.color = options.color;
 
         var layer = document.createElement('canvas');
         layer.height = options.height;
@@ -11,8 +10,8 @@
 
         var ctx = layer.getContext("2d");
         ctx.beginPath();
-        ctx.strokeStyle = this.color;
-        ctx.arc(this.x, this.y, this.size, 0, 2*Math.PI);
+        ctx.strokeStyle = '#000000';
+        ctx.rect(this.x - this.size/2, this.y - this.size/2, this.size, this.size);
         ctx.stroke();
 
         this.layer = layer;

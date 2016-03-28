@@ -1,9 +1,9 @@
 !function(APP){
     APP.namespace('APP.tools');
-    var MathFn = APP.MathFn;
+    var MathFn = APP.core.MathFn;
     var Point = APP.Point;
     var Curve = APP.Curve;
-    var LayerObject = APP.LayerObject;
+    var LayerObject = APP.objects.LayerObject;
     /**
      * Ластик, позволяет стирать область холста, относительно переданной координаты
      * @class EraserTool Ластик

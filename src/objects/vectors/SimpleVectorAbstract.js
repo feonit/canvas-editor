@@ -7,7 +7,7 @@
      * @memberof APP.objects
      * */
     APP.objects.SimpleVectorAbstract = function(attributes){
-        APP.VectorLayerAbstract.apply(this, arguments);
+        APP.objects.VectorLayerAbstract.apply(this, arguments);
         /** type {number} */
         this.x0 = attributes.x0;
         /** type {number} */
@@ -18,7 +18,7 @@
         this.y1 = attributes.y1;
     };
 
-    APP.objects.SimpleVectorAbstract.prototype = Object.create(APP.VectorLayerAbstract.prototype);
+    APP.objects.SimpleVectorAbstract.prototype = Object.create(APP.objects.VectorLayerAbstract.prototype);
     APP.objects.SimpleVectorAbstract.prototype.constructor = APP.objects.SimpleVectorAbstract;
 
 }(APP);

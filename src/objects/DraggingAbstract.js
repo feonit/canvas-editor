@@ -1,6 +1,6 @@
 !function(APP){
     APP.namespace('APP');
-    var MathFn = APP.MathFn;
+    var MathFn = APP.core.MathFn;
 
     /**
      * Содержит историю перемещений
@@ -12,7 +12,7 @@
      * @param {number[][]} options.coordinatesLine — исходные координаты 1-но пиксельной фигуры
      * */
     APP.DraggingAbstract = function (options){
-        APP.LayerObject.apply(this, arguments);
+        APP.objects.LayerObject.apply(this, arguments);
         options = options || {};
 
         /**
@@ -22,7 +22,7 @@
         this.offsetHistory = new APP.OffsetHistory(options.offsetHistory);
     };
 
-    APP.DraggingAbstract.prototype = Object.create(APP.LayerObject.prototype);
+    APP.DraggingAbstract.prototype = Object.create(APP.objects.LayerObject.prototype);
     APP.DraggingAbstract.prototype.constructor = APP.DraggingAbstract;
 
     /**

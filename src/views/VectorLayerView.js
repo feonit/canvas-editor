@@ -1,6 +1,6 @@
 !function(APP){
     APP.namespace('APP.views');
-    var MathFn = APP.MathFn;
+    var MathFn = APP.core.MathFn;
 
     /**
      * Отвечает за отображение информации
@@ -19,7 +19,7 @@
     };
 
     APP.views.VectorLayerAbstractView.prototype = Object.create(APP.views.LayerView.prototype);
-    APP.views.VectorLayerAbstractView.prototype.constructor = APP.VectorLayerAbstractView;
+    APP.views.VectorLayerAbstractView.prototype.constructor = APP.objects.VectorLayerAbstractView;
 
     /**
      * Функция отрисовывает окружности по заданным координатам с заданным цветом

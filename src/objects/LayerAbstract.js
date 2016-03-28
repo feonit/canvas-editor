@@ -1,6 +1,5 @@
 !function(APP){
-    APP.namespace('APP');
-    var MathFn = APP.MathFn;
+    APP.namespace('APP.objects');
     /**
      * Номер последнего слоя
      * @type {number}
@@ -10,13 +9,13 @@
     /**
      * Базовый класс слоев
      * @class LayerAbstract
-     * @memberof APP
+     * @memberof APP.objects
      * @param {Object} options
      * @param {number[][]} options.coordinates
      * @param {number[]} options.color
      * @param {number[][]} options.coordinatesLine — исходные координаты 1-но пиксельной фигуры
      * */
-    APP.LayerAbstract = function (options){
+    APP.objects.LayerAbstract = function (options){
 
         options = options || {};
 
@@ -33,7 +32,7 @@
         this.width = options.width;
     };
 
-    APP.LayerAbstract.prototype = {
-        constructor: APP.LayerAbstract
+    APP.objects.LayerAbstract.prototype = {
+        constructor: APP.objects.LayerAbstract
     };
 }(APP);

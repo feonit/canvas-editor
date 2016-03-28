@@ -1,12 +1,12 @@
 !function(APP){
-    APP.namespace('APP');
+    APP.namespace('APP.objects');
 
     /**
      * Векторный слой
      * @class VectorLayerAbstract
      * @memberof APP
      * */
-    APP.VectorLayerAbstract = function (attributes){
+    APP.objects.VectorLayerAbstract = function (attributes){
         APP.DraggingAbstract.apply(this, arguments);
         this.size = attributes.size;
 
@@ -29,12 +29,12 @@
         });
     };
 
-    APP.VectorLayerAbstract.prototype = Object.create(APP.DraggingAbstract.prototype);
-    APP.VectorLayerAbstract.prototype.constructor = APP.VectorLayerAbstract;
+    APP.objects.VectorLayerAbstract.prototype = Object.create(APP.DraggingAbstract.prototype);
+    APP.objects.VectorLayerAbstract.prototype.constructor = APP.objects.VectorLayerAbstract;
 
 
     // способ для вычисления координат пикселей
-    APP.VectorLayerAbstract.prototype.calcCoordinates = function(){
+    APP.objects.VectorLayerAbstract.prototype.calcCoordinates = function(){
         var beginWithX = this.coordinatesLine[0][0];
         var beginWithY = this.coordinatesLine[0][1];
         var fakeLayer = new APP.views.VectorLayerAbstractView({
