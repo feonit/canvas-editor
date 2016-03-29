@@ -42,8 +42,8 @@
                 }
 
                 var circleView = new APP.views.CursorCircleView({
-                    x: event.layerX,
-                    y: event.layerY,
+                    x: event.clientX,
+                    y: event.clientY,
                     height: canvas.height,
                     width: canvas.width,
                     size: Math.round(appInstance.settings.drawingSize/2),

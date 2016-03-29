@@ -11,7 +11,7 @@
 
         function mousedown(event){
             if (event.which == 1){ // выделяем объект левой
-                tool.draggingStart(event.layerX, event.layerY);
+                tool.draggingStart(event.clientX, event.clientY);
                 mouseIsPressed = true;
                 cursorView.setGrabbing();
 
@@ -21,9 +21,9 @@
         }
 
         function mousemove(event){
-            tool.draggingContinue(event.layerX, event.layerY);
+            tool.draggingContinue(event.clientX, event.clientY);
             if (!mouseIsPressed){
-                checkIfGrab(event.layerX, event.layerY);
+                checkIfGrab(event.clientX, event.clientY);
             }
         }
 
@@ -38,7 +38,7 @@
 
         function mouseup(event){
             mouseIsPressed = false;
-            tool.draggingEnd(event.layerX, event.layerY);
+            tool.draggingEnd(event.clientX, event.clientY);
             cursorView.deleteGrabbing();
             appInstance.mediator.publish(appInstance.UPDATE_CANVAS);
         }

@@ -16,7 +16,7 @@
 
         this.onMouseDown = function(event){
             snapshotView = new APP.views.CanvasSnapShotView(canvas);
-            bufferPoints = [new APP.Point(event.layerX, event.layerY)];
+            bufferPoints = [new APP.Point(event.clientX, event.clientY)];
             isDrawStarted = true;
             bufferCanvas = document.createElement('canvas');
             bufferCanvas.width = canvas.width;
@@ -26,12 +26,12 @@
 
         this.onMouseMove = function(event){
             if (!isDrawStarted) return;
-            bufferPoints.push(new APP.Point(event.layerX, event.layerY));
+            bufferPoints.push(new APP.Point(event.clientX, event.clientY));
             _change();
         };
 
         this.onMouseUp = function(event){
-            bufferPoints.push(new APP.Point(event.layerX, event.layerY));
+            bufferPoints.push(new APP.Point(event.clientX, event.clientY));
             object = new APP.objects.CurveComplexVectorAbstract({
                 points: bufferPoints,
                 size: appInstance.settings.drawingSize,
