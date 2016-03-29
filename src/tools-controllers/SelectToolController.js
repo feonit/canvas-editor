@@ -7,7 +7,7 @@
         var tool = new SelectTool(appInstance, canvas);
 
         function mousedown(event){
-            tool.selectObjectByCoordinate(event.clientX, event.clientY);
+            tool.selectObjectByCoordinate(event.offsetX, event.offsetY);
             event.preventDefault();// double select text around
         }
 

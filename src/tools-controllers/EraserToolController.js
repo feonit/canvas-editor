@@ -39,8 +39,8 @@
                 }
 
                 var circleView = new APP.views.CursorSquareView({
-                    x: event.clientX,
-                    y: event.clientY,
+                    x: event.offsetX,
+                    y: event.offsetY,
                     height: canvas.height,
                     width: canvas.width,
                     size: Math.round(appInstance.settings.drawingSize)
@@ -72,15 +72,15 @@
 
         function mousedown(event){
             tool.setOptions({ size:  appInstance.settings.eraserSize });
-            tool.eraserStart(event.clientX, event.clientY);
+            tool.eraserStart(event.offsetX, event.offsetY);
         }
 
         function mousemove(event){
-            tool.eraserContinue(event.clientX, event.clientY);
+            tool.eraserContinue(event.offsetX, event.offsetY);
         }
 
         function mouseup(event){
-            tool.eraserEnd(event.clientX, event.clientY);
+            tool.eraserEnd(event.offsetX, event.offsetY);
             appInstance.mediator.publish(appInstance.UPDATE_CANVAS);
             appInstance.regionManager.reset();
         }

@@ -21,20 +21,20 @@
             if (!picked){
                 points = [];
                 snapshotView = new APP.views.CanvasSnapShotView(canvas);
-                points.push([event.clientX, event.clientY]);
+                points.push([event.offsetX, event.offsetY]);
                 isDrawStarted = true;
             }
         };
 
         this.onMouseMove = function(event){
             if (isDrawStarted){
-                _change(points.concat([[event.clientX, event.clientY]]));
+                _change(points.concat([[event.offsetX, event.offsetY]]));
             }
         };
 
         this.onMouseUp = function(event){
             picked = true;
-            points.push([event.clientX, event.clientY]);
+            points.push([event.offsetX, event.offsetY]);
             _change(points);
         };
 

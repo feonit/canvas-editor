@@ -19,19 +19,19 @@
         this.onMouseDown = function(event){
             snapshotView = new APP.views.CanvasSnapShotView(canvas);
             ObjectConstructor = map[appInstance.settings.drawingType];
-            x0 = event.clientX;
-            y0 = event.clientY;
+            x0 = event.offsetX;
+            y0 = event.offsetY;
             _change(x0, y0, x0, y0);
             isDrawStarted = true;
         };
 
         this.onMouseMove = function(event){
             if (!isDrawStarted) return;
-            _change(x0, y0, event.clientX, event.clientY);
+            _change(x0, y0, event.offsetX, event.offsetY);
         };
 
         this.onMouseUp = function(event){
-            _change(x0, y0, event.clientX, event.clientY);
+            _change(x0, y0, event.offsetX, event.offsetY);
             isDrawStarted = false;
             that.publicNewObject(object);
         };
