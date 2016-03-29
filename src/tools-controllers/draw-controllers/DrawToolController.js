@@ -34,7 +34,7 @@
             }
         };
 
-        this.onMouseMoveMoveCircle = function(){
+        this.onMouseMoveMoveCircle = function(event){
             if (!prevent){
 
                 if (!snapshotView){
@@ -102,9 +102,7 @@
      * */
     APP.controllers.DrawToolController.prototype.publicNewObject = function(object){
         if (object){
-            this.appInstance.newEvent('CREATED_REGION', [
-                object
-            ]);
+            this.appInstance.mediator.publish(appInstance.CREATED_REGION, object);
             this.appInstance.mediator.publish(appInstance.UPDATE_CANVAS);
         }
     };

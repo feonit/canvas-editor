@@ -1,20 +1,5 @@
 !function(APP, HTMLCanvasElement){
     APP.namespace('APP');
-    var ToolsDriver = APP.core.ToolsDriver;
-    var RegionManager = APP.core.RegionManager;
-    var Mediator = APP.core.Mediator;
-    var StorageManager = APP.core.StorageManager;
-
-    function extend(src, obj){
-        for (var prop in src){
-            if (src.hasOwnProperty(prop)){
-                if (!obj.hasOwnProperty(prop)){
-                    obj[prop] = src[prop];
-                }
-            }
-        }
-        return obj;
-    }
 
     /**
      * Канвас редактор
@@ -35,6 +20,17 @@
         if (!canvas instanceof HTMLCanvasElement )
             throw 'Lost canvas element';
 
+        var extend = function (src, obj){
+            for (var prop in src){
+                if (src.hasOwnProperty(prop)){
+                    if (!obj.hasOwnProperty(prop)){
+                        obj[prop] = src[prop];
+                    }
+                }
+            }
+            return obj;
+        };
+
         Object.defineProperty(this, 'canvas', {value: canvas});
 
         options = options || {};
@@ -49,15 +45,13 @@
             defaultToolConstructor: APP.controllers.DrawCurveController
         };
 
-        this.toolsDriver = new ToolsDriver(this, canvas);
+        this.toolsDriver = new APP.core.ToolsDriver(this, canvas);
 
-        this.mediator = new Mediator();
-
-        this.TOTAL_STATE_NAME = 'TOTAL_STATE_NAME';
+        this.mediator = new APP.core.Mediator();
 
         if (options.settings && options.settings.storageEnabled){
 
-            this.storageManager = new StorageManager({
+            this.storageManager = new APP.core.StorageManager({
                 key: options.settings.storageKey,
                 namespace: 'CanvasEditor'
             });
@@ -81,7 +75,7 @@
             saveLocalUtilController.start();
         }
 
-        this.regionManager = new RegionManager(this, canvas, options.regionManager);
+        this.regionManager = new APP.core.RegionManager(this, canvas, options.regionManager);
 
         canvas.setAttribute('oncontextmenu', 'return false;');
         var ctx = canvas.getContext('2d');
@@ -98,15 +92,102 @@
 
         this.toolsDriver.play(options.settings.defaultToolConstructor);
 
+        this.mediator.subscribe(this.CREATED_REGION, (function(object){
+            this.regionManager.addRegion(object);
+        }).bind(this));
+
     };
 
     APP.CanvasEditor.prototype.CREATED_REGION = 'CREATED_REGION';
     APP.CanvasEditor.prototype.UPDATE_CANVAS = 'UPDATE_CANVAS';
+    APP.CanvasEditor.prototype.TOTAL_STATE_NAME = 'TOTAL_STATE_NAME';
 
-    APP.CanvasEditor.prototype.newEvent = function(eventName, data){
-        if (eventName === this.CREATED_REGION){
-            var object = data[0];
-            this.regionManager.addRegion(object);
+    /**
+     * Метод считывает состояния определенных компонентов системы и подготоваливает
+     * данные для последующей инициализации приложения
+     * */
+    APP.CanvasEditor.prototype.getTotalState = function () {
+        var instanse = this;
+
+        var data = {};
+        var exclusion =[
+            APP.core.ToolsDriver,
+            APP.core.Mediator,
+            APP.core.PixelsMap
+        ];
+
+        function searchObjectOptions(obj, link) {
+            var propValue;
+            var constructor;
+
+            for (var propName in obj) {
+                if (obj.hasOwnProperty(propName)) {
+                    propValue = obj[propName];
+
+                    if (typeof propValue === "undefined")
+                        continue;
+
+                    if (propValue === null)
+                        continue;
+
+                    constructor = propValue.constructor;
+
+                    function processArray(arr, selfArrLink, itemOfArrName) {
+                        selfArrLink[itemOfArrName] = [];
+
+                        // если пустой выходим
+                        if (!arr.length)
+                            return;
+
+                        // если не объекты, присваиваем
+                        if (typeof (arr[0]) !== "object") {
+                            selfArrLink[itemOfArrName] = arr;
+                            return;
+                        }
+
+                        // если опять массив
+                        if (Array.isArray(arr[0])) {
+                            arr.forEach(function (itemOfArr, index) {
+                                processArray(itemOfArr, selfArrLink[itemOfArrName], index);
+                            });
+                            return;
+                        }
+
+                        // если все объекты
+                        arr.forEach(function (itemOfArr) {
+                            var optionsOfObject = {};
+                            searchObjectOptions(itemOfArr, optionsOfObject);
+                            selfArrLink[propName].push(optionsOfObject);
+                        });
+                    }
+
+                    // свойство массив
+                    if (Array.isArray(propValue)) {
+                        processArray(propValue, link, propName);
+                    } else
+                    // свойство объект не массив
+                    if (typeof propValue === "object") {
+
+                        if (exclusion.indexOf(constructor) > -1)
+                            continue;
+
+                        // если его прямой родитель Object
+                        if (constructor.prototype !== Object.prototype) {
+                            var newLink = link[propName] = {};
+                            searchObjectOptions(propValue, newLink);
+                        } else {
+                            link[propName] = propValue;
+                        }
+                    } else {
+                        link[propName] = propValue;
+                    }
+                }
+            }
         }
+
+        searchObjectOptions(instanse, data);
+
+        return data;
     };
+
 }(APP, HTMLCanvasElement);

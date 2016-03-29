@@ -6,7 +6,7 @@
      * @throw
      * @return {StorageManager}
      * */
-     APP.core.StorageManager = function StorageManager(options){
+     APP.core.StorageManager = function (options){
          options = options || {};
 
          if (!this.supportsLocalStorage())

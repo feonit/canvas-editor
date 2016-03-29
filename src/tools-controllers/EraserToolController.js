@@ -31,7 +31,7 @@
             }
         };
 
-        this.onMouseMoveMoveCircle = function(){
+        this.onMouseMoveMoveCircle = function(event){
             if (!prevent){
 
                 if (!snapshotView){

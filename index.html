@@ -56,7 +56,8 @@
         }
 
         canvas{
-            border: 50px solid black;
+            border: 5px solid black;
+            margin: 20px;
         }
     </style>
 </head>
@@ -66,7 +67,7 @@
     Fallback content.Telling the user to use a different browser that supports canvas.
 </canvas>
 
-<canvas id="canvas-2" class="canvas-2" width="800" height="400">
+<canvas id="canvas-2" class="canvas-2" width="600" height="300">
     Fallback content.Telling the user to use a different browser that supports canvas.
 </canvas>
 
@@ -75,7 +76,6 @@
 
 <!-- CanvasEditor library -->
 <script type="text/javascript" src="src/namespace.js"></script>
-<script type="text/javascript" src="src/state.js"></script>
 <script type="text/javascript" src="src/algorithms/SearchPixelsAlgorithm.js"></script>
 <script type="text/javascript" src="src/StorageManager.js"></script>
 <script type="text/javascript" src="src/MathFn.js"></script>
@@ -170,10 +170,10 @@
 
         window.appInstance = appInstance;
 
-//        var sideBar = document.getElementsByClassName('side-bar')[0];
-//        sideBar.appendChild((new ToolBarView(appInstance)).nodeElement);
-//        sideBar.appendChild((new OptionsView(appInstance)).nodeElement);
-//        sideBar.appendChild((new UtilsBarView(appInstance)).nodeElement);
+        var sideBar = document.getElementsByClassName('side-bar')[0];
+        sideBar.appendChild((new ToolBarView(appInstance)).nodeElement);
+        sideBar.appendChild((new OptionsView(appInstance)).nodeElement);
+        sideBar.appendChild((new UtilsBarView(appInstance)).nodeElement);
     };
 
 </script>

@@ -5,7 +5,7 @@
     APP.controllers.SaveLocalUtilController = function (appInstance){
 
         this._saveToLocalSorage = function (){
-            var state = APP.getTotalState(appInstance);
+            var state = appInstance.getTotalState();
             appInstance.storageManager.setItem(appInstance.TOTAL_STATE_NAME, state);
         };
 
