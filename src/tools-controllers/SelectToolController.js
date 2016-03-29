@@ -1,6 +1,6 @@
 !function(APP){
     APP.namespace('APP.controllers');
-    var ToolController = APP.controllers.ToolController;
+    var ToolController = APP.core.ToolController;
     var SelectTool = APP.tools.SelectTool;
     APP.controllers.SelectToolController = function (appInstance, canvas){
 
@@ -14,7 +14,7 @@
         function keydown(event){
             if (event.code == "Delete"){
                 tool.deleteSelectedObjects();
-                appInstance.mediator.publish(appInstance.UPDATE_CANVAS);
+                appInstance.mediator.publish(appInstance.UPDATE_CANVAS_EVENT);
             }
         }
 

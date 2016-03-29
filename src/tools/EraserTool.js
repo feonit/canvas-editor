@@ -1,8 +1,8 @@
 !function(APP){
     APP.namespace('APP.tools');
     var MathFn = APP.core.MathFn;
-    var Point = APP.Point;
-    var Curve = APP.Curve;
+    var Point = APP.core.Point;
+    var Curve = APP.core.Curve;
     var LayerObject = APP.objects.LayerObject;
     /**
      * Ластик, позволяет стирать область холста, относительно переданной координаты
@@ -50,7 +50,7 @@
 
             this._render();
             this.points = null;
-            appInstance.mediator.publish(appInstance.UPDATE_CANVAS);
+            appInstance.mediator.publish(appInstance.UPDATE_CANVAS_EVENT);
         },
 
         _render : function(){

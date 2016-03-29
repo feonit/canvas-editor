@@ -1,6 +1,6 @@
 !function(CanvasEditor, global){
 
-    global.ToolBarView = function (appInstance){
+    global.ToolBarView = function (appInstance, enabledTool){
 
         var wrapper = this.nodeElement = document.createElement('div');
         wrapper.className = 'tool-bar';
@@ -13,9 +13,10 @@
          * */
 
         var toolsDriver = appInstance.toolsDriver;
-        var enabledTool = appInstance.settings.defaultToolConstructor || APP.controllers.DrawCurveController;
 
-        toolsDriver.play(enabledTool);
+        if (enabledTool){
+            toolsDriver.play(enabledTool);
+        }
 
         var map = {
             "Стерка": "EraserToolController",
@@ -84,4 +85,4 @@
         wrapper.appendChild(radioBox);
     }
 
-}(APP.CanvasEditor, window);
+}(APP.core.CanvasEditor, window);

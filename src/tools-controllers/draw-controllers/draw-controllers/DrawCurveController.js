@@ -2,8 +2,8 @@
     APP.namespace('APP.controllers');
 
     APP.controllers.DrawCurveController = function (appInstance, canvas){
-        APP.controllers.DrawToolController.apply(this, arguments);
-        this.__super = APP.controllers.DrawToolController.prototype;
+        APP.core.DrawToolController.apply(this, arguments);
+        this.__super = APP.core.DrawToolController.prototype;
 
         var snapshotView;
         var isDrawStarted = false;
@@ -16,7 +16,7 @@
 
         this.onMouseDown = function(event){
             snapshotView = new APP.views.CanvasSnapShotView(canvas);
-            bufferPoints = [new APP.Point(event.offsetX, event.offsetY)];
+            bufferPoints = [new APP.core.Point(event.offsetX, event.offsetY)];
             isDrawStarted = true;
             bufferCanvas = document.createElement('canvas');
             bufferCanvas.width = canvas.width;
@@ -26,12 +26,12 @@
 
         this.onMouseMove = function(event){
             if (!isDrawStarted) return;
-            bufferPoints.push(new APP.Point(event.offsetX, event.offsetY));
+            bufferPoints.push(new APP.core.Point(event.offsetX, event.offsetY));
             _change();
         };
 
         this.onMouseUp = function(event){
-            bufferPoints.push(new APP.Point(event.offsetX, event.offsetY));
+            bufferPoints.push(new APP.core.Point(event.offsetX, event.offsetY));
             object = new APP.objects.CurveComplexVectorAbstract({
                 points: bufferPoints,
                 size: appInstance.settings.drawingSize,
@@ -50,7 +50,7 @@
 
         var _change = function(){
             // способ ускоряет отрисовку, без создания промежуточных объектов
-            var coordinates = APP.core.MathFn.drawBezierCurve(new APP.Curve(bufferPoints));
+            var coordinates = APP.core.MathFn.drawBezierCurve(new APP.core.Curve(bufferPoints));
             APP.views.VectorLayerAbstractView.renderCircles(
                 bufferCanvas,
                 coordinates,
@@ -75,6 +75,6 @@
             canvas.removeEventListener('mouseup', this.onMouseUp);
         }
     };
-    APP.controllers.DrawCurveController.prototype = Object.create(APP.controllers.DrawToolController.prototype);
+    APP.controllers.DrawCurveController.prototype = Object.create(APP.core.DrawToolController.prototype);
     APP.controllers.DrawCurveController.prototype.constructor = APP.controllers.DrawCurveController;
 }(APP);

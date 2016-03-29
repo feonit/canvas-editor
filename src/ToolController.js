@@ -1,24 +1,21 @@
 !function(APP){
-    APP.namespace('APP');
-
-    /** @namespace APP.controllers */
-    APP.namespace('APP.controllers');
+    APP.namespace('APP.core');
 
     /**
      * @class ToolController
-     * @memberof APP
+     * @memberof APP.core
      * */
-    APP.controllers.ToolController = function (){};
+    APP.core.ToolController = function (){};
     /**
      * Включение инструмента
      * */
-    APP.controllers.ToolController.prototype.start = function(){
+    APP.core.ToolController.prototype.start = function(){
         throw "method must be implemented";
     };
     /**
      * Отключение инструмента
      * */
-    APP.controllers.ToolController.prototype.stop = function(){
+    APP.core.ToolController.prototype.stop = function(){
         throw "method must be implemented";
     };
 }(APP);

@@ -1,8 +1,8 @@
 !function(APP){
-    APP.namespace('APP.controllers');
-    var ToolController = APP.controllers.ToolController;
+    APP.namespace('APP.utils');
+    var ToolController = APP.core.ToolController;
 
-    APP.controllers.SaveLocalUtilController = function (appInstance){
+    APP.utils.SaveLocalUtilController = function (appInstance){
 
         this._saveToLocalSorage = function (){
             var state = appInstance.getTotalState();
@@ -10,13 +10,13 @@
         };
 
         this.start = function(){
-            appInstance.mediator.subscribe(appInstance.UPDATE_CANVAS, this._saveToLocalSorage);
+            appInstance.mediator.subscribe(appInstance.UPDATE_CANVAS_EVENT, this._saveToLocalSorage);
         };
 
         this.stop = function(){
-            appInstance.mediator.unsubscribe(appInstance.UPDATE_CANVAS, this._saveToLocalSorage);
+            appInstance.mediator.unsubscribe(appInstance.UPDATE_CANVAS_EVENT, this._saveToLocalSorage);
         }
     };
-    APP.controllers.SaveLocalUtilController.prototype = Object.create(ToolController);
-    APP.controllers.SaveLocalUtilController.prototype.constructor = APP.controllers.SaveLocalUtilController;
+    APP.utils.SaveLocalUtilController.prototype = Object.create(ToolController);
+    APP.utils.SaveLocalUtilController.prototype.constructor = APP.utils.SaveLocalUtilController;
 }(APP);

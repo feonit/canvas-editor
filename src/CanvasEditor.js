@@ -1,18 +1,18 @@
 !function(APP, HTMLCanvasElement){
-    APP.namespace('APP');
+    APP.namespace('APP.core');
 
     /**
      * Канвас редактор
      *
      * @class CanvasEditor
-     * @memberof APP
+     * @memberof APP.core
      * @param {HTMLCanvasElement} canvas
      * @param {Object} options
      * @param {string} options.lineColor
      * @param {number} options.lineWidth
      * @param {string} options.figureType
      * */
-    APP.CanvasEditor = function (canvas, options){
+    APP.core.CanvasEditor = function (canvas, options){
         if (!canvas)
             throw 'Lost first parameter';
         if (!(HTMLCanvasElement && canvas.getContext))
@@ -41,8 +41,7 @@
             eraserSize: 10,
             drawingType: 'CURVE_TYPE',
             storageEnabled: false,
-            drawingCursorEnabled: false,
-            defaultToolConstructor: APP.controllers.DrawCurveController
+            drawingCursorEnabled: false
         };
 
         this.toolsDriver = new APP.core.ToolsDriver(this, canvas);
@@ -71,7 +70,7 @@
                 extend(oldSettings, options.settings);
             }
 
-            var saveLocalUtilController = new APP.controllers.SaveLocalUtilController(this);
+            var saveLocalUtilController = new APP.utils.SaveLocalUtilController(this);
             saveLocalUtilController.start();
         }
 
@@ -90,23 +89,21 @@
 
         this.settings = options.settings;
 
-        this.toolsDriver.play(options.settings.defaultToolConstructor);
-
-        this.mediator.subscribe(this.CREATED_REGION, (function(object){
+        this.mediator.subscribe(this.CREATED_REGION_EVENT, (function(object){
             this.regionManager.addRegion(object);
         }).bind(this));
 
     };
 
-    APP.CanvasEditor.prototype.CREATED_REGION = 'CREATED_REGION';
-    APP.CanvasEditor.prototype.UPDATE_CANVAS = 'UPDATE_CANVAS';
-    APP.CanvasEditor.prototype.TOTAL_STATE_NAME = 'TOTAL_STATE_NAME';
+    APP.core.CanvasEditor.prototype.CREATED_REGION_EVENT = 'CREATED_REGION_EVENT';
+    APP.core.CanvasEditor.prototype.UPDATE_CANVAS_EVENT = 'UPDATE_CANVAS_EVENT';
+    APP.core.CanvasEditor.prototype.TOTAL_STATE_NAME = 'TOTAL_STATE_NAME';
 
     /**
      * Метод считывает состояния определенных компонентов системы и подготоваливает
      * данные для последующей инициализации приложения
      * */
-    APP.CanvasEditor.prototype.getTotalState = function () {
+    APP.core.CanvasEditor.prototype.getTotalState = function () {
         var instanse = this;
 
         var data = {};

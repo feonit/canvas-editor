@@ -1,6 +1,6 @@
 !function(APP){
     APP.namespace('APP.controllers');
-    var ToolController = APP.controllers.ToolController;
+    var ToolController = APP.core.ToolController;
     var EraserTool = APP.tools.EraserTool;
     APP.controllers.EraserToolController = function (appInstance, canvas){
 
@@ -81,7 +81,7 @@
 
         function mouseup(event){
             tool.eraserEnd(event.offsetX, event.offsetY);
-            appInstance.mediator.publish(appInstance.UPDATE_CANVAS);
+            appInstance.mediator.publish(appInstance.UPDATE_CANVAS_EVENT);
             appInstance.regionManager.reset();
         }
 

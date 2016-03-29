@@ -1,11 +1,11 @@
 !function(APP){
-    APP.namespace('APP.controllers');
+    APP.namespace('APP.core');
     /**
      * @class DrawToolController
-     * @memberof APP.controllers
+     * @memberof APP.core
      * */
-    APP.controllers.DrawToolController = function (appInstance, canvas){
-        APP.controllers.ToolController.apply(this, arguments);
+    APP.core.DrawToolController = function (appInstance, canvas){
+        APP.core.ToolController.apply(this, arguments);
         this.appInstance = appInstance;
         this.canvas = canvas;
 
@@ -75,10 +75,10 @@
         }
     };
 
-    APP.controllers.DrawToolController.prototype = Object.create(APP.controllers.ToolController.prototype);
-    APP.controllers.DrawToolController.prototype.constructor = APP.controllers.DrawToolController;
+    APP.core.DrawToolController.prototype = Object.create(APP.core.ToolController.prototype);
+    APP.core.DrawToolController.prototype.constructor = APP.core.DrawToolController;
 
-    APP.controllers.DrawToolController.prototype.start = function(){
+    APP.core.DrawToolController.prototype.start = function(){
         if (this.appInstance.settings.drawingCursorEnabled){
             this.saveCursor();
             this.canvas.addEventListener('mousedown', this.onMouseDownHideCircle, false);
@@ -87,7 +87,7 @@
             this.canvas.addEventListener('mouseout', this.onMouseOut, false);
         }
     };
-    APP.controllers.DrawToolController.prototype.stop = function(){
+    APP.core.DrawToolController.prototype.stop = function(){
         if (this.appInstance.settings.drawingCursorEnabled){
             this.restoreCursor();
             this.canvas.removeEventListener('mousedown', this.onMouseDownHideCircle);
@@ -100,10 +100,10 @@
     /**
      * Создает новое изображение нарисованной линии и сохраняет
      * */
-    APP.controllers.DrawToolController.prototype.publicNewObject = function(object){
+    APP.core.DrawToolController.prototype.publicNewObject = function(object){
         if (object){
-            this.appInstance.mediator.publish(appInstance.CREATED_REGION, object);
-            this.appInstance.mediator.publish(appInstance.UPDATE_CANVAS);
+            this.appInstance.mediator.publish(appInstance.CREATED_REGION_EVENT, object);
+            this.appInstance.mediator.publish(appInstance.UPDATE_CANVAS_EVENT);
         }
     };
 

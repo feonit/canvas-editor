@@ -24,30 +24,31 @@
          * Метод регистрации нового инструмента
          * @param {function} Constructor — конструктор нового инструмента
          * */
-        plug : function(Constructor){
+        _plug : function(Constructor){
             this._register.push(Constructor);
         },
         /**
          * Метод активизации инструмента
-         * @param {function} Tool - имя инструмента
+         * @param {ToolController} ToolController - имя инструмента
          * */
-        play : function(Tool){
-            if (!Tool){
+        play : function(ToolController){
+            if (!ToolController){
                 return;
             }
-            if ((this._register.indexOf[Tool] < 0)){
-                this.plug(Tool)
+
+            if ((this._register.indexOf[ToolController] < 0)){
+                this._plug(ToolController)
             }
 
-            if (this._activedTool === Tool){
+            if (this._activedTool === ToolController){
                 return;
             }
 
             if (this._instanceTool){
                 this._instanceTool.stop();
             }
-            this._instanceTool = new Tool(this.appInstance, this._canvas);
-            this._activedTool = Tool;
+            this._instanceTool = new ToolController(this.appInstance, this._canvas);
+            this._activedTool = ToolController;
             this._instanceTool.start();
         }
     };

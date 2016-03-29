@@ -3,11 +3,11 @@
     /**
      * Точка
      * @class Point
-     * @memberof APP
+     * @memberof APP.core
      * @param {number} x
      * @param {number} y
      * */
-    APP.Point = function (x, y){
+    APP.core.Point = function (x, y){
         this.x = x;
         this.y = y;
     }
@@ -18,10 +18,10 @@
     /**
      * Кривая линия
      * @class Curve
-     * @memberof APP
+     * @memberof APP.core
      * @param points
      * */
-    APP.Curve = function (points){
+    APP.core.Curve = function (points){
         this.x = [];
         this.y = [];
 

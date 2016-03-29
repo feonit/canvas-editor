@@ -2,9 +2,9 @@
     APP.namespace('APP.controllers');
 
     APP.controllers.DrawBrokenVectorController = function (appInstance, canvas){
-        APP.controllers.DrawToolController.apply(this, arguments);
+        APP.core.DrawToolController.apply(this, arguments);
 
-        this.__super = APP.controllers.DrawToolController.prototype;
+        this.__super = APP.core.DrawToolController.prototype;
 
         // снимок
         var snapshotView;
@@ -66,7 +66,7 @@
             snapshotView.redrawWithLayer(view.layer);
         };
     };
-    APP.controllers.DrawBrokenVectorController.prototype = Object.create(APP.controllers.DrawToolController.prototype);
+    APP.controllers.DrawBrokenVectorController.prototype = Object.create(APP.core.DrawToolController.prototype);
     APP.controllers.DrawBrokenVectorController.prototype.constructor = APP.controllers.DrawBrokenVectorController;
 
     APP.controllers.DrawBrokenVectorController.prototype.start = function(){

@@ -102,7 +102,7 @@
 <script type="text/javascript" src="src/layers/objects/vectors/simple/RectangleSimpleVector.js"></script>
 <script type="text/javascript" src="src/tools/EraserTool.js"></script>
 <script type="text/javascript" src="src/tools/SelectTool.js"></script>
-<script type="text/javascript" src="src/tools-controllers/ToolController.js"></script>
+<script type="text/javascript" src="src/ToolController.js"></script>
 <script type="text/javascript" src="src/tools-controllers/draw-controllers/DrawToolController.js"></script>
 <script type="text/javascript" src="src/tools-controllers/draw-controllers/draw-controllers/DrawCurveController.js"></script>
 <script type="text/javascript" src="src/tools-controllers/draw-controllers/draw-controllers/DrawSimpleVectorController.js"></script>
@@ -122,8 +122,6 @@
 <script type="text/javascript" src="src/CanvasEditor.js"></script>
 <script type="text/javascript" src="src/utils-controllers/SaveLocalUtilController.js"></script>
 <script type="text/javascript" src="src/utils-controllers/SaveServerUtilController.js"></script>
-<script type="text/javascript" src="src/utils-controllers/TransparentUtilController.js"></script>
-<script type="text/javascript" src="src/utils-controllers/RandomOptionsController.js"></script>
 
 <!-- example views -->
 <script type="text/javascript" src="example-ui/ui-components/RadioBoxComponent.js"></script>
@@ -142,7 +140,7 @@
         var canvas = document.getElementById('canvas');
         var img = document.getElementById('img');
 
-        var appInstance = new APP.CanvasEditor(document.getElementById('canvas'), {
+        var appInstance = new APP.core.CanvasEditor(document.getElementById('canvas'), {
             settings: {
                 drawingColor: "0000ff",
                 drawingSize: 4,
@@ -150,12 +148,14 @@
                 storageKey: 'qwerty',
                 uploadUrl: '/upload.php',
                 uploadEnabled: true,
-                drawingCursorEnabled: true,
-                defaultToolConstructor: APP.controllers.DrawCurveController
+                drawingCursorEnabled: true
             }
         });
 
-        var appInstance2 = new APP.CanvasEditor(document.getElementById('canvas-2'), {
+        var enabledTool = APP.controllers.DrawCurveController;
+        appInstance.toolsDriver.play(enabledTool);
+
+        var appInstance2 = new APP.core.CanvasEditor(document.getElementById('canvas-2'), {
             settings: {
                 drawingColor: "0000ff",
                 drawingSize: 4,
@@ -163,15 +163,14 @@
                 storageKey: 'qwerty2',
                 uploadUrl: '/upload.php',
                 uploadEnabled: true,
-                drawingCursorEnabled: true,
-                defaultToolConstructor: APP.controllers.DrawCurveController
+                drawingCursorEnabled: true
             }
         });
 
         window.appInstance = appInstance;
 
         var sideBar = document.getElementsByClassName('side-bar')[0];
-        sideBar.appendChild((new ToolBarView(appInstance)).nodeElement);
+        sideBar.appendChild((new ToolBarView(appInstance)).nodeElement, enabledTool);
         sideBar.appendChild((new OptionsView(appInstance)).nodeElement);
         sideBar.appendChild((new UtilsBarView(appInstance)).nodeElement);
     };

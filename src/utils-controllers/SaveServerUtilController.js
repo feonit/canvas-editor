@@ -1,8 +1,8 @@
 !function(APP){
-    APP.namespace('APP.controllers');
-    var ToolController = APP.controllers.ToolController;
+    APP.namespace('APP.utils');
+    var ToolController = APP.core.ToolController;
 
-    APP.controllers.SaveServerUtilController = function (appInstance, canvas){
+    APP.utils.SaveServerUtilController = function (appInstance, canvas){
 
         function dataURItoBlob(dataURI) {
             // convert base64/URLEncoded data component to raw binary data held in a string
@@ -53,12 +53,12 @@
         };
 
         this.start = function(){
-            appInstance.mediator.subscribe(appInstance.UPDATE_CANVAS, this._saveToServer);
+            appInstance.mediator.subscribe(appInstance.UPDATE_CANVAS_EVENT, this._saveToServer);
         };
         this.stop = function(){
-            appInstance.mediator.unsubscribe(appInstance.UPDATE_CANVAS, this._saveToServer);
+            appInstance.mediator.unsubscribe(appInstance.UPDATE_CANVAS_EVENT, this._saveToServer);
         };
     }
-    APP.controllers.SaveServerUtilController.prototype = Object.create(ToolController);
-    APP.controllers.SaveServerUtilController.prototype.constructor = APP.controllers.SaveServerUtilController;
+    APP.utils.SaveServerUtilController.prototype = Object.create(ToolController);
+    APP.utils.SaveServerUtilController.prototype.constructor = APP.utils.SaveServerUtilController;
 }(APP);

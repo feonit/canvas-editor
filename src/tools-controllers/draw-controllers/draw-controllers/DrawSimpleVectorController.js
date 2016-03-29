@@ -2,8 +2,8 @@
     APP.namespace('APP.controllers');
 
     APP.controllers.DrawSimpleVectorController = function (appInstance, canvas){
-        APP.controllers.DrawToolController.apply(this, arguments);
-        this.__super = APP.controllers.DrawToolController.prototype;
+        APP.core.DrawToolController.apply(this, arguments);
+        this.__super = APP.core.DrawToolController.prototype;
 
         // начальная позиция
         var x0, y0;
@@ -64,7 +64,7 @@
             snapshotView.redrawWithLayer(view.layer);
         };
     };
-    APP.controllers.DrawSimpleVectorController.prototype = Object.create(APP.controllers.DrawToolController.prototype);
+    APP.controllers.DrawSimpleVectorController.prototype = Object.create(APP.core.DrawToolController.prototype);
     APP.controllers.DrawSimpleVectorController.prototype.constructor = APP.controllers.DrawSimpleVectorController;
 
     APP.controllers.DrawSimpleVectorController.prototype.start = function(){
