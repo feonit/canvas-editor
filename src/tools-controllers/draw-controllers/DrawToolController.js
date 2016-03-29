@@ -105,6 +105,7 @@
             this.appInstance.newEvent('CREATED_REGION', [
                 object
             ]);
+            this.appInstance.mediator.publish(appInstance.UPDATE_CANVAS);
         }
     };
 

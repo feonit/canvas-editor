@@ -13,7 +13,7 @@
          * */
 
         var toolsDriver = appInstance.toolsDriver;
-        var enabledTool = APP.controllers.DrawCurveController;
+        var enabledTool = appInstance.settings.defaultToolConstructor || APP.controllers.DrawCurveController;
 
         toolsDriver.play(enabledTool);
 

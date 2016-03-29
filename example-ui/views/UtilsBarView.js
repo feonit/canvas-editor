@@ -52,7 +52,7 @@
          * Утилита: Сохранение локально
          * */
         !function(){
-            var isEnabled = false;
+            var isEnabled = appInstance.settings.storageEnabled;
 
             var util = new APP.controllers.SaveLocalUtilController(appInstance, appInstance.canvas);
             var checkBox = new CheckBoxComponent('Автосохранение локально', isEnabled);

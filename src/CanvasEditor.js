@@ -45,17 +45,25 @@
             eraserSize: 10,
             drawingType: 'CURVE_TYPE',
             storageEnabled: false,
-            drawingCursorEnabled: false
+            drawingCursorEnabled: false,
+            defaultToolConstructor: APP.controllers.DrawCurveController
         };
 
         this.toolsDriver = new ToolsDriver(this, canvas);
+
         this.mediator = new Mediator();
 
+        this.TOTAL_STATE_NAME = 'TOTAL_STATE_NAME';
+
         if (options.settings && options.settings.storageEnabled){
-            this.storageManager = new StorageManager('unic_namespace');
+
+            this.storageManager = new StorageManager({
+                key: options.settings.storageKey,
+                namespace: 'CanvasEditor'
+            });
 
             // сохраненное состояние
-            var stateOptions = this.storageManager.getProperty('SAVED_STATE');
+            var stateOptions = this.storageManager.getProperty(this.TOTAL_STATE_NAME);
 
             if (stateOptions){
                 // запоминаем предыдушие настройки
@@ -87,6 +95,9 @@
         extend(defaultSettings, options.settings);
 
         this.settings = options.settings;
+
+        this.toolsDriver.play(options.settings.defaultToolConstructor);
+
     };
 
     APP.CanvasEditor.prototype.CREATED_REGION = 'CREATED_REGION';

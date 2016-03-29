@@ -51,13 +51,25 @@
             cursor:-moz-grabbing;
             cursor:-webkit-grabbing;
         }
+        .canvas-2{
+            background: darkolivegreen;
+        }
+
+        canvas{
+            border: 50px solid black;
+        }
     </style>
 </head>
 <body>
 
-<canvas id="canvas" width="800" height="400">
+<canvas id="canvas" width="600" height="300">
     Fallback content.Telling the user to use a different browser that supports canvas.
 </canvas>
+
+<canvas id="canvas-2" class="canvas-2" width="800" height="400">
+    Fallback content.Telling the user to use a different browser that supports canvas.
+</canvas>
+
 <div class="side-bar"></div>
 </body>
 
@@ -71,25 +83,23 @@
 <script type="text/javascript" src="src/ToolsDriver.js"></script>
 <script type="text/javascript" src="src/PixelsMap.js"></script>
 <script type="text/javascript" src="src/ObjectsOrder.js"></script>
-<script type="text/javascript" src="src/objects/LayerAbstract.js"></script>
-<script type="text/javascript" src="src/objects/LayerObject.js"></script>
-<script type="text/javascript" src="src/objects/OffsetHistory.js"></script>
-<script type="text/javascript" src="src/objects/DraggingAbstract.js"></script>
-<script type="text/javascript" src="src/objects/RasterLayer.js"></script>
-<script type="text/javascript" src="src/objects/rasters/SimpleRaster.js"></script>
-<script type="text/javascript" src="src/objects/LayerBackground.js"></script>
+<script type="text/javascript" src="src/LayerAbstract.js"></script>
+<script type="text/javascript" src="src/layers/LayerObject.js"></script>
+<script type="text/javascript" src="src/layers/objects/RasterLayer.js"></script>
+<script type="text/javascript" src="src/layers/objects/rasters/SimpleRaster.js"></script>
+<script type="text/javascript" src="src/layers/LayerBackground.js"></script>
 <script type="text/javascript" src="src/RegionManager.js"></script>
 <script type="text/javascript" src="src/Mediator.js"></script>
 <script type="text/javascript" src="src/tools/DraggingTool.js"></script>
-<script type="text/javascript" src="src/objects/VectorLayerAbstract.js"></script>
-<script type="text/javascript" src="src/objects/vectors/SimpleVectorAbstract.js"></script>
-<script type="text/javascript" src="src/objects/vectors/ComplexVectorAbstract.js"></script>
-<script type="text/javascript" src="src/objects/vectors/simple/ArrowSimpleVector.js"></script>
-<script type="text/javascript" src="src/objects/vectors/complex/CurveComplexVector.js"></script>
-<script type="text/javascript" src="src/objects/vectors/complex/BrokenComplexVector.js"></script>
-<script type="text/javascript" src="src/objects/vectors/simple/EllipseSimpleVector.js"></script>
-<script type="text/javascript" src="src/objects/vectors/simple/LineSimpleVector.js"></script>
-<script type="text/javascript" src="src/objects/vectors/simple/RectangleSimpleVector.js"></script>
+<script type="text/javascript" src="src/layers/objects/VectorLayerAbstract.js"></script>
+<script type="text/javascript" src="src/layers/objects/vectors/SimpleVectorAbstract.js"></script>
+<script type="text/javascript" src="src/layers/objects/vectors/ComplexVectorAbstract.js"></script>
+<script type="text/javascript" src="src/layers/objects/vectors/simple/ArrowSimpleVector.js"></script>
+<script type="text/javascript" src="src/layers/objects/vectors/complex/CurveComplexVector.js"></script>
+<script type="text/javascript" src="src/layers/objects/vectors/complex/BrokenComplexVector.js"></script>
+<script type="text/javascript" src="src/layers/objects/vectors/simple/EllipseSimpleVector.js"></script>
+<script type="text/javascript" src="src/layers/objects/vectors/simple/LineSimpleVector.js"></script>
+<script type="text/javascript" src="src/layers/objects/vectors/simple/RectangleSimpleVector.js"></script>
 <script type="text/javascript" src="src/tools/EraserTool.js"></script>
 <script type="text/javascript" src="src/tools/SelectTool.js"></script>
 <script type="text/javascript" src="src/tools-controllers/ToolController.js"></script>
@@ -116,13 +126,14 @@
 <script type="text/javascript" src="src/utils-controllers/RandomOptionsController.js"></script>
 
 <!-- example views -->
-<script type="text/javascript" src="example/ui-components/RadioBoxComponent.js"></script>
-<script type="text/javascript" src="example/ui-components/CheckBoxComponent.js"></script>
-<script type="text/javascript" src="example/ui-components/InputColorComponent.js"></script>
-<script type="text/javascript" src="example/ui-components/InputSliderComponent.js"></script>
-<script type="text/javascript" src="example/views/OptionsView.js"></script>
-<script type="text/javascript" src="example/views/ToolBarView.js"></script>
-<script type="text/javascript" src="example/views/UtilsBarView.js"></script>
+<script type="text/javascript" src="example-ui/ui-components/RadioBoxComponent.js"></script>
+<script type="text/javascript" src="example-ui/ui-components/CheckBoxComponent.js"></script>
+<script type="text/javascript" src="example-ui/ui-components/InputColorComponent.js"></script>
+<script type="text/javascript" src="example-ui/ui-components/InputSliderComponent.js"></script>
+
+<script type="text/javascript" src="example-ui/views/OptionsView.js"></script>
+<script type="text/javascript" src="example-ui/views/ToolBarView.js"></script>
+<script type="text/javascript" src="example-ui/views/UtilsBarView.js"></script>
 
 <script>
 
@@ -131,25 +142,38 @@
         var canvas = document.getElementById('canvas');
         var img = document.getElementById('img');
 
-        var options = {
+        var appInstance = new APP.CanvasEditor(document.getElementById('canvas'), {
             settings: {
                 drawingColor: "0000ff",
                 drawingSize: 4,
-                storageEnabled: false,
-                drawingCursorEnabled: true
+                storageEnabled: true,
+                storageKey: 'qwerty',
+                uploadUrl: '/upload.php',
+                uploadEnabled: true,
+                drawingCursorEnabled: true,
+                defaultToolConstructor: APP.controllers.DrawCurveController
             }
-        };
-        var appInstance = new APP.CanvasEditor(document.getElementById('canvas'), options);
+        });
 
-//        window.storageManager.setItem('SAVED_STATE', '');
+        var appInstance2 = new APP.CanvasEditor(document.getElementById('canvas-2'), {
+            settings: {
+                drawingColor: "0000ff",
+                drawingSize: 4,
+                storageEnabled: true,
+                storageKey: 'qwerty2',
+                uploadUrl: '/upload.php',
+                uploadEnabled: true,
+                drawingCursorEnabled: true,
+                defaultToolConstructor: APP.controllers.DrawCurveController
+            }
+        });
 
         window.appInstance = appInstance;
 
-        var sideBar = document.getElementsByClassName('side-bar')[0];
-        sideBar.appendChild((new ToolBarView(appInstance)).nodeElement);
-        sideBar.appendChild((new OptionsView(appInstance)).nodeElement);
-        sideBar.appendChild((new UtilsBarView(appInstance)).nodeElement);
-
+//        var sideBar = document.getElementsByClassName('side-bar')[0];
+//        sideBar.appendChild((new ToolBarView(appInstance)).nodeElement);
+//        sideBar.appendChild((new OptionsView(appInstance)).nodeElement);
+//        sideBar.appendChild((new UtilsBarView(appInstance)).nodeElement);
     };
 
 </script>

@@ -6,27 +6,24 @@
      * @throw
      * @return {StorageManager}
      * */
-     APP.core.StorageManager = function StorageManager(localNamespace){
-            if (!this.supportsLocalStorage()) return false;
-            if (!localNamespace) throw 'You need specific name';
+     APP.core.StorageManager = function StorageManager(options){
+         options = options || {};
 
-            var namespace = this.GLOBAL_NAMESPACE + this.SEPARATOR + localNamespace;
+         if (!this.supportsLocalStorage())
+             return false;
 
-            Object.defineProperties(this, {
-                namespace: {
-                    value: namespace
-                },
-                localNamespace: {
-                    value: localNamespace
-                }
-            });
-        };
+         if (!options.key || !options.namespace)
+             throw 'You need specific key and namespace for storage';
+
+         var namespace = options.namespace;
+
+         this.uniqueNamespace = namespace + this.SEPARATOR + options.key;
+    };
 
     APP.core.StorageManager.prototype = {
             constructor: APP.core.StorageManager,
 
             SEPARATOR: '.',
-            GLOBAL_NAMESPACE: 'CANVAS_EDITOR',
 
             supportsLocalStorage: function(){
                 try {
@@ -37,11 +34,11 @@
             },
 
             /**
-             * @param {String} key — property name
+             * @param {String} propName — property name
              * @return null || object
              * */
-            getProperty: function(key){
-                var propertyName = this.namespace + this.SEPARATOR + key;
+            getProperty: function(propName){
+                var propertyName = this.uniqueNamespace + this.SEPARATOR + propName;
                 var prop = localStorage.getItem(propertyName);
 
                 var data;
@@ -54,12 +51,8 @@
                 return data;
             },
 
-            setItem: function(key, value){
-                var propertyName,
-                    propertyValue;
-
-                propertyName = this.namespace + this.SEPARATOR + key;
-                propertyValue = value;
+            setItem: function(propName, value){
+                var propertyName = this.uniqueNamespace + this.SEPARATOR + propName;
                 var item = JSON.stringify(value);
                 localStorage.setItem(propertyName, item);
             },

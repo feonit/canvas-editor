@@ -6,11 +6,10 @@
 
         this._saveToLocalSorage = function (){
             var state = APP.getTotalState(appInstance);
-            appInstance.storageManager.setItem('SAVED_STATE', state);
+            appInstance.storageManager.setItem(appInstance.TOTAL_STATE_NAME, state);
         };
 
         this.start = function(){
-            this._saveToLocalSorage();
             appInstance.mediator.subscribe(appInstance.UPDATE_CANVAS, this._saveToLocalSorage);
         };
 

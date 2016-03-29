@@ -24,6 +24,12 @@
          * */
         this.color = options.color;
 
+        /**
+         * Смещение слоя на главноем холсте после транспортировки.
+         * @arg {number[][]}
+         * */
+        this.offsetHistory = new APP.OffsetHistory(options.offsetHistory);
+
         Object.defineProperties(this, {
             ///**
             // * Координаты точек контура
@@ -51,8 +57,38 @@
     };
 
     APP.objects.LayerObject.prototype = Object.create(APP.objects.LayerAbstract.prototype);
-    APP.objects.LayerObject.prototype.constructor = APP.DraggingAbstract;
+    APP.objects.LayerObject.prototype.constructor = APP.objects.LayerObject;
 
+    /**
+     * Сгенерировать новый набор оригинальных координат с применением актуального отступа
+     * @param {number[][]} coordinates
+     * @param {number[]} offset
+     * */
+    APP.objects.LayerObject.prototype.getRelationCoordinate = function(coordinates, offset){
+        var relation = [];
+
+        coordinates = coordinates || this.coordinates;
+
+        for (var i = 0, len = coordinates.length; i < len; i+=1 ) {
+            relation[i] = [];
+            relation[i][0] = coordinates[i][0];
+            relation[i][1] = coordinates[i][1];
+        }
+
+        offset = offset || this.offsetHistory.currentOffset;
+
+        _addOffsetToCoordinate(relation, offset);
+
+        function _addOffsetToCoordinate(coordinates, offset){
+            for (var i = 0, len = coordinates.length; i < len; i+=1 ){
+                coordinates[i][0] += offset[0];
+                coordinates[i][1] += offset[1];
+            }
+            return coordinates;
+        }
+
+        return relation;
+    }
 
     /**
      * Метод создания подцветки
@@ -71,4 +107,33 @@
         this.isActived = false;
         this.layerView.eraserBorder();
     };
+}(APP);
+
+
+!function(APP){
+    APP.namespace('APP');
+
+    /**
+     * История перемещений
+     * @class OffsetHistory
+     * @memberof APP
+     * */
+    APP.OffsetHistory = function(options){
+        options = options || {};
+        this.currentOffset = options.currentOffset || [0,0];
+        /**
+         * Смещение слоя на главноем холсте после транспортировки.
+         * @arg {number[][]}
+         * */
+        this.recordsOffset = options.recordsOffset || [[0,0]];
+    };
+
+    APP.OffsetHistory.prototype.saveRecordOffset = function(){
+        this.recordsOffset.push([this.currentOffset[0], this.currentOffset[1]])
+    };
+
+    APP.OffsetHistory.prototype.getPrevRecord = function(){
+        return this.recordsOffset[this.recordsOffset.length - 2];
+    };
+
 }(APP);

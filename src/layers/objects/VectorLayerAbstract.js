@@ -7,7 +7,7 @@
      * @memberof APP
      * */
     APP.objects.VectorLayerAbstract = function (attributes){
-        APP.DraggingAbstract.apply(this, arguments);
+        APP.objects.LayerObject.apply(this, arguments);
         this.size = attributes.size;
 
         Object.defineProperty(this, 'coordinatesLine', {
@@ -29,7 +29,7 @@
         });
     };
 
-    APP.objects.VectorLayerAbstract.prototype = Object.create(APP.DraggingAbstract.prototype);
+    APP.objects.VectorLayerAbstract.prototype = Object.create(APP.objects.LayerObject.prototype);
     APP.objects.VectorLayerAbstract.prototype.constructor = APP.objects.VectorLayerAbstract;
 
 
