@@ -38,4 +38,18 @@
         }
     };
 
+    APP.views.CursorView.prototype.hideCursor = function(){
+        if (this._savedCursorStyle === undefined){
+            this._savedCursorStyle = this.canvas.style.cursor;
+            this.canvas.style.cursor = 'none';
+        }
+    };
+
+    APP.views.CursorView.prototype.revertCursor = function(){
+        if (this._savedCursorStyle !== undefined){
+            this.canvas.style.cursor = this._savedCursorStyle;
+            this._savedCursorStyle = undefined;
+        }
+    };
+
 }(APP);

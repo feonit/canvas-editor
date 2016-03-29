@@ -16,24 +16,9 @@
         // отключен
         var prevent;
 
-        // курсор
-        var savedCursorStyle;
-
         var that = this;
 
-        this.saveCursor = function(){
-            if (savedCursorStyle === undefined){
-                savedCursorStyle = canvas.style.cursor;
-                canvas.style.cursor = 'none';
-            }
-        };
-
-        this.restoreCursor = function(){
-            if (savedCursorStyle !== undefined){
-                canvas.style.cursor = savedCursorStyle;
-                savedCursorStyle = undefined;
-            }
-        };
+        this.cursorView = new APP.views.CursorView({canvas: canvas});
 
         this.onMouseMoveMoveCircle = function(event){
             if (!prevent){
@@ -56,7 +41,7 @@
         };
 
         this.onMouseDownHideCircle = function(event){
-            that.restoreCursor();
+            that.cursorView.revertCursor();
             if (snapshotView){//dblclick
                 snapshotView.restore();
             }
@@ -65,7 +50,7 @@
         };
 
         this.onMouseUpShowCircle = function(){
-            that.saveCursor();
+            that.cursorView.hideCursor();
             prevent = false;
         };
 
@@ -81,7 +66,7 @@
 
     APP.core.DrawToolController.prototype.start = function(){
         if (this.appInstance.settings.drawingCursorEnabled){
-            this.saveCursor();
+            this.cursorView.hideCursor();
             this.canvas.addEventListener('mousedown', this.onMouseDownHideCircle, false);
             this.canvas.addEventListener('mousemove', this.onMouseMoveMoveCircle, false);
             this.canvas.addEventListener('mouseup', this.onMouseUpShowCircle, false);
@@ -90,7 +75,7 @@
     };
     APP.core.DrawToolController.prototype.stop = function(){
         if (this.appInstance.settings.drawingCursorEnabled){
-            this.restoreCursor();
+            this.cursorView.revertCursor();
             this.canvas.removeEventListener('mousedown', this.onMouseDownHideCircle);
             this.canvas.removeEventListener('mousemove', this.onMouseMoveMoveCircle);
             this.canvas.removeEventListener('mouseup', this.onMouseUpShowCircle);
