@@ -3,7 +3,7 @@
 
     /**
      * Задний главный слой
-     * @class LayerBackground
+     * @class
      * @memberof APP.objects
      * */
     APP.objects.LayerBackground = function (options){

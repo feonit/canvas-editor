@@ -3,6 +3,7 @@
     var MathFn = APP.core.MathFn;
     /**
      * Класс Слой Вид. Отвечает за отображение информации о слое.
+     * @class
      * @memberof APP.views
      * @param {Object} attributes — атрибуты
      * @param {number} attributes.width — высота слоя

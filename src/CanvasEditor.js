@@ -3,8 +3,7 @@
 
     /**
      * Канвас редактор
-     *
-     * @class CanvasEditor
+     * @class
      * @memberof APP.core
      * @param {HTMLCanvasElement} canvas
      * @param {Object} options

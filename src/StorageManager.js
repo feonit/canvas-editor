@@ -2,8 +2,10 @@
     APP.namespace('APP.core');
 
     /**
-     * @constructor
+     * Работа с локальным хранилищем, для сохранения состояния
+     * @class
      * @throw
+     * @memberof APP.core
      * @return {StorageManager}
      * */
      APP.core.StorageManager = function (options){

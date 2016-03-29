@@ -1,7 +1,8 @@
 !function(APP){
     APP.namespace('APP.tools');
     /**
-     * @class DraggingTool
+     * Логика работы инструмента ластика
+     * @class
      * @memberof APP.tools
      * @param {CanvasEditor} appInstance
      * @param {HTMLCanvasElement} canvas — канвас

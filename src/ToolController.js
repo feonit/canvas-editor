@@ -2,7 +2,8 @@
     APP.namespace('APP.core');
 
     /**
-     * @class ToolController
+     * Интерфейс для контроллеров
+     * @class
      * @memberof APP.core
      * */
     APP.core.ToolController = function (){};

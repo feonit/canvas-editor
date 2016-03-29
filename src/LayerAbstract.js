@@ -8,7 +8,7 @@
 
     /**
      * Базовый класс слоев
-     * @class LayerAbstract
+     * @class
      * @memberof APP.objects
      * @param {Object} options
      * @param {number[][]} options.coordinates

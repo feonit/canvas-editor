@@ -1,6 +1,11 @@
 !function(APP){
     APP.namespace('APP.controllers');
 
+    /**
+     * Контроллер для рисования примитивной фигуры
+     * @class
+     * @memberof APP.controllers
+     * */
     APP.controllers.DrawSimpleVectorController = function (appInstance, canvas){
         APP.core.DrawToolController.apply(this, arguments);
         this.__super = APP.core.DrawToolController.prototype;

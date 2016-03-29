@@ -1,4 +1,9 @@
 !function(APP){
+    /**
+     * Курсор в виде круга
+     * @class
+     * @memberof APP.views
+     * */
     APP.views.CursorCircleView = function(options){
         this.x = options.x;
         this.y = options.y;

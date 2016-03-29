@@ -2,6 +2,11 @@
     APP.namespace('APP.utils');
     var ToolController = APP.core.ToolController;
 
+    /**
+     * Автоматическое сохранение состояния приложения на сервер
+     * @class
+     * @memberof APP.utils
+     * */
     APP.utils.SaveServerUtilController = function (appInstance, canvas){
 
         function dataURItoBlob(dataURI) {

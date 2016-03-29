@@ -6,7 +6,7 @@
     var LayerObject = APP.objects.LayerObject;
     /**
      * Ластик, позволяет стирать область холста, относительно переданной координаты
-     * @class EraserTool Ластик
+     * @class
      * @memberof APP.tools
      * @arg {String} shape — форма ластика: круг/квадрат (Circle, Squire)
      * @arg {Number} shapeLength — параметры формы ластика: длинна стороны/диагонали

@@ -3,10 +3,10 @@
     var PixelsMap = APP.core.PixelsMap;
     var ObjectsOrder = APP.core.ObjectsOrder;
     var LayerBackground = APP.objects.LayerBackground;
-    var RasterLayer = APP.objects.RasterLayer;
     /**
-     * @class RegionManager
-     * @memberof APP
+     * Управление объектами на холсте
+     * @class
+     * @memberof APP.core
      * @param appInstance
      * @param {HTMLCanvasElement} canvas
      * */

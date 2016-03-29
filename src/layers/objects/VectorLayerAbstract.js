@@ -3,8 +3,8 @@
 
     /**
      * Векторный слой
-     * @class VectorLayerAbstract
-     * @memberof APP
+     * @class
+     * @memberof APP.objects
      * */
     APP.objects.VectorLayerAbstract = function (attributes){
         APP.objects.LayerObject.apply(this, arguments);

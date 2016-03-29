@@ -2,6 +2,12 @@
     APP.namespace('APP.controllers');
     var ToolController = APP.core.ToolController;
     var EraserTool = APP.tools.EraserTool;
+
+    /**
+     * Контроллер для стерки
+     * @class
+     * @memberof APP.controllers
+     * */
     APP.controllers.EraserToolController = function (appInstance, canvas){
 
         var tool = new EraserTool(appInstance, canvas);

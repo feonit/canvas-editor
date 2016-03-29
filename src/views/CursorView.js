@@ -1,5 +1,10 @@
 !function(APP){
 
+    /**
+     * Класс для работы с курсором
+     * @class
+     * @memberof APP.views
+     * */
     APP.views.CursorView = function(options){
         this.canvas = options.canvas;
         this._cursorIs = this.canvas.style.cursor;

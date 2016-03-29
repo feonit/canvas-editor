@@ -1,9 +1,9 @@
 !function(APP){
-    /** @namespace APP.views */
     APP.namespace('APP.views');
 
     /**
-     * @class CanvasSnapShotView
+     * Снимок с холста
+     * @class
      * @memberof APP.views
      * */
     APP.views.CanvasSnapShotView = function(canvas){

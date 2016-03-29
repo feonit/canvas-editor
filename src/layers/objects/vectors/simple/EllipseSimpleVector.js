@@ -3,7 +3,7 @@
 
     /**
      * Овал
-     * @class EllipseSimpleVectorAbstract
+     * @class
      * @memberof APP.objects
      * */
     APP.objects.EllipseSimpleVectorAbstract = function (attributes){

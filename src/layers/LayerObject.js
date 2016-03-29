@@ -3,7 +3,7 @@
 
     /**
      * Объект слоя
-     * @class LayerObject
+     * @class
      * @memberof APP.objects
      * @param {Object} options
      * @param {number[][]} options.coordinates
@@ -107,12 +107,12 @@
 
 
 !function(APP){
-    APP.namespace('APP');
+    APP.namespace('APP.core');
 
     /**
      * История перемещений
-     * @class OffsetHistory
-     * @memberof APP
+     * @class
+     * @memberof APP.core
      * */
     APP.core.OffsetHistory = function(options){
         options = options || {};

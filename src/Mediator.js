@@ -2,8 +2,8 @@
     APP.namespace('APP.core');
     /**
      * Для связи между модулями
-     * @memberof APP
-     * @class Mediator
+     * @class
+     * @memberof APP.core
      * */
     APP.core.Mediator = function (){
         // events

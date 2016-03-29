@@ -4,7 +4,7 @@
 
     /**
      * Прямая
-     * @class LineSimpleVectorAbstract
+     * @class
      * @memberof APP.objects
      * */
     APP.objects.LineSimpleVectorAbstract = function (attributes){

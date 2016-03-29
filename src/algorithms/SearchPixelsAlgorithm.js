@@ -1,5 +1,4 @@
 !function(APP) {
-    /** @namespace APP.algorithms */
     APP.namespace('APP.algorithms');
 
     /**

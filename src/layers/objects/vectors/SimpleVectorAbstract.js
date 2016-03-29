@@ -3,7 +3,7 @@
 
     /**
      * Класс определяет две контрольные точки
-     * @class SimpleVectorAbstract
+     * @class
      * @memberof APP.objects
      * */
     APP.objects.SimpleVectorAbstract = function(attributes){

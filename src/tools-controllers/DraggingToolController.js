@@ -3,6 +3,11 @@
     var ToolController = APP.core.ToolController;
     var DraggingTool = APP.tools.DraggingTool;
 
+    /**
+     * Контроллер для переноса объектов
+     * @class
+     * @memberof APP.controllers
+     * */
     APP.controllers.DraggingToolController = function (appInstance, canvas){
 
         var tool = new DraggingTool(appInstance, canvas);

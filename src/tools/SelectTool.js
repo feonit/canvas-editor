@@ -1,7 +1,8 @@
 !function(APP){
     APP.namespace('APP.tools');
     /**
-     * @class SelectTool
+     * Логика работы инструмента выборки
+     * @class
      * @memberof APP.tools
      * @param {CanvasEditor} appInstance
      * @param {HTMLCanvasElement} canvas — канвас

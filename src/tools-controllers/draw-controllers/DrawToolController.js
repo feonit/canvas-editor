@@ -1,7 +1,8 @@
 !function(APP){
     APP.namespace('APP.core');
     /**
-     * @class DrawToolController
+     * Базовое поведение для инструмента рисования
+     * @class
      * @memberof APP.core
      * */
     APP.core.DrawToolController = function (appInstance, canvas){

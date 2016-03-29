@@ -4,7 +4,7 @@
 
     /**
      * Отвечает за отображение информации
-     * @class VectorLayerAbstractView
+     * @class
      * @memberof APP.views
      * */
     APP.views.VectorLayerAbstractView = function(options){

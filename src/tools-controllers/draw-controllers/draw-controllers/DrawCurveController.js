@@ -1,6 +1,11 @@
 !function(APP){
     APP.namespace('APP.controllers');
 
+    /**
+     * Контроллер для рисования кривой линии
+     * @class
+     * @memberof APP.controllers
+     * */
     APP.controllers.DrawCurveController = function (appInstance, canvas){
         APP.core.DrawToolController.apply(this, arguments);
         this.__super = APP.core.DrawToolController.prototype;

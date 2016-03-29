@@ -1,6 +1,9 @@
 !function(APP){
     APP.namespace('APP.core');
 
+    /**
+     * @memberof APP.core
+     * */
     APP.core.MathFn = {
         /**
          * Получить список координат для всех точек принадлежащих к окружности с заданным радиусом

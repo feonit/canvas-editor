@@ -2,6 +2,11 @@
     APP.namespace('APP.utils');
     var ToolController = APP.core.ToolController;
 
+    /**
+     * Автоматическое сохранение состояния приложения локально
+     * @class
+     * @memberof APP.utils
+     * */
     APP.utils.SaveLocalUtilController = function (appInstance){
 
         this._saveToLocalSorage = function (){

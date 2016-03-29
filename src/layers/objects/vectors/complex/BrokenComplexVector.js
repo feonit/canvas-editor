@@ -6,7 +6,7 @@
     /**
      * Класс определяет по массиву контрольных точек
      * координаты ломанной линии
-     * @class BrokenComplexVectorAbstract
+     * @class
      * @memberof APP.objects
      * */
     APP.objects.BrokenComplexVectorAbstract = function (attributes){

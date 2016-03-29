@@ -2,6 +2,12 @@
     APP.namespace('APP.controllers');
     var ToolController = APP.core.ToolController;
     var SelectTool = APP.tools.SelectTool;
+
+    /**
+     * Контроллер выборки/удаления объектов
+     * @class
+     * @memberof APP.controllers
+     * */
     APP.controllers.SelectToolController = function (appInstance, canvas){
 
         var tool = new SelectTool(appInstance, canvas);

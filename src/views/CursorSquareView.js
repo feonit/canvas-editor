@@ -1,4 +1,9 @@
 !function(APP){
+    /**
+     * Курсор в виде квадрата
+     * @class
+     * @memberof APP.views
+     * */
     APP.views.CursorSquareView = function(options){
         this.x = options.x;
         this.y = options.y;

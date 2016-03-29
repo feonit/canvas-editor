@@ -1,6 +1,11 @@
 !function(APP){
     APP.namespace('APP.controllers');
 
+    /**
+     * Контроллер для рисования ломанной линии
+     * @class
+     * @memberof APP.controllers
+     * */
     APP.controllers.DrawBrokenVectorController = function (appInstance, canvas){
         APP.core.DrawToolController.apply(this, arguments);
 

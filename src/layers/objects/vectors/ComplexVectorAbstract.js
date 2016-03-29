@@ -3,7 +3,7 @@
 
     /**
      * Класс определяет массив контрольных точек
-     * @class ComplexVectorAbstract
+     * @class
      * @memberof APP.objects
      * */
     APP.objects.ComplexVectorAbstract = function(attributes){

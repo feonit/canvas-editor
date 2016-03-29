@@ -7,7 +7,7 @@
     /**
      * Класс определяет по массиву контрольных точек
      * координаты кривых безье
-     * @class CurveComplexVectorAbstract
+     * @class
      * @memberof APP.objects
      * */
     APP.objects.CurveComplexVectorAbstract = function (attributes){

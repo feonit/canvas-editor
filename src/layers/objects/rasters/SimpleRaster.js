@@ -3,7 +3,7 @@
 
     /**
      * Класс определяет две контрольные точки
-     * @class SimpleRaster
+     * @class
      * @memberof APP.objects
      * */
     APP.objects.SimpleRaster = function(attributes){

@@ -3,7 +3,7 @@
 
     /**
      * Прямоугольник
-     * @class RectangleSimpleVectorAbstract
+     * @class
      * @memberof APP.objects
      * */
     APP.objects.RectangleSimpleVectorAbstract = function (attributes){

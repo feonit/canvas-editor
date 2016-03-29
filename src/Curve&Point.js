@@ -2,7 +2,7 @@
     APP.namespace('APP');
     /**
      * Точка
-     * @class Point
+     * @class
      * @memberof APP.core
      * @param {number} x
      * @param {number} y
@@ -17,7 +17,7 @@
     APP.namespace('APP');
     /**
      * Кривая линия
-     * @class Curve
+     * @class
      * @memberof APP.core
      * @param points
      * */

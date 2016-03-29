@@ -3,8 +3,8 @@
 
     /**
      * Растровый слой
-     * @class RasterLayer
-     * @memberof APP
+     * @class
+     * @memberof APP.objects
      * */
     APP.objects.RasterLayer = function (options){
         APP.objects.LayerObject.apply(this, arguments);

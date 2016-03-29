@@ -3,7 +3,7 @@
 
     /**
      * Стрелка
-     * @class ArrowSimpleVectorAbstract
+     * @class
      * @memberof APP.objects
      * */
     APP.objects.ArrowSimpleVectorAbstract = function (attributes){

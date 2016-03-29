@@ -2,8 +2,8 @@
     APP.namespace('APP.core');
     /**
      * Обеспечивает управление инструментами и получение доступа подключаемых инструментов к канвасу
-     * @class ToolsDriver
-     * @memberof APP
+     * @class
+     * @memberof APP.core
      * @param {Object} appInstance
      * @param {HTMLCanvasElement} canvas
      * */
