@@ -72,7 +72,7 @@
             if (snapshotView){
                 snapshotView.restore();
             }
-        }
+        };
 
         function mousedown(event){
             tool.setOptions({ size:  appInstance.settings.eraserSize });
@@ -85,8 +85,8 @@
 
         function mouseup(event){
             tool.eraserEnd(event.offsetX, event.offsetY);
-            appInstance.mediator.publish(appInstance.UPDATE_CANVAS_EVENT);
             appInstance.regionManager.reset();
+            appInstance.mediator.publish(appInstance.UPDATE_CANVAS_EVENT);
         }
 
         this.start = function(){

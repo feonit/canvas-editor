@@ -78,7 +78,7 @@
         }
         if (options.rasters){
             options.rasters.forEach(function(options){
-                obj = new APP.objects.RasterLayer(options);
+                obj = new APP.objects.SimpleRaster(options);
                 that.rasters.push(obj);
                 that._objects[obj.id] = obj;
             });
@@ -113,7 +113,7 @@
                 case APP.objects.RectangleSimpleVectorAbstract:
                     this.rects.push(obj); break;
 
-                case APP.objects.RasterLayer:
+                case APP.objects.SimpleRaster:
                     this.rasters.push(obj); break;
 
                 default:

@@ -77,14 +77,23 @@
             }
 
             if (layerObject instanceof APP.objects.RasterLayer){
-                layerObject.layerView = APP.views.RasterLayerView.createByCoordinates({
-                    height: layerObject.height,
-                    width: layerObject.width,
-                    coordinates: layerObject.coordinates,
-                    borderCoordinates: layerObject.borderCoordinates,
-                    color: layerObject.color,
-                    dataUrl: layerObject.dataUrl
-                });
+                if (layerObject.dataUrl){
+                    layerObject.layerView = APP.views.RasterLayerView.createByDataUrl({
+                        height: layerObject.height,
+                        width: layerObject.width,
+                        dataUrl: layerObject.dataUrl,
+                        borderCoordinates: layerObject.borderCoordinates,
+                    });
+                } else {
+                    layerObject.layerView = APP.views.RasterLayerView.createByCoordinates({
+                        height: layerObject.height,
+                        width: layerObject.width,
+                        coordinates: layerObject.coordinates,
+                        borderCoordinates: layerObject.borderCoordinates,
+                        color: layerObject.color,
+                        dataUrl: layerObject.dataUrl
+                    });
+                }
             }
 
             if (layerObject instanceof APP.objects.LayerBackground){
@@ -245,7 +254,11 @@
                     }
                 };
 
+                // подчистить бекгроунд
                 putPixelsAtCanvas(raw.layerView.layer, region.getRelationCoordinate(), CLEAN_COLOR);
+
+                //обновить данные
+                raw.dataUrl = raw.layerView.layer.toDataURL();
 
                 this.addRegion(region);
             }
