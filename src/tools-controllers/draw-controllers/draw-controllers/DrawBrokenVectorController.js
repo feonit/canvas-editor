@@ -53,7 +53,7 @@
         };
 
         var _change = function(points){
-            object = new APP.objects.BrokenComplexVectorAbstract({
+            object = new APP.objects.BrokenComplexVector({
                 points: points,
                 width: canvas.width,
                 height: canvas.height,

@@ -7,7 +7,7 @@
      * @class
      * @memberof APP.objects
      * */
-    APP.objects.BrokenComplexVectorAbstract = function (attributes){
+    APP.objects.BrokenComplexVector = function (attributes){
         APP.objects.ComplexVectorAbstract.apply(this, arguments);
 
         var coordinates = [];
@@ -23,7 +23,7 @@
 
     };
 
-    APP.objects.BrokenComplexVectorAbstract.prototype = Object.create(APP.objects.ComplexVectorAbstract.prototype);
-    APP.objects.BrokenComplexVectorAbstract.prototype.constructor = APP.objects.BrokenComplexVectorAbstract;
+    APP.objects.BrokenComplexVector.prototype = Object.create(APP.objects.ComplexVectorAbstract.prototype);
+    APP.objects.BrokenComplexVector.prototype.constructor = APP.objects.BrokenComplexVector;
 
 }(APP);

@@ -23,6 +23,7 @@
         this.lines = [];
         this.rects = [];
         this.rasters = [];
+        this.broken = [];
 
         var that = this;
 
@@ -83,6 +84,13 @@
                 that._objects[obj.id] = obj;
             });
         }
+        if (options.broken){
+            options.broken.forEach(function(options){
+                obj = new APP.objects.BrokenComplexVector(options);
+                that.broken.push(obj);
+                that._objects[obj.id] = obj;
+            });
+        }
     };
 
     /** @lends ObjectsOrder.prototype */
@@ -116,8 +124,11 @@
                 case APP.objects.SimpleRaster:
                     this.rasters.push(obj); break;
 
+                case APP.objects.BrokenComplexVector:
+                    this.broken.push(obj); break;
+
                 default:
-                    //
+                    throw 'Не опознанная фигура'
             }
 
             this._objects[obj.id] = obj;
@@ -161,8 +172,12 @@
                     subIndex = this.rasters.indexOf(obj);
                     subIndex > 0 && this.rasters.splice(subIndex, 1); break;
 
+                case APP.objects.BrokenComplexVector:
+                    subIndex = this.broken.indexOf(obj);
+                    subIndex > 0 && this.broken.splice(subIndex, 1); break;
+
                 default:
-                //
+                    throw 'Не опознанная фигура'
             }
 
             delete this._objects[obj.id];
