@@ -1,6 +1,6 @@
-!function(CanvasEditor, global){
+!function(global){
 
-    global.ToolBarView = function (appInstance, enabledTool){
+    global.ToolBarView = function (appInstance, APP, enabledTool){
 
         var wrapper = this.nodeElement = document.createElement('div');
         wrapper.className = 'tool-bar';
@@ -85,4 +85,4 @@
         wrapper.appendChild(radioBox);
     }
 
-}(APP.core.CanvasEditor, window);
+}(window);

@@ -11,7 +11,7 @@
      * @param {number} options.lineWidth
      * @param {string} options.figureType
      * */
-    APP.core.CanvasEditor = function (canvas, options){
+    APP.core.App = function (canvas, options){
         if (!canvas)
             throw 'Lost first parameter';
         if (!(HTMLCanvasElement && canvas.getContext))
@@ -38,35 +38,36 @@
             drawingColor: '000000',
             drawingSize: 10,
             eraserSize: 10,
-            drawingType: 'CURVE_TYPE',
-            storageEnabled: false,
-            drawingCursorEnabled: false
+            drawingType: 'CURVE_TYPE'
+        };
+
+        var defaultConfiguration = {
+            storageEnabled: true,
+            storageKey: 'qwerty',
+            uploadUrl: '/upload.php',
+            uploadEnabled: true,
+            drawingCursorEnabled: true
         };
 
         this.toolsDriver = new APP.core.ToolsDriver(this, canvas);
 
         this.mediator = new APP.core.Mediator();
 
-        if (options.settings && options.settings.storageEnabled){
+        if (options.configuration && options.configuration.storageEnabled){
 
             this.storageManager = new APP.core.StorageManager({
-                key: options.settings.storageKey,
+                key: options.configuration.storageKey,
                 namespace: 'CanvasEditor'
             });
 
             // сохраненное состояние
-            var stateOptions = this.storageManager.getProperty(this.TOTAL_STATE_NAME);
+            var state = this.storageManager.getProperty(this.TOTAL_STATE_NAME);
 
-            if (stateOptions){
-                // запоминаем предыдушие настройки
-                var oldSettings = options.settings;
-                // заменяем опции на сохраненное
-                options = stateOptions;
+            if (state){
 
-                options.settings = options.settings || {};
-
-                // восстанавливаем настройки, если каких то нет в сохраненном состоянии
-                extend(oldSettings, options.settings);
+                // дополняем опции
+                extend(state, options);
+                extend(state.settings, options.settings);
             }
 
             var saveLocalUtilController = new APP.utils.SaveLocalUtilController(this);
@@ -78,15 +79,18 @@
         canvas.setAttribute('oncontextmenu', 'return false;');
         var ctx = canvas.getContext('2d');
         ctx.mozImageSmoothingEnabled = false;
-        ctx.webkitImageSmoothingEnabled = false;
         ctx.msImageSmoothingEnabled = false;
         ctx.imageSmoothingEnabled = false;
 
         options.settings = options.settings || {};
+        options.configuration = options.configuration || {};
 
+        // если чего то не хватает
         extend(defaultSettings, options.settings);
+        extend(defaultConfiguration, options.configuration);
 
         this.settings = options.settings;
+        this.configuration = options.configuration;
 
         this.mediator.subscribe(this.CREATED_REGION_EVENT, (function(object){
             this.regionManager.addRegion(object);
@@ -94,15 +98,15 @@
 
     };
 
-    APP.core.CanvasEditor.prototype.CREATED_REGION_EVENT = 'CREATED_REGION_EVENT';
-    APP.core.CanvasEditor.prototype.UPDATE_CANVAS_EVENT = 'UPDATE_CANVAS_EVENT';
-    APP.core.CanvasEditor.prototype.TOTAL_STATE_NAME = 'TOTAL_STATE_NAME';
+    APP.core.App.prototype.CREATED_REGION_EVENT = 'CREATED_REGION_EVENT';
+    APP.core.App.prototype.UPDATE_CANVAS_EVENT = 'UPDATE_CANVAS_EVENT';
+    APP.core.App.prototype.TOTAL_STATE_NAME = 'TOTAL_STATE_NAME';
 
     /**
      * Метод считывает состояния определенных компонентов системы и подготоваливает
      * данные для последующей инициализации приложения
      * */
-    APP.core.CanvasEditor.prototype.getTotalState = function () {
+    APP.core.App.prototype.getTotalState = function () {
         var instanse = this;
 
         var data = {};

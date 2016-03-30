@@ -1,7 +1,5 @@
 !function(APP){
     APP.namespace('APP.controllers');
-    var ToolController = APP.core.ToolController;
-    var SelectTool = APP.tools.SelectTool;
 
     /**
      * Контроллер выборки/удаления объектов
@@ -10,7 +8,7 @@
      * */
     APP.controllers.SelectToolController = function (appInstance, canvas){
 
-        var tool = new SelectTool(appInstance, canvas);
+        var tool = new APP.tools.SelectTool(appInstance, canvas);
 
         function mousedown(event){
             tool.selectObjectByCoordinate(event.offsetX, event.offsetY);
@@ -36,6 +34,6 @@
             tool.reset();
         }
     };
-    APP.controllers.SelectToolController.prototype = Object.create(ToolController);
+    APP.controllers.SelectToolController.prototype = Object.create(APP.core.ToolController);
     APP.controllers.SelectToolController.prototype.constructor = APP.controllers.SelectToolController;
 }(APP);

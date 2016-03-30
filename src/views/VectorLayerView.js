@@ -1,6 +1,5 @@
 !function(APP){
     APP.namespace('APP.views');
-    var MathFn = APP.core.MathFn;
 
     /**
      * Отвечает за отображение информации
@@ -32,7 +31,6 @@
     APP.views.VectorLayerAbstractView.renderCircles = function(canvas, coordinates, color, radius){
         var ctx = canvas.getContext('2d');
         ctx.mozImageSmoothingEnabled = false;
-        ctx.webkitImageSmoothingEnabled = false;
         ctx.msImageSmoothingEnabled = false;
         ctx.imageSmoothingEnabled = false;
 
@@ -96,7 +94,7 @@
                 // а когда радиус 0 то диаметр 1пиксель
                 canvasR.height = powRadius + 1;
                 canvasR.width = powRadius + 1;
-                var coordinates = MathFn.getCircleCoordinates(radius);
+                var coordinates = APP.core.MathFn.getCircleCoordinates(radius);
                 var len = coordinates.length;
                 var canvasRCtx = canvasR.getContext('2d');
 

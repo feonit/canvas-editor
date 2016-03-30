@@ -1,7 +1,5 @@
 !function(APP){
     APP.namespace('APP.controllers');
-    var ToolController = APP.core.ToolController;
-    var EraserTool = APP.tools.EraserTool;
 
     /**
      * Контроллер для стерки
@@ -10,7 +8,7 @@
      * */
     APP.controllers.EraserToolController = function (appInstance, canvas){
 
-        var tool = new EraserTool(appInstance, canvas);
+        var tool = new APP.tools.EraserTool(appInstance, canvas);
 
         // снимок
         var snapshotView;
@@ -114,6 +112,6 @@
             canvas.removeEventListener('mouseup', mouseup);
         };
     };
-    APP.controllers.EraserToolController.prototype = Object.create(ToolController);
+    APP.controllers.EraserToolController.prototype = Object.create(APP.core.ToolController);
     APP.controllers.EraserToolController.prototype.constructor = APP.controllers.EraserToolController;
 }(APP);

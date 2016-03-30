@@ -1,9 +1,5 @@
 !function(APP){
     APP.namespace('APP.tools');
-    var MathFn = APP.core.MathFn;
-    var Point = APP.core.Point;
-    var Curve = APP.core.Curve;
-    var LayerObject = APP.objects.LayerObject;
     /**
      * Ластик, позволяет стирать область холста, относительно переданной координаты
      * @class
@@ -33,20 +29,20 @@
             }
             if (!this.points) {
                 this.points = [];
-                this.points.push(new Point(x, y));
+                this.points.push(new APP.core.Point(x, y));
                 this._render();
             }
         },
 
         eraserContinue : function(x, y){
             if (this.points){
-                this.points.push(new Point(x, y));
+                this.points.push(new APP.core.Point(x, y));
                 this._render();
             }
         },
 
         eraserEnd : function(x, y){
-            this.points.push(new Point(x, y));
+            this.points.push(new APP.core.Point(x, y));
 
             this._render();
             this.points = null;
@@ -54,7 +50,7 @@
         },
 
         _render : function(){
-            var flow = MathFn.drawBezierCurve(new Curve(this.points));
+            var flow = APP.core.MathFn.drawBezierCurve(new APP.core.Curve(this.points));
             flow.forEach((function(coor){
                 this.cleanAtPoint(coor[0], coor[1]);
             }).bind(this));
@@ -104,10 +100,10 @@
          * Получить координаты всех точек принадлежащих окружности с заданными координатой и радиусом
          * */
         _getCircleCoordinatesWithOffset : function(x0, y0, radius){
-            var coordinates = MathFn.getCircleCoordinates(radius);
+            var coordinates = APP.core.MathFn.getCircleCoordinates(radius);
 
             //todo
-            coordinates = LayerObject.prototype.getRelationCoordinate(coordinates, x0, y0);
+            coordinates = APP.objects.LayerObject.prototype.getRelationCoordinate(coordinates, x0, y0);
             return coordinates;
         }
     };

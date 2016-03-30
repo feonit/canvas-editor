@@ -1,6 +1,5 @@
 !function(APP){
     APP.namespace('APP.views');
-    var MathFn = APP.core.MathFn;
     /**
      * Класс Слой Вид. Отвечает за отображение информации о слое.
      * @class
@@ -37,7 +36,7 @@
         // отрисовать бордер
         var imageData = this.layer.getContext('2d').createImageData(1, 1);
         for (var i=0, len = this.borderCoordinates.length; i < len; i++){
-            var colorData = MathFn.getRandomColorData();
+            var colorData = APP.core.MathFn.getRandomColorData();
 
             imageData.data[0] = colorData[0];
             imageData.data[1] = colorData[1];

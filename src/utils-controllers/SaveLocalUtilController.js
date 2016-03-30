@@ -1,6 +1,5 @@
 !function(APP){
     APP.namespace('APP.utils');
-    var ToolController = APP.core.ToolController;
 
     /**
      * Автоматическое сохранение состояния приложения локально
@@ -22,6 +21,6 @@
             appInstance.mediator.unsubscribe(appInstance.UPDATE_CANVAS_EVENT, this._saveToLocalSorage);
         }
     };
-    APP.utils.SaveLocalUtilController.prototype = Object.create(ToolController);
+    APP.utils.SaveLocalUtilController.prototype = Object.create(APP.core.ToolController);
     APP.utils.SaveLocalUtilController.prototype.constructor = APP.utils.SaveLocalUtilController;
 }(APP);

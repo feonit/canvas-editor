@@ -88,8 +88,8 @@
      * */
     APP.core.DrawToolController.prototype.publicNewObject = function(object){
         if (object){
-            this.appInstance.mediator.publish(appInstance.CREATED_REGION_EVENT, object);
-            this.appInstance.mediator.publish(appInstance.UPDATE_CANVAS_EVENT);
+            this.appInstance.mediator.publish(this.appInstance.CREATED_REGION_EVENT, object);
+            this.appInstance.mediator.publish(this.appInstance.UPDATE_CANVAS_EVENT);
         }
     };
 

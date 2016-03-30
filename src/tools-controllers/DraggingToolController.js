@@ -1,7 +1,5 @@
 !function(APP){
     APP.namespace('APP.controllers');
-    var ToolController = APP.core.ToolController;
-    var DraggingTool = APP.tools.DraggingTool;
 
     /**
      * Контроллер для переноса объектов
@@ -10,7 +8,7 @@
      * */
     APP.controllers.DraggingToolController = function (appInstance, canvas){
 
-        var tool = new DraggingTool(appInstance, canvas);
+        var tool = new APP.tools.DraggingTool(appInstance, canvas);
         var cursorView = new APP.views.CursorView({canvas, canvas});
         var mouseIsPressed = false;
         var cursorOverObject = false;
@@ -67,6 +65,6 @@
             canvas.removeEventListener('mouseup', mouseup);
         };
     };
-    APP.controllers.DraggingToolController.prototype = Object.create(ToolController);
+    APP.controllers.DraggingToolController.prototype = Object.create(APP.core.ToolController);
     APP.controllers.DraggingToolController.prototype.constructor = APP.controllers.DraggingToolController;
 }(APP);

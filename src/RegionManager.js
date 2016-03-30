@@ -1,8 +1,5 @@
 !function(APP){
     APP.namespace('APP.core');
-    var PixelsMap = APP.core.PixelsMap;
-    var ObjectsOrder = APP.core.ObjectsOrder;
-    var LayerBackground = APP.objects.LayerBackground;
     /**
      * Управление объектами на холсте
      * @class
@@ -15,13 +12,13 @@
 
         Object.defineProperty(this, 'canvas', {value: canvas});
 
-        this.pixelsMap = new PixelsMap();
+        this.pixelsMap = new APP.core.PixelsMap();
 
-        this.objectsOrder = new ObjectsOrder(options.objectsOrder);
+        this.objectsOrder = new APP.core.ObjectsOrder(options.objectsOrder);
 
         if (!options.objectsOrder){// если нет автогенерации
             /** @lends RegionManager.prototype */
-            this.addRegion(LayerBackground.createLayerBackground(this.canvas));
+            this.addRegion(APP.objects.LayerBackground.createLayerBackground(this.canvas));
         } else {
             this.objectsOrder.getObjects().forEach((function(layerObject){
                 this.addLayerView(layerObject);
@@ -41,9 +38,9 @@
          * Сбросить состояние
          * */
         reset: function(){
-            this.pixelsMap = new PixelsMap();
-            this.objectsOrder = new ObjectsOrder();
-            this.addRegion(LayerBackground.createLayerBackground(this.canvas));
+            this.pixelsMap = new APP.core.PixelsMap();
+            this.objectsOrder = new APP.core.ObjectsOrder();
+            this.addRegion(APP.objects.LayerBackground.createLayerBackground(this.canvas));
         },
         /**
          * Метод для записи региона в карту пикселей

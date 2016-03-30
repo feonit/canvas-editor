@@ -1,6 +1,5 @@
 !function(APP){
     APP.namespace('APP.utils');
-    var ToolController = APP.core.ToolController;
 
     /**
      * Автоматическое сохранение состояния приложения на сервер
@@ -29,7 +28,7 @@
             return new Blob([ia], {type:mimeString});
         }
 
-        function submitFile(blob){
+        function submitFile(blob, url){
             // Create a new FormData object.
             var formData = new FormData();
             var name = (Date.now()).toString();
@@ -38,7 +37,7 @@
 
             var xhr = new XMLHttpRequest();
 
-            xhr.open('POST', 'upload', true);
+            xhr.open('POST', url, true);
             xhr.onload = function () {
                 if (xhr.status === 200) {
                     // File(s) uploaded.
@@ -53,8 +52,8 @@
 
         this._saveToServer = function(){
             var blob = dataURItoBlob(canvas.toDataURL("image/png", {}));
-            console.log(blob.size/1000 + ' kb');
-            submitFile(blob);
+            //console.log(blob.size/1000 + ' kb');
+            submitFile(blob, appInstance.configuration.uploadUrl);
         };
 
         this.start = function(){
@@ -63,7 +62,7 @@
         this.stop = function(){
             appInstance.mediator.unsubscribe(appInstance.UPDATE_CANVAS_EVENT, this._saveToServer);
         };
-    }
-    APP.utils.SaveServerUtilController.prototype = Object.create(ToolController);
+    };
+    APP.utils.SaveServerUtilController.prototype = Object.create(APP.core.ToolController);
     APP.utils.SaveServerUtilController.prototype.constructor = APP.utils.SaveServerUtilController;
 }(APP);

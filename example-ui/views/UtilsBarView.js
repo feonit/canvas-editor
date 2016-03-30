@@ -1,6 +1,6 @@
-!function(CanvasEditor, global){
+!function(global){
 
-    global.UtilsBarView = function (appInstance){
+    global.UtilsBarView = function (appInstance, APP){
 
         var wrapper = document.createElement('div');
         wrapper.className = 'tool-bar';
@@ -33,7 +33,7 @@
          * Утилита: Сохранение локально
          * */
         !function(){
-            var isEnabled = appInstance.settings.storageEnabled;
+            var isEnabled = appInstance.configuration.storageEnabled;
 
             var util = new APP.utils.SaveLocalUtilController(appInstance, appInstance.canvas);
             var checkBox = new CheckBoxComponent('Автосохранение локально', isEnabled);
@@ -54,5 +54,5 @@
         this.nodeElement = wrapper;
     }
 
-}(APP.core.CanvasEditor, window);
+}(window);
 

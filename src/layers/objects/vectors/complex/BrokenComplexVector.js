@@ -1,7 +1,5 @@
 !function(APP){
     APP.namespace('APP.objects');
-    var MathFn = APP.core.MathFn;
-    var ComplexVectorAbstract = APP.objects.ComplexVectorAbstract;
 
     /**
      * Класс определяет по массиву контрольных точек
@@ -10,13 +8,13 @@
      * @memberof APP.objects
      * */
     APP.objects.BrokenComplexVectorAbstract = function (attributes){
-        ComplexVectorAbstract.apply(this, arguments);
+        APP.objects.ComplexVectorAbstract.apply(this, arguments);
 
         var coordinates = [];
         var points = this.points;
         points.forEach(function(point, index){
             if (points[index + 1]){
-                coordinates = coordinates.concat(MathFn.bline(point[0], point[1], points[index + 1][0], points[index + 1][1]));
+                coordinates = coordinates.concat(APP.core.MathFn.bline(point[0], point[1], points[index + 1][0], points[index + 1][1]));
             }
 
         });
@@ -25,7 +23,7 @@
 
     };
 
-    APP.objects.BrokenComplexVectorAbstract.prototype = Object.create(ComplexVectorAbstract.prototype);
+    APP.objects.BrokenComplexVectorAbstract.prototype = Object.create(APP.objects.ComplexVectorAbstract.prototype);
     APP.objects.BrokenComplexVectorAbstract.prototype.constructor = APP.objects.BrokenComplexVectorAbstract;
 
 }(APP);
